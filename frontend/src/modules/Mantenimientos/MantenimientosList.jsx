@@ -1,18 +1,18 @@
 import { useState, useEffect } from "react";
-import { getCamiones } from "../../services/mantenimientosService";
+import { getMantenimientos } from "../../services/mantenimientosService";
 
-export default function CamionesList() {
-  const [camiones, setCamiones] = useState([]);
+export default function MantenimientosList() {
+  const [mantenimientos, setMantenimientos] = useState([]);
 
   useEffect(() => {
-    getCamiones().then(setCamiones);
+    getMantenimientos().then(setMantenimientos);
   }, []);
 
   return (
     <div>
-      <h2>Camiones</h2>
+      <h2>Mantenimientos</h2>
       <ul>
-        {camiones.map(c => (
+        {mantenimientos.map(c => (
           <li key={c.id}>{c.camion} {c.estado}</li>
         ))}
       </ul>
