@@ -1,0 +1,114 @@
+/* Fondo general del formulario */
+.ingresar-clientes-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e0e7ff, #213547); /* tonos suaves y profesionales */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Contenedor principal */
+.ingresar-clientes-container {
+  background-color: #ffffff;
+  padding: 30px 40px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  width: 480px; /* más ancho */
+  max-width: 95%; /* sigue siendo responsivo en pantallas pequeñas */
+  text-align: center;
+}
+
+.ingresar-clientes-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Logo */
+.logo-container {
+  margin-bottom: 20px;
+}
+
+.logo {
+  width: 80px;
+  height: auto;
+}
+
+/* Título */
+.ingresar-clientes-title {
+  font-size: 1.9rem;
+  margin-bottom: 25px;
+  color: #1f2937; /* gris oscuro */
+  font-weight: 700;
+}
+
+/* Formulario */
+.ingresar-clientes-form .form-group {
+  margin-bottom: 18px;
+  text-align: left;
+}
+
+.ingresar-clientes-form label {
+  display: block;
+  margin-bottom: 6px;
+  color: #4b5563; /* gris medio */
+  font-weight: 500;
+}
+
+.ingresar-clientes-form input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db; /* gris claro */
+  outline: none;
+  font-size: 1rem;
+  transition: 0.2s;
+}
+
+.ingresar-clientes-form input:focus {
+  border-color: #6366f1; /* azul suave para enfocar */
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.3);
+}
+
+/* Botones */
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
+}
+
+.form-button, .close-button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  color: #fff;
+  margin: 0 5px;
+  background-color: #374151; /* gris oscuro */
+}
+
+.form-button:hover, .close-button:hover {
+  background-color: #4b5563; /* gris hover */
+}
+
+/* Para adaptabilidad en móviles */
+@media (max-width: 480px) {
+  .ingresar-clientes-container {
+    width: 90%;
+    padding: 25px 20px;
+  }
+}
+
+/* Logo */
+.logo-container {
+  margin-bottom: 25px; /* un poco más de espacio debajo */
+}
+
+.logo {
+  width: 120px; /* más grande */
+  height: auto;
+}

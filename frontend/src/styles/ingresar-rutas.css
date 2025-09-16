@@ -1,0 +1,121 @@
+.ingresar-ruta-wrapper {
+  display: flex;
+  justify-content: center;
+  padding: 30px 10px;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e0e7ff, #213547);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.ingresar-ruta-container {
+  background-color: #ffffff;
+  padding: 25px 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  width: 500px;
+  max-width: 95%;
+}
+
+.logo-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+.logo {
+  width: 120px;
+}
+
+.ingresar-ruta-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.ingresar-ruta-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px 20px;
+}
+
+/* Cada fila de dos campos */
+.form-row {
+  display: flex;
+  gap: 20px;
+  width: 100%;
+}
+
+/* Grupo de campo */
+.form-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.form-group.full-width {
+  flex: 1 1 100%;
+}
+
+/* Etiquetas */
+.form-group label {
+  margin-bottom: 5px;
+  font-weight: 500;
+  text-align: left;
+}
+
+/* Inputs y selects */
+.form-group input,
+.form-group select {
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+/* Input No. de Ruta más pequeño */
+.small-input {
+  max-width: 150px;
+}
+
+/* Campos con mismo ancho */
+.full-input {
+  width: 100%;
+}
+
+/* Botones */
+.button-group {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.form-button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  background-color: #2563eb;
+  color: #fff;
+}
+
+.close-button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  background-color: #e5e7eb;
+  color: #111827;
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+  .form-row {
+    flex-direction: column;
+  }
+  .small-input,
+  .full-input {
+    max-width: 100%;
+  }
+}

@@ -2,7 +2,7 @@ import React from "react";
 
 import { useEffect, useState } from "react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from "recharts";
-import api from "../../services/api";
+import api from "../services/api";
 
 export default function Reportes() {
   const [data, setData] = useState([]);

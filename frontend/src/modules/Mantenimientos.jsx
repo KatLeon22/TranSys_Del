@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getMantenimientos } from "../../services/mantenimientosService";
+import { getMantenimientos } from "../services/mantenimientosService";
 
 export default function MantenimientosList() {
   const [mantenimientos, setMantenimientos] = useState([]);

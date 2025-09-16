@@ -1,0 +1,125 @@
+/* src/styles/editar-ayudantes.css */
+
+/* Fondo general del formulario */
+.editar-ayudante-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #e0e7ff, #213547);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Contenedor principal */
+.editar-ayudante-container {
+  background-color: #ffffff;
+  padding: 30px 40px;
+  border-radius: 15px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+  width: 480px;
+  max-width: 95%;
+  text-align: center;
+}
+
+.editar-ayudante-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+/* Logo */
+.logo-container {
+  margin-bottom: 20px;
+}
+
+.logo {
+  width: 80px;
+  height: auto;
+}
+
+/* Título */
+.editar-ayudante-title {
+  font-size: 1.9rem;
+  margin-bottom: 25px;
+  color: #1f2937;
+  font-weight: 700;
+}
+
+/* Formulario */
+.editar-ayudante-form .form-group {
+  margin-bottom: 18px;
+  text-align: left;
+}
+
+.editar-ayudante-form label {
+  display: block;
+  margin-bottom: 6px;
+  color: #4b5563;
+  font-weight: 500;
+}
+
+.editar-ayudante-form input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  outline: none;
+  font-size: 1rem;
+  transition: 0.2s;
+}
+
+.editar-ayudante-form input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.3);
+}
+
+/* Botones */
+.button-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 25px;
+}
+
+.form-button, .close-button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  color: #fff;
+  margin: 0 5px;
+  background-color: #374151;
+}
+
+.form-button:hover, .close-button:hover {
+  background-color: #4b5563;
+}
+
+/* Botón guardar cambios en azul */
+.form-button.ingresar-btn {
+  background-color: #2563eb;
+}
+
+.form-button.ingresar-btn:hover {
+  background-color: #1d4ed8;
+}
+
+/* Adaptabilidad en móviles */
+@media (max-width: 480px) {
+  .editar-ayudante-container {
+    width: 90%;
+    padding: 25px 20px;
+  }
+}
+
+/* Logo */
+.logo-container {
+  margin-bottom: 25px;
+}
+
+.logo {
+  width: 120px;
+  height: auto;
+}

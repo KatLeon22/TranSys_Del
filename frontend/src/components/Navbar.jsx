@@ -1,7 +1,13 @@
+import React from "react";
+
 export default function Navbar() {
   return (
-    <div style={{ background: "#eee", padding: "10px 20px" }}>
-      <h1>Empresa Delivery</h1>
-    </div>
+    <header className="navbar">
+      <h1>Panel Administrativo</h1>
+      <div className="user">
+        <span>Usuario: Admin</span>
+        <button>Cerrar sesión</button>
+      </div>
+    </header>
   );
 }
