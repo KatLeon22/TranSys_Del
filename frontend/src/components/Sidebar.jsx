@@ -1,18 +1,35 @@
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
+import "../styles/layout.css";
 
 export default function Sidebar() {
+  const [personalOpen, setPersonalOpen] = useState(false);
+
   return (
-    <div style={{ width: "200px", background: "#333", color: "#fff", padding: "20px" }}>
-      <h2>Dashboard</h2>
+    <aside className="sidebar">
+      <div className="sidebar-header">S DE LEON</div>
       <nav>
-        <ul>
-          <li><Link to="/choferes" style={{ color: "#fff" }}>Choferes</Link></li>
-          <li><Link to="/camiones" style={{ color: "#fff" }}>Camiones</Link></li>
-          <li><Link to="/rutas" style={{ color: "#fff" }}>Rutas</Link></li>
-          <li><Link to="/mantenimientos" style={{ color: "#fff" }}>Mantenimientos</Link></li>
-          <li><Link to="/reportes" style={{ color: "#fff" }}>Reportes</Link></li>
-        </ul>
+        <NavLink to="/Dashboard">Dashboard</NavLink>
+        <div>
+          {/* Personal desplegable */}
+          <button
+            className="sidebar-dropdown-btn"
+            onClick={() => setPersonalOpen(!personalOpen)}
+          >
+            Personal
+          </button>
+          {personalOpen && (
+            <div className="sidebar-dropdown-content">
+              <NavLink to="/choferes">Pilotos</NavLink>
+              <NavLink to="/ayudantes">Ayudantes</NavLink>
+            </div>
+          )}
+        </div>
+        <NavLink to="/clientes">Clientes</NavLink>
+        <NavLink to="/camiones">Camiones</NavLink>
+        <NavLink to="/rutas">Rutas</NavLink>
+        <NavLink to="/reportes">Reportes</NavLink>
       </nav>
-    </div>
+    </aside>
   );
 }

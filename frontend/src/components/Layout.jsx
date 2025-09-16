@@ -1,13 +1,15 @@
+import React from "react";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
+import "../styles/layout.css";
 
 export default function Layout({ children }) {
   return (
-    <div style={{ display: "flex", minHeight: "100vh" }}>
+    <div className="layout">
       <Sidebar />
-      <div style={{ flex: 1 }}>
+      <div className="layout-main">
         <Navbar />
-        <div style={{ padding: "20px" }}>{children}</div>
+        <div className="layout-content">{children}</div>
       </div>
     </div>
   );
