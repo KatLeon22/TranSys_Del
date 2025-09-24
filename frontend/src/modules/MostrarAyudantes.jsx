@@ -1,3 +1,4 @@
+// src/modules/MostrarAyudante.jsx
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import "../styles/mostrar-ayudantes.css";
@@ -11,12 +12,12 @@ export default function MostrarAyudante() {
   useEffect(() => {
     // Datos simulados
     const data = [
-      { id: 1, nombre: "Pedro", apellido: "Santos", telefono: "+502 5551-2001", rutasAsignadas: 1 },
-      { id: 2, nombre: "Carla", apellido: "Morales", telefono: "+502 5551-2002", rutasAsignadas: 2 },
-      { id: 3, nombre: "Andrés", apellido: "Lopez", telefono: "+502 5551-2003", rutasAsignadas: 1 },
-      { id: 4, nombre: "Luciana", apellido: "Ramírez", telefono: "+502 5551-2004", rutasAsignadas: 3 },
-      { id: 5, nombre: "Jorge", apellido: "Hernández", telefono: "+502 5551-2005", rutasAsignadas: 2 },
-      { id: 6, nombre: "Sofía", apellido: "Gutiérrez", telefono: "+502 5551-2006", rutasAsignadas: 1 },
+      { id: 1, nombre: "Pedro", apellido: "Santos", telefono: "+502 5551-2001" },
+      { id: 2, nombre: "Carla", apellido: "Morales", telefono: "+502 5551-2002" },
+      { id: 3, nombre: "Andrés", apellido: "Lopez", telefono: "+502 5551-2003" },
+      { id: 4, nombre: "Luciana", apellido: "Ramírez", telefono: "+502 5551-2004" },
+      { id: 5, nombre: "Jorge", apellido: "Hernández", telefono: "+502 5551-2005" },
+      { id: 6, nombre: "Sofía", apellido: "Gutiérrez", telefono: "+502 5551-2006" },
     ];
 
     const found = data.find(a => a.id === parseInt(id));
@@ -49,11 +50,6 @@ export default function MostrarAyudante() {
           <div className="form-group">
             <label>Teléfono:</label>
             <input type="text" value={ayudante.telefono} disabled />
-          </div>
-
-          <div className="form-group">
-            <label>No. de Rutas:</label>
-            <input type="number" value={ayudante.rutasAsignadas} disabled />
           </div>
 
           <div className="button-group">

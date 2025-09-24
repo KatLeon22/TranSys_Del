@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "../styles/editar-choferes.css";
 import Logo from "../assets/logo.png";
+import choferesService from "../services/choferesService";
 
 export default function EditarChoferes() {
   const navigate = useNavigate();
@@ -13,46 +14,105 @@ export default function EditarChoferes() {
     nombre: "",
     apellido: "",
     telefono: "",
-    rol: "",
-    tipoLicencia: ""
+    tipoLicencia: "",
+    fechaVencimiento: ""
   });
 
   const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
   // Cargar datos del chofer
   useEffect(() => {
-    if (chofer) {
-      setFormData({
-        nombre: chofer.nombre,
-        apellido: chofer.apellido,
-        telefono: chofer.telefono,
-        rol: chofer.rol,
-        tipoLicencia: chofer.tipoLicencia
-      });
-      setLoading(false);
-    } else {
-      alert("Chofer no encontrado");
-      navigate("/choferes");
-    }
-  }, [chofer, navigate]);
+    const cargarChofer = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        if (chofer?.id) {
+          // Cargar datos del chofer desde la base de datos
+          const response = await choferesService.getChoferById(chofer.id);
+          
+          if (response.success) {
+            const choferData = response.data;
+            console.log('Datos del chofer recibidos:', choferData);
+            console.log('Fecha original:', choferData.vencimiento);
+            
+            let fechaFormateada = "";
+            if (choferData.vencimiento) {
+              try {
+                const fecha = new Date(choferData.vencimiento);
+                if (!isNaN(fecha.getTime())) {
+                  fechaFormateada = fecha.toISOString().split('T')[0];
+                } else {
+                  console.warn('Fecha inválida:', choferData.vencimiento);
+                }
+              } catch (error) {
+                console.error('Error formateando fecha:', error);
+              }
+            }
+            console.log('Fecha formateada:', fechaFormateada);
+            
+            setFormData({
+              nombre: choferData.nombre || "",
+              apellido: choferData.apellido || "",
+              telefono: choferData.telefono || "",
+              tipoLicencia: choferData.tipo_licencia || "",
+              fechaVencimiento: fechaFormateada
+            });
+          } else {
+            setError("Error al cargar los datos del piloto");
+          }
+        } else {
+          setError("Piloto no encontrado");
+        }
+      } catch (error) {
+        console.error("Error cargando piloto:", error);
+        setError("Error al cargar los datos del piloto: " + error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    cargarChofer();
+  }, [chofer]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setSaving(true);
+    setError("");
 
-    // Guardar cambios usando localStorage temporalmente o implementar contexto/global state
-    const storedChoferes = JSON.parse(localStorage.getItem("choferes")) || [];
-    const updatedChoferes = storedChoferes.map(c =>
-      c.id === chofer.id ? { ...c, ...formData } : c
-    );
-    localStorage.setItem("choferes", JSON.stringify(updatedChoferes));
-
-    alert("Chofer actualizado correctamente");
-    navigate("/choferes");
+    try {
+      console.log("Actualizando piloto:", chofer.id, formData);
+      
+      // Mapear los datos del frontend al formato que espera el backend
+      const choferData = {
+        nombre: formData.nombre,
+        apellido: formData.apellido,
+        telefono: formData.telefono,
+        tipo_licencia: formData.tipoLicencia,
+        vencimiento: formData.fechaVencimiento
+      };
+      
+      const response = await choferesService.updateChofer(chofer.id, choferData);
+      
+      if (response.success) {
+        alert("Piloto actualizado exitosamente");
+        navigate("/choferes");
+      } else {
+        setError(response.message || "Error al actualizar el piloto");
+      }
+    } catch (error) {
+      console.error("Error actualizando piloto:", error);
+      setError("Error al actualizar el piloto: " + error.message);
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleCancel = () => {
@@ -60,13 +120,36 @@ export default function EditarChoferes() {
   };
 
   if (loading) {
-    return <div>Cargando...</div>;
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Cargando datos del piloto...</p>
+      </div>
+    );
+  }
+
+  if (error && !chofer?.id) {
+    return (
+      <div className="error-container">
+        <div className="error-message">{error}</div>
+        <button onClick={() => navigate("/choferes")} className="form-button">
+          Volver a Pilotos
+        </button>
+      </div>
+    );
   }
 
   return (
     <div className="editar-chofer-wrapper">
       <div className="editar-chofer-container">
         <h2 className="editar-chofer-title">Editar Piloto</h2>
+        {console.log('FormData actual:', formData)}
+
+        {error && (
+          <div className="error-message" style={{ color: 'red', marginBottom: '20px', textAlign: 'center' }}>
+            {error}
+          </div>
+        )}
 
         {/* Logo de la empresa debajo del título */}
         <div className="logo-container">
@@ -97,19 +180,9 @@ export default function EditarChoferes() {
           <div className="form-group">
             <label>Teléfono</label>
             <input
-              type="text"
+              type="tel"
               name="telefono"
               value={formData.telefono}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>Rol</label>
-            <input
-              type="text"
-              name="rol"
-              value={formData.rol}
               onChange={handleChange}
               required
             />
@@ -124,10 +197,24 @@ export default function EditarChoferes() {
               required
             />
           </div>
+          <div className="form-group">
+            <label>Fecha de Vencimiento de Licencia</label>
+            <input
+              type="date"
+              name="fechaVencimiento"
+              value={formData.fechaVencimiento}
+              onChange={handleChange}
+              required
+            />
+          </div>
 
           <div className="button-group">
-            <button type="submit" className="form-button">Guardar</button>
-            <button type="button" className="close-button" onClick={handleCancel}>Cancelar</button>
+            <button type="submit" className="form-button" disabled={saving}>
+              {saving ? "Guardando..." : "Guardar"}
+            </button>
+            <button type="button" className="close-button" onClick={handleCancel} disabled={saving}>
+              Cancelar
+            </button>
           </div>
         </form>
       </div>

@@ -4,7 +4,7 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: #f9fafb; /* gris claro */
+  background-color: #f9fafb;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -14,7 +14,7 @@ html, body {
   width: 100%;
   padding: 10px;
   margin: 0 auto;
-  overflow-x: auto; /* scroll horizontal si es necesario */
+  overflow-x: auto; /* scroll horizontal solo si es necesario */
 }
 
 /* ----------------------------- */
@@ -24,6 +24,7 @@ html, body {
   font-weight: bold;
   margin-bottom: 15px;
   color: #1f2937;
+  text-align: center;
 }
 
 /* ----------------------------- */
@@ -42,6 +43,31 @@ html, body {
   align-items: center;
   gap: 8px;
   font-size: 0.8rem;
+}
+
+.rutas-next-number {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  background-color: #e8f5e8;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #4ade80;
+}
+
+.next-number-label {
+  font-weight: 600;
+  color: #166534;
+}
+
+.next-number-value {
+  font-weight: bold;
+  color: #15803d;
+  background-color: #dcfce7;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #22c55e;
 }
 
 .rutas-search {
@@ -92,18 +118,23 @@ html, body {
 /* ----------------------------- */
 /* Tabla */
 .rutas-table {
-  width: max-content; /* se ajusta al contenido */
-  min-width: 100%;    /* ocupa al menos todo el ancho de la pantalla */
+  width: 100%;
+  min-width: 1200px; /* ancho mínimo para legibilidad */
   border-collapse: collapse;
-  table-layout: auto;
-  font-size: 0.7rem;  /* letra pequeña */
+  table-layout: fixed; /* columnas uniformes */
+  font-size: 0.75rem;
 }
 
+/* Cabeceras y celdas */
 .rutas-table th,
 .rutas-table td {
-  padding: 4px 6px;
+  padding: 6px 8px;
   text-align: center;
   border: 1px solid #e5e7eb;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.8rem;
   word-break: break-word;
 }
 
@@ -113,6 +144,7 @@ html, body {
   font-weight: 600;
 }
 
+/* Hover fila */
 .rutas-table tr:hover {
   background-color: #2563eb33;
 }
@@ -121,8 +153,8 @@ html, body {
 .rutas-table select,
 .rutas-table input {
   width: 100%;
-  padding: 2px 4px;
-  font-size: 0.65rem;
+  font-size: 0.75rem;
+  padding: 4px 6px;
   border-radius: 4px;
   border: 1px solid #cbd5e0;
   box-sizing: border-box;
@@ -134,10 +166,11 @@ html, body {
   border-radius: 4px;
   padding: 2px 4px;
   width: 100%;
+  font-size: 0.7rem;
   box-sizing: border-box;
-  font-size: 0.65rem;
 }
 
+/* ----------------------------- */
 /* Columnas importantes */
 .rutas-table th:nth-child(1),
 .rutas-table td:nth-child(1) { width: 60px; }   /* No. Ruta */
@@ -148,7 +181,9 @@ html, body {
 .rutas-table th:nth-child(9),
 .rutas-table td:nth-child(9) { width: 100px; }  /* Ayudante */
 .rutas-table th:nth-child(12),
-.rutas-table td:nth-child(12) { width: 90px; }  /* Estado */
+.rutas-table td:nth-child(12) { width: 80px; }  /* Estado */
+.rutas-table th:nth-child(14),
+.rutas-table td:nth-child(14) { width: 90px; }  /* Combustible */
 
 /* ----------------------------- */
 /* Paginación */
@@ -208,31 +243,21 @@ html, body {
 
 /* ----------------------------- */
 /* Responsive */
-@media (max-width: 768px) {
-  .rutas-table th, .rutas-table td { font-size: 0.7rem; padding: 4px 6px; }
+@media (max-width: 1024px) {
+  .rutas-table th, .rutas-table td { font-size: 0.7rem; padding: 3px 5px; }
   .rutas-search, .rutas-select, .rutas-button { font-size: 0.7rem; padding: 3px 5px; }
 }
 
-@media (max-width: 480px) {
-  .rutas-table th, .rutas-table td { font-size: 0.65rem; padding: 3px 4px; }
+@media (max-width: 768px) {
+  .rutas-table th, .rutas-table td { font-size: 0.65rem; padding: 2px 4px; }
   .rutas-search, .rutas-select, .rutas-button { font-size: 0.65rem; padding: 2px 3px; }
 }
-
-/* Letras en tabla */
-.rutas-table th,
-.rutas-table td {
-  font-size: 0.8rem; /* un poco más grande */
-  padding: 6px 8px;
+/* Columna Estado */
+.rutas-table th:nth-child(12),
+.rutas-table td:nth-child(12) {
+  width: auto;              /* que tome el ancho necesario */
+  white-space: normal;      /* permite que el texto se muestre completo */
+  word-break: break-word;   /* corta la palabra si es muy larga */
+  text-align: center;
 }
 
-/* Inputs y selects dentro de la tabla */
-.rutas-table select,
-.rutas-table input {
-  font-size: 0.75rem;
-  padding: 4px 6px;
-}
-
-/* Cabeceras */
-.rutas-table th {
-  font-size: 0.85rem;
-}

@@ -1,20 +1,196 @@
-import api from "./api";
+const API_BASE_URL = 'http://localhost:4000/api';
 
-// Obtener todas las rutas
-export const getRutas = async () => {
-  const res = await api.get("/rutas");
-  return res.data;
-};
+class RutasService {
+    // Obtener token del localStorage
+    getAuthHeaders() {
+        const token = localStorage.getItem('token');
+        return {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        };
+    }
 
-// Crear una nueva ruta
-export const createRuta = async (ruta) => {
-  const res = await api.post("/rutas", ruta);
-  return res.data;
-};
+    // Obtener todas las rutas
+    async getAllRutas() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/rutas`, {
+                method: 'GET',
+                headers: this.getAuthHeaders()
+            });
 
-// Opcional: obtener una ruta por ID
-export const getRutaById = async (id) => {
-  const res = await api.get(`/rutas/${id}`);
-  return res.data;
-};
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
 
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error obteniendo rutas:', error);
+            throw error;
+        }
+    }
+
+    // Obtener una ruta por ID
+    async getRutaById(id) {
+        try {
+            const response = await fetch(`${API_BASE_URL}/rutas/${id}`, {
+                method: 'GET',
+                headers: this.getAuthHeaders()
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error obteniendo ruta:', error);
+            throw error;
+        }
+    }
+
+    // Crear nueva ruta
+    async createRuta(rutaData) {
+        try {
+            const response = await fetch(`${API_BASE_URL}/rutas`, {
+                method: 'POST',
+                headers: this.getAuthHeaders(),
+                body: JSON.stringify(rutaData)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error creando ruta:', error);
+            throw error;
+        }
+    }
+
+    // Actualizar ruta
+    async updateRuta(id, rutaData) {
+        try {
+            const response = await fetch(`${API_BASE_URL}/rutas/${id}`, {
+                method: 'PUT',
+                headers: this.getAuthHeaders(),
+                body: JSON.stringify(rutaData)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error actualizando ruta:', error);
+            throw error;
+        }
+    }
+
+    // Eliminar ruta
+    async deleteRuta(id) {
+        try {
+            const response = await fetch(`${API_BASE_URL}/rutas/${id}`, {
+                method: 'DELETE',
+                headers: this.getAuthHeaders()
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error eliminando ruta:', error);
+            throw error;
+        }
+    }
+
+    // Obtener choferes disponibles
+    async getChoferes() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/choferes`, {
+                method: 'GET',
+                headers: this.getAuthHeaders()
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error obteniendo choferes:', error);
+            throw error;
+        }
+    }
+
+    // Obtener camiones disponibles
+    async getCamiones() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/camiones`, {
+                method: 'GET',
+                headers: this.getAuthHeaders()
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error obteniendo camiones:', error);
+            throw error;
+        }
+    }
+
+    // Obtener clientes disponibles
+    async getClientes() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/clientes`, {
+                method: 'GET',
+                headers: this.getAuthHeaders()
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error obteniendo clientes:', error);
+            throw error;
+        }
+    }
+
+    // Obtener ayudantes disponibles
+    async getAyudantes() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/ayudantes`, {
+                method: 'GET',
+                headers: this.getAuthHeaders()
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error obteniendo ayudantes:', error);
+            throw error;
+        }
+    }
+}
+
+export default new RutasService();

@@ -1,6 +1,7 @@
 // src/modules/Choferes.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import choferesService from "../services/choferesService.js";
 import "../styles/reutilizar.css";
 
 export default function Choferes() {
@@ -10,20 +11,49 @@ export default function Choferes() {
   const [choferToDelete, setChoferToDelete] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const data = [
-      { id: 1, nombre: "José", apellido: "Ramírez", telefono: "+502 5551-1003", rol: "Conductor", tipoLicencia: "C" },
-      { id: 2, nombre: "María", apellido: "López", telefono: "+502 5551-1004", rol: "Conductor", tipoLicencia: "B" },
-      { id: 3, nombre: "Luis", apellido: "Gómez", telefono: "+502 5551-1005", rol: "Conductor", tipoLicencia: "C" },
-      { id: 4, nombre: "Ana", apellido: "Martínez", telefono: "+502 5551-1006", rol: "Conductor", tipoLicencia: "B" },
-      { id: 5, nombre: "Carlos", apellido: "Ramírez", telefono: "+502 5551-1007", rol: "Conductor", tipoLicencia: "C" },
-      { id: 6, nombre: "Lucía", apellido: "Hernández", telefono: "+502 5551-1008", rol: "Conductor", tipoLicencia: "B" },
-    ];
-    setChoferes(data);
+    cargarChoferes();
   }, []);
+
+  const cargarChoferes = async () => {
+    try {
+      setLoading(true);
+      setError('');
+      
+      console.log('Cargando choferes...');
+      const response = await choferesService.getChoferes();
+      console.log('Respuesta del servicio:', response);
+      
+      if (response.success) {
+        console.log('Datos recibidos:', response.data);
+        const choferesFormateados = response.data.map(chofer => ({
+          id: chofer.id,
+          nombre: chofer.nombre,
+          apellido: chofer.apellido,
+          telefono: chofer.telefono || '',
+          tipoLicencia: chofer.tipo_licencia || '',
+          fechaVencimiento: chofer.vencimiento || '',
+          username: chofer.username || '',
+          rol_nombre: chofer.rol_nombre || ''
+        }));
+        console.log('Choferes formateados:', choferesFormateados);
+        setChoferes(choferesFormateados);
+      } else {
+        console.error('Error en la respuesta:', response.message);
+        setError('Error al cargar los choferes: ' + response.message);
+      }
+    } catch (error) {
+      console.error('Error completo:', error);
+      setError('Error al cargar los choferes: ' + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Acción de los combobox
   const handleActionChange = (e, chofer) => {
@@ -40,9 +70,24 @@ export default function Choferes() {
     }
   };
 
-  const confirmDelete = () => {
-    setChoferes(prev => prev.filter(c => c.id !== choferToDelete.id));
-    setModalVisible(false);
+  const confirmDelete = async () => {
+    try {
+      console.log('Eliminando chofer:', choferToDelete.id);
+      const response = await choferesService.deleteChofer(choferToDelete.id);
+      console.log('Respuesta del servicio:', response);
+      
+      if (response.success) {
+        setChoferes(prev => prev.filter(c => c.id !== choferToDelete.id));
+        setModalVisible(false);
+        setChoferToDelete(null);
+        setError(''); // Limpiar errores anteriores
+      } else {
+        setError(response.message || 'Error al eliminar el chofer');
+      }
+    } catch (error) {
+      console.error('Error completo:', error);
+      setError(error.message || 'Error al eliminar el chofer');
+    }
   };
 
   const cancelDelete = () => {
@@ -61,6 +106,29 @@ export default function Choferes() {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentChoferes = choferesFiltrados.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(choferesFiltrados.length / itemsPerPage);
+
+  if (loading) {
+    return (
+      <div className="reutilizar-container">
+        <h2>Pilotos</h2>
+        <div style={{ textAlign: 'center', padding: '50px' }}>
+          <p>Cargando pilotos...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="reutilizar-container">
+        <h2>Pilotos</h2>
+        <div style={{ color: 'red', textAlign: 'center', padding: '20px' }}>
+          <p>{error}</p>
+          <button onClick={cargarChoferes} className="btn-primary">Reintentar</button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="reutilizar-container">
@@ -110,8 +178,8 @@ export default function Choferes() {
             <th>Nombre</th>
             <th>Apellido</th>
             <th>Teléfono</th>
-            <th>Rol</th>
             <th>Tipo de Licencia</th>
+            <th>Fecha de Vencimiento<br />de Licencia</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -121,8 +189,8 @@ export default function Choferes() {
               <td>{chofer.nombre}</td>
               <td>{chofer.apellido}</td>
               <td>{chofer.telefono}</td>
-              <td>{chofer.rol}</td>
               <td>{chofer.tipoLicencia}</td>
+              <td>{chofer.fechaVencimiento ? new Date(chofer.fechaVencimiento).toLocaleDateString('es-ES') : 'N/A'}</td>
               <td>
                 <select onChange={(e) => handleActionChange(e, chofer)} className="reutilizar-select">
                   <option value="">Seleccionar</option>

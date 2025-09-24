@@ -9,24 +9,22 @@ export default function EditarAyudantes() {
   const { id } = useParams();
   const location = useLocation();
 
-  // Traer los datos del ayudante desde state o backend simulado
+  // Estado inicial del ayudante
   const [ayudante, setAyudante] = useState({
     nombre: "",
     apellido: "",
-    telefono: "",
-    rol: "Ayudante"
+    telefono: ""
   });
 
   useEffect(() => {
     if (location.state && location.state.ayudante) {
       setAyudante(location.state.ayudante);
     } else {
-      // Simulando obtener ayudante por id
+      // Simulación de obtener ayudante por ID
       const data = {
         nombre: "Pedro",
         apellido: "Santos",
-        telefono: "+502 5551-2001",
-        rol: "Ayudante"
+        telefono: "+502 5551-2001"
       };
       setAyudante(data);
     }
@@ -60,22 +58,35 @@ export default function EditarAyudantes() {
         <form className="editar-ayudante-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Nombre</label>
-            <input type="text" name="nombre" value={ayudante.nombre} onChange={handleChange} required />
+            <input
+              type="text"
+              name="nombre"
+              value={ayudante.nombre}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className="form-group">
             <label>Apellido</label>
-            <input type="text" name="apellido" value={ayudante.apellido} onChange={handleChange} required />
+            <input
+              type="text"
+              name="apellido"
+              value={ayudante.apellido}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className="form-group">
             <label>Teléfono</label>
-            <input type="tel" name="telefono" value={ayudante.telefono} onChange={handleChange} required />
-          </div>
-
-          <div className="form-group">
-            <label>Rol</label>
-            <input type="text" name="rol" value={ayudante.rol} readOnly />
+            <input
+              type="tel"
+              name="telefono"
+              value={ayudante.telefono}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className="button-group">

@@ -1,6 +1,7 @@
 // src/modules/Ruta.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import rutaService from "../services/rutaService.js";
 import "../styles/rutas.css";
 
 export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
@@ -10,57 +11,99 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [modal, setModal] = useState({ show: false, rutaId: null });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [choferesDisponibles, setChoferesDisponibles] = useState([]);
+  const [ayudantesDisponibles, setAyudantesDisponibles] = useState([]);
+  const [camionesDisponibles, setCamionesDisponibles] = useState([]);
+  const [clientesDisponibles, setClientesDisponibles] = useState([]);
 
-  const choferesDisponibles = ["Carlos Ramírez", "Pedro Martínez", "Luis Fernández"];
-  const ayudantesDisponibles = ["Luis Gómez", "Ana López", "Marta Ruiz"];
-  const camionesDisponibles = ["International", "XYZ789", "LMN456"];
   const estados = ["Pendiente", "En curso", "Entregado", "Incidente"];
   const acciones = ["Editar", "Mostrar", "Eliminar"];
 
   useEffect(() => {
-    if (rutasProp && rutasProp.length > 0) {
-      setRutas(rutasProp);
-    } else {
-      const data = [
-        {
-          id: 1,
-          noRuta: "R001",
-          cliente: "Juan Pérez",
-          servicio: "Entrega",
-          mercaderia: "Electrodomésticos",
-          camion: "ABC123",
-          origen: "Guatemala",
-          destino: "Quetzaltenango",
-          chofer: "Carlos Ramírez",
-          ayudante: "Luis Gómez",
-          fecha: "2025-09-14",
-          hora: "14:30",
-          estado: "Pendiente",
-          precio: 150,
-          comentario: "",
-        },
-        {
-          id: 2,
-          noRuta: "R002",
-          cliente: "Laura García",
-          servicio: "Recolección",
-          mercaderia: "Muebles",
-          camion: "XYZ789",
-          origen: "Escuintla",
-          destino: "Guatemala",
-          chofer: "Pedro Martínez",
-          ayudante: "Ana López",
-          fecha: "2025-09-15",
-          hora: "09:00",
-          estado: "En curso",
-          precio: 200,
-          comentario: "Entrega parcial",
-        },
-      ];
-      setRutas(data);
-      if (setRutasProp) setRutasProp(data);
+    cargarDatos();
+  }, []);
+
+  const cargarDatos = async () => {
+    try {
+      setLoading(true);
+      setError('');
+
+      // Cargar todos los datos usando servicios
+      const [rutasRes, choferesRes, camionesRes, clientesRes, ayudantesRes] = await Promise.all([
+        rutaService.getAllRutas(),
+        rutaService.getChoferes(),
+        rutaService.getCamiones(),
+        rutaService.getClientes(),
+        rutaService.getAyudantes()
+      ]);
+
+      // Procesar rutas
+      if (rutasRes.success) {
+        const rutasFormateadas = rutasRes.data.map(ruta => ({
+          id: ruta.id,
+          noRuta: ruta.no_ruta,
+          cliente: `${ruta.cliente_nombre} ${ruta.cliente_apellido}`,
+          servicio: ruta.servicio,
+          mercaderia: ruta.mercaderia,
+          camion: ruta.camion_placa,
+          combustible: ruta.combustible,
+          origen: ruta.origen,
+          destino: ruta.destino,
+          chofer: `${ruta.piloto_nombre} ${ruta.piloto_apellido}`,
+          ayudante: ruta.ayudante_nombre ? `${ruta.ayudante_nombre} ${ruta.ayudante_apellido}` : '',
+          fecha: ruta.fecha,
+          hora: ruta.hora,
+          estado: ruta.estado,
+          precio: ruta.precio,
+          comentario: ruta.comentario || '',
+          cliente_id: ruta.cliente_id,
+          camion_id: ruta.camion_id,
+          chofer_id: ruta.chofer_id,
+          ayudante_id: ruta.ayudante_id
+        }));
+        setRutas(rutasFormateadas);
+        if (setRutasProp) setRutasProp(rutasFormateadas);
+      }
+
+      // Procesar datos de referencia
+      if (choferesRes.success) {
+        setChoferesDisponibles(choferesRes.data.map(c => ({
+          id: c.id,
+          nombre: `${c.nombre} ${c.apellido}`
+        })));
+      }
+
+      if (camionesRes.success) {
+        setCamionesDisponibles(camionesRes.data.map(c => ({
+          id: c.id,
+          placa: c.placa
+        })));
+      }
+
+      if (clientesRes.success) {
+        setClientesDisponibles(clientesRes.data.map(c => ({
+          id: c.id,
+          nombre: `${c.nombre} ${c.apellido}`
+        })));
+      }
+
+      if (ayudantesRes.success) {
+        setAyudantesDisponibles(ayudantesRes.data.map(a => ({
+          id: a.id,
+          nombre: `${a.nombre} ${a.apellido}`
+        })));
+      }
+
+
+    } catch (error) {
+      console.error('Error cargando datos:', error);
+      setError('Error al cargar los datos. Intenta nuevamente.');
+    } finally {
+      setLoading(false);
     }
-  }, [rutasProp, setRutasProp]);
+  };
 
   const rutasFiltradas = rutas.filter(
     r =>
@@ -75,10 +118,42 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
   const currentRutas = rutasFiltradas.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(rutasFiltradas.length / itemsPerPage);
 
-  const handleChange = (id, field, value) => {
-    const updated = rutas.map(r => (r.id === id ? { ...r, [field]: value } : r));
-    setRutas(updated);
-    if (setRutasProp) setRutasProp(updated);
+  const handleChange = async (id, field, value) => {
+    try {
+      const ruta = rutas.find(r => r.id === id);
+      if (!ruta) return;
+
+      // Preparar datos para actualizar
+      const updateData = { ...ruta };
+      
+      // Mapear campos del frontend a la API
+      if (field === 'camion') {
+        const camion = camionesDisponibles.find(c => c.placa === value);
+        if (camion) updateData.camion_id = camion.id;
+      } else if (field === 'chofer') {
+        const chofer = choferesDisponibles.find(c => c.nombre === value);
+        if (chofer) updateData.chofer_id = chofer.id;
+      } else if (field === 'ayudante') {
+        const ayudante = ayudantesDisponibles.find(a => a.nombre === value);
+        if (ayudante) updateData.ayudante_id = ayudante.id;
+      } else {
+        updateData[field] = value;
+      }
+
+      // Usar servicio para actualizar
+      const response = await rutaService.updateRuta(id, updateData);
+      
+      if (response.success) {
+        const updated = rutas.map(r => (r.id === id ? { ...r, [field]: value } : r));
+        setRutas(updated);
+        if (setRutasProp) setRutasProp(updated);
+      } else {
+        setError('Error al actualizar la ruta');
+      }
+    } catch (error) {
+      console.error('Error actualizando ruta:', error);
+      setError('Error al actualizar la ruta. Intenta nuevamente.');
+    }
   };
 
   const handleAccionChange = (id, value) => {
@@ -87,19 +162,62 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
     else if (value === "Mostrar") navigate(`/mostrar-ruta/${id}`);
   };
 
-  const confirmarEliminar = () => {
-    const updated = rutas.filter(r => r.id !== modal.rutaId);
-    setRutas(updated);
-    if (setRutasProp) setRutasProp(updated);
-    setModal({ show: false, rutaId: null });
+  const confirmarEliminar = async () => {
+    try {
+      const response = await rutaService.deleteRuta(modal.rutaId);
+      
+      if (response.success) {
+        const updated = rutas.filter(r => r.id !== modal.rutaId);
+        setRutas(updated);
+        if (setRutasProp) setRutasProp(updated);
+        setModal({ show: false, rutaId: null });
+      } else {
+        setError('Error al eliminar la ruta');
+      }
+    } catch (error) {
+      console.error('Error eliminando ruta:', error);
+      setError('Error al eliminar la ruta. Intenta nuevamente.');
+    }
   };
 
   const choferesOcupados = rutas.map(r => r.chofer);
   const ayudantesOcupados = rutas.map(r => r.ayudante);
 
+  if (loading) {
+    return (
+      <div className="rutas-container">
+        <h2>Rutas</h2>
+        <div style={{ textAlign: 'center', padding: '50px' }}>
+          <p>Cargando rutas...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="rutas-container">
+        <h2>Rutas</h2>
+        <div style={{ color: 'red', textAlign: 'center', padding: '20px' }}>
+          <p>{error}</p>
+          <button onClick={cargarDatos} className="rutas-button">Reintentar</button>
+          {error.includes('Sesión expirada') && (
+            <button 
+              onClick={() => window.location.href = '/login'} 
+              className="rutas-button"
+              style={{ marginLeft: '10px', backgroundColor: '#dc3545' }}
+            >
+              Ir al Login
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="rutas-container">
-      <h2>Gestión de Rutas</h2>
+      <h2>Rutas</h2>
 
       <div className="rutas-controls-top">
         <div className="rutas-pages-left">
@@ -126,6 +244,7 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
           />
         </div>
 
+
         <button
           className="rutas-button ingresar-btn"
           onClick={() => navigate("/ingresar-ruta")}
@@ -142,15 +261,16 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
             <th>Servicio</th>
             <th>Mercadería</th>
             <th>Camión</th>
+            <th>Combustible<br />(gal.)</th>
             <th>Origen</th>
             <th>Destino</th>
             <th>Chofer</th>
             <th>Ayudante</th>
             <th>Fecha</th>
             <th>Hora</th>
-            <th>Estado</th>
-            <th>Precio</th>
+            <th>Precio del viaje</th>
             <th style={{width: "50px"}}>Comentario</th>
+            <th>Estado</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -163,27 +283,40 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
               <td>{ruta.mercaderia}</td>
               <td>
                 <select value={ruta.camion} onChange={e => handleChange(ruta.id,'camion',e.target.value)}>
-                  {camionesDisponibles.map(c => <option key={c} value={c}>{c}</option>)}
+                  {camionesDisponibles.map(c => <option key={c.id} value={c.placa}>{c.placa}</option>)}
                 </select>
+              </td>
+              <td>
+                <input
+                  type="number"
+                  value={ruta.combustible}
+                  onChange={e => handleChange(ruta.id, 'combustible', parseFloat(e.target.value))}
+                  min="0"
+                />
               </td>
               <td>{ruta.origen}</td>
               <td>{ruta.destino}</td>
               <td>
                 <select value={ruta.chofer} onChange={e => handleChange(ruta.id,'chofer',e.target.value)}>
                   {choferesDisponibles.map(c => (
-                    <option key={c} value={c} disabled={choferesOcupados.includes(c) && c !== ruta.chofer}>{c}</option>
+                    <option key={c.id} value={c.nombre} disabled={choferesOcupados.includes(c.nombre) && c.nombre !== ruta.chofer}>{c.nombre}</option>
                   ))}
                 </select>
               </td>
               <td>
                 <select value={ruta.ayudante} onChange={e => handleChange(ruta.id,'ayudante',e.target.value)}>
+                  <option value="">Sin ayudante</option>
                   {ayudantesDisponibles.map(a => (
-                    <option key={a} value={a} disabled={ayudantesOcupados.includes(a) && a !== ruta.ayudante}>{a}</option>
+                    <option key={a.id} value={a.nombre} disabled={ayudantesOcupados.includes(a.nombre) && a.nombre !== ruta.ayudante}>{a.nombre}</option>
                   ))}
                 </select>
               </td>
               <td>{ruta.fecha}</td>
               <td>{ruta.hora}</td>
+              <td>Q{ruta.precio}</td>
+              <td style={{maxWidth: "50px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"}}>
+                {ruta.comentario || "-"}
+              </td>
               <td>
                 <select
                   className="estado-select"
@@ -199,10 +332,6 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
                 >
                   {estados.map(e => <option key={e} value={e}>{e}</option>)}
                 </select>
-              </td>
-              <td>Q{ruta.precio}</td>
-              <td style={{maxWidth: "50px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"}}>
-                {ruta.comentario || "-"}
               </td>
               <td>
                 <select onChange={e => handleAccionChange(ruta.id,e.target.value)}>

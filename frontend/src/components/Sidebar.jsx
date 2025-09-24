@@ -10,6 +10,7 @@ export default function Sidebar() {
       <div className="sidebar-header">S DE LEON</div>
       <nav>
         <NavLink to="/Dashboard">Dashboard</NavLink>
+         <NavLink to="/rutas">Rutas</NavLink>
         <div>
           {/* Personal desplegable */}
           <button
@@ -27,7 +28,7 @@ export default function Sidebar() {
         </div>
         <NavLink to="/clientes">Clientes</NavLink>
         <NavLink to="/camiones">Camiones</NavLink>
-        <NavLink to="/rutas">Rutas</NavLink>
+       
         <NavLink to="/reportes">Reportes</NavLink>
       </nav>
     </aside>
