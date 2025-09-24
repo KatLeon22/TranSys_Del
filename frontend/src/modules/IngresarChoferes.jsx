@@ -1,7 +1,9 @@
+// src/modules/IngresarChoferes.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/ingresar-choferes.css";
 import Logo from "../assets/logo.png";
+import choferesService from "../services/choferesService";
 
 export default function IngresarChoferes() {
   const navigate = useNavigate();
@@ -9,26 +11,59 @@ export default function IngresarChoferes() {
     nombre: "",
     apellido: "",
     telefono: "",
-    rol: "Conductor",
     tipoLicencia: "",
+    fechaVencimiento: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setChofer((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Nuevo chofer:", chofer);
-    alert("Chofer ingresado (simulado)");
-    setChofer({
-      nombre: "",
-      apellido: "",
-      telefono: "",
-      rol: "Conductor",
-      tipoLicencia: "",
-    });
+    setLoading(true);
+    setError("");
+
+    try {
+      console.log("Creando nuevo piloto:", chofer);
+      
+      // Mapear los datos del frontend al formato que espera el backend
+      const choferData = {
+        nombre: chofer.nombre,
+        apellido: chofer.apellido,
+        telefono: chofer.telefono,
+        tipo_licencia: chofer.tipoLicencia,
+        vencimiento: chofer.fechaVencimiento
+      };
+      
+      const response = await choferesService.createChofer(choferData);
+      
+      if (response.success) {
+        alert("Piloto creado exitosamente");
+        
+        // Reiniciar formulario
+        setChofer({
+          nombre: "",
+          apellido: "",
+          telefono: "",
+          tipoLicencia: "",
+          fechaVencimiento: "",
+        });
+        
+        // Redirigir a la lista de choferes
+        navigate("/choferes");
+      } else {
+        setError(response.message || "Error al crear el piloto");
+      }
+    } catch (error) {
+      console.error("Error creando piloto:", error);
+      setError("Error al crear el piloto: " + error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleClose = () => {
@@ -42,37 +77,81 @@ export default function IngresarChoferes() {
           <img src={Logo} alt="Logo Empresa" className="logo" />
         </div>
 
-        <h2 className="ingresar-chofer-title">Ingresar Nuevo Chofer</h2>
+        <h2 className="ingresar-chofer-title">Ingresar Nuevo Piloto</h2>
+
+        {error && (
+          <div className="error-message" style={{ color: 'red', marginBottom: '20px', textAlign: 'center' }}>
+            {error}
+          </div>
+        )}
 
         <form className="ingresar-chofer-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label>Nombre</label>
-            <input type="text" name="nombre" value={chofer.nombre} onChange={handleChange} required />
+            <input
+              type="text"
+              name="nombre"
+              value={chofer.nombre}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className="form-group">
             <label>Apellido</label>
-            <input type="text" name="apellido" value={chofer.apellido} onChange={handleChange} required />
+            <input
+              type="text"
+              name="apellido"
+              value={chofer.apellido}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className="form-group">
             <label>Teléfono</label>
-            <input type="tel" name="telefono" value={chofer.telefono} onChange={handleChange} required />
-          </div>
-
-          <div className="form-group">
-            <label>Rol</label>
-            <input type="text" name="rol" value={chofer.rol} readOnly />
+            <input
+              type="tel"
+              name="telefono"
+              value={chofer.telefono}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className="form-group">
             <label>Tipo de Licencia</label>
-            <input type="text" name="tipoLicencia" value={chofer.tipoLicencia} onChange={handleChange} required />
+            <input
+              type="text"
+              name="tipoLicencia"
+              value={chofer.tipoLicencia}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Fecha de Vencimiento de Licencia</label>
+            <input
+              type="date"
+              name="fechaVencimiento"
+              value={chofer.fechaVencimiento}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className="button-group">
-            <button type="submit" className="form-button">Ingresar Chofer</button>
-            <button type="button" className="form-button close-button" onClick={handleClose}>Cerrar</button>
+            <button type="submit" className="form-button" disabled={loading}>
+              {loading ? "Creando..." : "Ingresar Piloto"}
+            </button>
+            <button
+              type="button"
+              className="form-button close-button"
+              onClick={handleClose}
+            >
+              Cerrar
+            </button>
           </div>
         </form>
       </div>

@@ -1,6 +1,7 @@
 // src/modules/Clientes.jsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import clientesService from "../services/clientesService.js";
 import "../styles/reutilizar.css";
 
 export default function Clientes() {
@@ -10,20 +11,41 @@ export default function Clientes() {
   const [clienteToDelete, setClienteToDelete] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const data = [
-      { id: 1, nombre: "Juan", apellido: "Pérez", telefono: "+502 5551-3001" },
-      { id: 2, nombre: "Laura", apellido: "García", telefono: "+502 5551-3002" },
-      { id: 3, nombre: "Pedro", apellido: "Martínez", telefono: "+502 5551-3003" },
-      { id: 4, nombre: "Ana", apellido: "Santos", telefono: "+502 5551-3004" },
-      { id: 5, nombre: "Carlos", apellido: "Ramírez", telefono: "+502 5551-3005" },
-      { id: 6, nombre: "Sofía", apellido: "López", telefono: "+502 5551-3006" },
-    ];
-    setClientes(data);
+    cargarClientes();
   }, []);
+
+  const cargarClientes = async () => {
+    try {
+      setLoading(true);
+      setError('');
+
+      const response = await clientesService.getClientes();
+
+      if (response.success) {
+        const clientesFormateados = response.data.map(cliente => ({
+          id: cliente.id,
+          nombre: cliente.nombre,
+          apellido: cliente.apellido,
+          telefono: cliente.telefono || '',
+          rutas_asignadas: cliente.rutas_asignadas || 0
+        }));
+        setClientes(clientesFormateados);
+      } else {
+        setError('Error al cargar los clientes');
+      }
+    } catch (error) {
+      setError('Error al cargar los clientes');
+      console.error('Error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleActionChange = (e, cliente) => {
     const action = e.target.value;
@@ -38,10 +60,21 @@ export default function Clientes() {
     }
   };
 
-  const confirmDelete = () => {
-    setClientes(prev => prev.filter(c => c.id !== clienteToDelete.id));
-    setModalVisible(false);
-    alert("Cliente eliminado (simulado)");
+  const confirmDelete = async () => {
+    try {
+      const response = await clientesService.deleteCliente(clienteToDelete.id);
+
+      if (response.success) {
+        setClientes(prev => prev.filter(c => c.id !== clienteToDelete.id));
+        setModalVisible(false);
+        alert("Cliente eliminado exitosamente");
+      } else {
+        setError('Error al eliminar el cliente');
+      }
+    } catch (error) {
+      setError('Error al eliminar el cliente');
+      console.error('Error:', error);
+    }
   };
 
   const cancelDelete = () => {
@@ -58,6 +91,29 @@ export default function Clientes() {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentClientes = clientesFiltrados.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(clientesFiltrados.length / itemsPerPage);
+
+  if (loading) {
+    return (
+      <div className="reutilizar-container">
+        <h2>Clientes</h2>
+        <div style={{ textAlign: 'center', padding: '40px', color: '#666' }}>
+          Cargando clientes...
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="reutilizar-container">
+        <h2>Clientes</h2>
+        <div style={{ color: 'red', textAlign: 'center', padding: '20px' }}>
+          <p>{error}</p>
+          <button onClick={cargarClientes} className="reutilizar-button">Reintentar</button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="reutilizar-container">

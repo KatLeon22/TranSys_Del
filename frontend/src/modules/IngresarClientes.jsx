@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import clientesService from "../services/clientesService.js";
 import "../styles/ingresar-clientes.css"; // tu CSS específico
 import Logo from "../assets/logo.png";
 
@@ -10,17 +11,45 @@ export default function IngresarClientes() {
     apellido: "",
     telefono: "",
   });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCliente(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Nuevo cliente:", cliente);
-    alert("Cliente ingresado (simulado)");
-    setCliente({ nombre: "", apellido: "", telefono: "" });
+    setLoading(true);
+    setError("");
+
+    try {
+      console.log("Creando nuevo cliente:", cliente);
+      
+      const response = await clientesService.createCliente(cliente);
+      
+      if (response.success) {
+        alert("Cliente creado exitosamente");
+        
+        // Reiniciar formulario
+        setCliente({
+          nombre: "",
+          apellido: "",
+          telefono: ""
+        });
+        
+        // Redirigir a la lista de clientes
+        navigate("/clientes");
+      } else {
+        setError(response.message || "Error al crear el cliente");
+      }
+    } catch (error) {
+      console.error("Error creando cliente:", error);
+      setError("Error al crear el cliente: " + error.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleClose = () => navigate("/clientes");
@@ -33,6 +62,12 @@ export default function IngresarClientes() {
         </div>
 
         <h2 className="ingresar-chofer-title">Ingresar Nuevo Cliente</h2>
+
+        {error && (
+          <div className="error-message" style={{ marginBottom: '15px', padding: '10px', backgroundColor: '#fee2e2', color: '#dc2626', borderRadius: '4px' }}>
+            {error}
+          </div>
+        )}
 
         <form className="ingresar-chofer-form" onSubmit={handleSubmit}>
           <div className="form-group">
@@ -51,8 +86,12 @@ export default function IngresarClientes() {
           </div>
 
           <div className="button-group">
-            <button type="submit" className="form-button">Ingresar Cliente</button>
-            <button type="button" className="form-button close-button" onClick={handleClose}>Cerrar</button>
+            <button type="submit" className="form-button" disabled={loading}>
+              {loading ? "Creando..." : "Ingresar Cliente"}
+            </button>
+            <button type="button" className="form-button close-button" onClick={handleClose} disabled={loading}>
+              Cerrar
+            </button>
           </div>
         </form>
       </div>

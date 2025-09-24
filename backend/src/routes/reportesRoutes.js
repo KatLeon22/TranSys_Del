@@ -1,12 +1,19 @@
 import express from "express";
+import { authenticateToken } from "../middleware/auth.js";
+import { 
+    getReportes, 
+    getReportePorPeriodo, 
+    exportarReporte 
+} from "../controllers/reportesController.js";
+
 const router = express.Router();
 
-let reportes = [
-  { mes: "Enero", chofer: "Juan Pérez", viajes: 12 },
-  { mes: "Febrero", chofer: "Juan Pérez", viajes: 8 },
-  { mes: "Marzo", chofer: "María Gómez", viajes: 15 },
-];
+// Todas las rutas requieren autenticación
+router.use(authenticateToken);
 
-router.get("/", (req, res) => res.json(reportes));
+// Rutas para reportes
+router.get("/", getReportes);
+router.post("/periodo", getReportePorPeriodo);
+router.get("/exportar", exportarReporte);
 
 export default router;

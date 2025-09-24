@@ -1,18 +1,66 @@
 // src/modules/MostrarRuta.jsx
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import "../styles/mostrar-rutas.css"; // mismo estilo
+import "../styles/mostrar-rutas.css";
 import Logo from "../assets/logo.png";
+import rutaService from "../services/rutaService";
 
-export default function MostrarRuta({ rutas }) {
+export default function MostrarRuta() {
   const navigate = useNavigate();
   const { id } = useParams();
   const rutaId = parseInt(id);
 
-  // Encuentra la ruta a mostrar
-  const ruta = rutas?.find(r => r.id === rutaId);
+  const [rutaData, setRutaData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  if (!ruta) return <p>Ruta no encontrada</p>;
+  // Cargar datos de la ruta desde la base de datos
+  useEffect(() => {
+    const cargarRuta = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        console.log('Cargando ruta con ID:', rutaId);
+        const response = await rutaService.getRutaById(rutaId);
+        console.log('Respuesta del servicio:', response);
+        
+        if (response.success) {
+          console.log('Datos de la ruta recibidos:', response.data);
+          setRutaData(response.data);
+        } else {
+          setError("Error al cargar los datos de la ruta");
+        }
+      } catch (error) {
+        console.error("Error cargando ruta:", error);
+        setError("Error al cargar los datos de la ruta: " + error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    cargarRuta();
+  }, [rutaId]);
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Cargando datos de la ruta...</p>
+      </div>
+    );
+  }
+
+  if (error || !rutaData) {
+    return (
+      <div className="error-container">
+        <div className="error-message">{error || "Ruta no encontrada"}</div>
+        <button onClick={() => navigate("/rutas")} className="form-button">
+          Volver a Rutas
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="ingresar-ruta-wrapper">
@@ -24,95 +72,99 @@ export default function MostrarRuta({ rutas }) {
         <h2 className="ingresar-ruta-title">Detalles de la Ruta</h2>
 
         <div className="ingresar-ruta-form">
-
-          {/* Fila 1: No. de Ruta */}
+          {/* No. de Ruta */}
           <div className="form-group full-width">
             <label>No. de Ruta:</label>
-            <input type="text" value={ruta.noRuta} readOnly className="small-input" />
+            <input type="text" value={rutaData?.no_ruta || ''} readOnly className="small-input" />
           </div>
 
-          {/* Fila 2: Cliente y Servicio */}
+          {/* Cliente y Servicio */}
           <div className="form-row">
             <div className="form-group">
               <label>Cliente:</label>
-              <input type="text" value={ruta.cliente} readOnly className="full-input" />
+              <input type="text" value={rutaData?.cliente_nombre || ''} readOnly className="full-input" />
             </div>
             <div className="form-group">
               <label>Servicio:</label>
-              <input type="text" value={ruta.servicio} readOnly className="full-input" />
+              <input type="text" value={rutaData?.servicio || ''} readOnly className="full-input" />
             </div>
           </div>
 
-          {/* Fila 3: Mercadería y Camión */}
+          {/* Mercadería y Camión */}
           <div className="form-row">
             <div className="form-group">
               <label>Mercadería:</label>
-              <input type="text" value={ruta.mercaderia} readOnly className="full-input" />
+              <input type="text" value={rutaData?.mercaderia || ''} readOnly className="full-input" />
             </div>
             <div className="form-group">
               <label>Camión:</label>
-              <input type="text" value={ruta.camion} readOnly className="full-input" />
+              <input type="text" value={rutaData?.camion_placa || ''} readOnly className="full-input" />
             </div>
           </div>
 
-          {/* Fila 4: Chofer y Ayudante */}
+          {/* Combustible y Chofer */}
           <div className="form-row">
+            <div className="form-group">
+              <label>Combustible (gal.):</label>
+              <input type="number" value={rutaData?.combustible || ''} readOnly className="full-input" />
+            </div>
             <div className="form-group">
               <label>Chofer:</label>
-              <input type="text" value={ruta.chofer} readOnly className="full-input" />
+              <input type="text" value={rutaData?.chofer_nombre || ''} readOnly className="full-input" />
             </div>
+          </div>
+
+          {/* Ayudante y Origen */}
+          <div className="form-row">
             <div className="form-group">
               <label>Ayudante:</label>
-              <input type="text" value={ruta.ayudante} readOnly className="full-input" />
+              <input type="text" value={rutaData?.ayudante_nombre || ''} readOnly className="full-input" />
             </div>
-          </div>
-
-          {/* Fila 5: Origen y Destino */}
-          <div className="form-row">
             <div className="form-group">
               <label>Origen:</label>
-              <input type="text" value={ruta.origen} readOnly className="full-input" />
+              <input type="text" value={rutaData?.origen || ''} readOnly className="full-input" />
             </div>
+          </div>
+
+          {/* Destino y Fecha */}
+          <div className="form-row">
             <div className="form-group">
               <label>Destino:</label>
-              <input type="text" value={ruta.destino} readOnly className="full-input" />
+              <input type="text" value={rutaData?.destino || ''} readOnly className="full-input" />
             </div>
-          </div>
-
-          {/* Fila 6: Fecha y Hora */}
-          <div className="form-row">
             <div className="form-group">
               <label>Fecha:</label>
-              <input type="date" value={ruta.fecha} readOnly className="full-input" />
-            </div>
-            <div className="form-group">
-              <label>Hora (ETA):</label>
-              <input type="time" value={ruta.hora} readOnly className="full-input" />
+              <input 
+                type="date" 
+                value={rutaData?.fecha ? new Date(rutaData.fecha).toISOString().split('T')[0] : ''} 
+                readOnly 
+                className="full-input" 
+              />
             </div>
           </div>
 
-          {/* Fila 7: Estado y Precio */}
+          {/* Hora y Precio */}
           <div className="form-row">
             <div className="form-group">
-              <label>Estado:</label>
-              <input type="text" value={ruta.estado} readOnly className="full-input" />
+              <label>Hora (ETA):</label>
+              <input type="time" value={rutaData?.hora || ''} readOnly className="full-input" />
             </div>
             <div className="form-group">
-              <label>Precio (Q):</label>
-              <input type="number" value={ruta.precio} readOnly className="full-input" />
+              <label>Precio del viaje (Q):</label>
+              <input type="number" value={rutaData?.precio || ''} readOnly className="full-input" />
             </div>
           </div>
 
-          {/* Fila 8: Comentario */}
+          {/* Comentario */}
           <div className="form-group full-width">
             <label>Comentario:</label>
-            <textarea
-              value={ruta.comentario || ""}
-              readOnly
-              className="full-input"
-              rows={3}
-              placeholder="Sin comentarios"
-            />
+            <textarea value={rutaData?.comentario || ""} readOnly className="full-input" rows={3} placeholder="Sin comentarios" />
+          </div>
+
+          {/* Estado */}
+          <div className="form-group full-width">
+            <label>Estado:</label>
+            <input type="text" value={rutaData?.estado || ''} readOnly className="full-input" />
           </div>
 
           <div className="button-group">

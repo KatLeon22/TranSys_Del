@@ -1,17 +1,24 @@
 import express from "express";
+import { authenticateToken } from "../middleware/auth.js";
+import { 
+    getAllChoferes, 
+    getChoferById, 
+    createChofer, 
+    updateChofer, 
+    deleteChofer 
+} from "../controllers/choferesController.js";
+
 const router = express.Router();
 
-let choferes = [
-  { id: 1, nombre: "Juan", apellido: "Pérez", licencia: "12345" },
-  { id: 2, nombre: "María", apellido: "Gómez", licencia: "67890" },
-];
+// Todas las rutas requieren autenticación
+router.use(authenticateToken);
 
-router.get("/", (req, res) => res.json(choferes));
-router.post("/", (req, res) => {
-  const nuevo = { id: choferes.length + 1, ...req.body };
-  choferes.push(nuevo);
-  res.json(nuevo);
-});
+// Rutas CRUD para choferes
+router.get("/", getAllChoferes);
+router.get("/:id", getChoferById);
+router.post("/", createChofer);
+router.put("/:id", updateChofer);
+router.delete("/:id", deleteChofer);
 
 export default router;
 

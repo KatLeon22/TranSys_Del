@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from "react";
+// src/modules/Ayudantes.jsx
+import React, { useState, useEffect } from "react"; 
 import { useNavigate } from "react-router-dom";
+import ayudantesService from "../services/ayudantesService.js";
 import "../styles/reutilizar.css";
 
 export default function Ayudantes() {
@@ -9,20 +11,37 @@ export default function Ayudantes() {
   const [ayudanteToDelete, setAyudanteToDelete] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    const data = [
-      { id: 1, nombre: "Pedro", apellido: "Santos", telefono: "+502 5551-2001", rol: "Ayudante" },
-      { id: 2, nombre: "Carla", apellido: "Morales", telefono: "+502 5551-2002", rol: "Ayudante" },
-      { id: 3, nombre: "Andrés", apellido: "Lopez", telefono: "+502 5551-2003", rol: "Ayudante" },
-      { id: 4, nombre: "Luciana", apellido: "Ramírez", telefono: "+502 5551-2004", rol: "Ayudante" },
-      { id: 5, nombre: "Jorge", apellido: "Hernández", telefono: "+502 5551-2005", rol: "Ayudante" },
-      { id: 6, nombre: "Sofía", apellido: "Gutiérrez", telefono: "+502 5551-2006", rol: "Ayudante" },
-    ];
-    setAyudantes(data);
+    cargarAyudantes();
   }, []);
+
+  const cargarAyudantes = async () => {
+    try {
+      setLoading(true);
+      setError("");
+      console.log('Cargando ayudantes desde la base de datos...');
+      
+      const response = await ayudantesService.getAyudantes();
+      console.log('Respuesta del servicio:', response);
+      
+      if (response.success) {
+        console.log('Ayudantes cargados:', response.data);
+        setAyudantes(response.data);
+      } else {
+        setError("Error al cargar los ayudantes");
+      }
+    } catch (error) {
+      console.error("Error cargando ayudantes:", error);
+      setError("Error al cargar los ayudantes: " + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleActionChange = (e, ayudante) => {
     const action = e.target.value;
@@ -31,17 +50,32 @@ export default function Ayudantes() {
     if (action === "editar") {
       navigate(`/editar-ayudantes/${ayudante.id}`, { state: { ayudante } });
     } else if (action === "mostrar") {
-      navigate(`/mostrar-ayudante/${ayudante.id}`);
+      navigate(`/mostrar-ayudante/${ayudante.id}`, { state: { ayudante } });
     } else if (action === "eliminar") {
       setAyudanteToDelete(ayudante);
       setModalVisible(true);
     }
   };
 
-  const confirmDelete = () => {
-    setAyudantes(prev => prev.filter(a => a.id !== ayudanteToDelete.id));
-    setModalVisible(false);
-    alert("Ayudante eliminado (simulado)");
+  const confirmDelete = async () => {
+    try {
+      console.log('Eliminando ayudante:', ayudanteToDelete.id);
+      const response = await ayudantesService.deleteAyudante(ayudanteToDelete.id);
+      console.log('Respuesta del servicio:', response);
+      
+      if (response.success) {
+        setAyudantes(prev => prev.filter(a => a.id !== ayudanteToDelete.id));
+        setModalVisible(false);
+        setAyudanteToDelete(null);
+        setError(''); // Limpiar errores anteriores
+        alert("Ayudante eliminado exitosamente");
+      } else {
+        setError(response.message || 'Error al eliminar el ayudante');
+      }
+    } catch (error) {
+      console.error('Error eliminando ayudante:', error);
+      setError(error.message || 'Error al eliminar el ayudante');
+    }
   };
 
   const cancelDelete = () => {
@@ -59,9 +93,41 @@ export default function Ayudantes() {
   const currentAyudantes = ayudantesFiltrados.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(ayudantesFiltrados.length / itemsPerPage);
 
+  if (loading) {
+    return (
+      <div className="reutilizar-container">
+        <h2>Ayudantes</h2>
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>Cargando ayudantes...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="reutilizar-container">
+        <h2>Ayudantes</h2>
+        <div className="error-container">
+          <div className="error-message">{error}</div>
+          <button onClick={cargarAyudantes} className="reutilizar-button">
+            Reintentar
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="reutilizar-container">
       <h2>Ayudantes</h2>
+
+      {error && (
+        <div className="error-message" style={{ marginBottom: '10px', padding: '8px', backgroundColor: '#fee2e2', color: '#dc2626', borderRadius: '4px' }}>
+          {error}
+        </div>
+      )}
 
       <div className="reutilizar-controls-top">
         <div className="reutilizar-pages-left">
@@ -107,7 +173,6 @@ export default function Ayudantes() {
             <th>Nombre</th>
             <th>Apellido</th>
             <th>Teléfono</th>
-            <th>Rol</th>
             <th>Acciones</th>
           </tr>
         </thead>
@@ -117,7 +182,6 @@ export default function Ayudantes() {
               <td>{ayudante.nombre}</td>
               <td>{ayudante.apellido}</td>
               <td>{ayudante.telefono}</td>
-              <td>{ayudante.rol}</td>
               <td>
                 <select onChange={(e) => handleActionChange(e, ayudante)} className="reutilizar-select">
                   <option value="">Seleccionar</option>

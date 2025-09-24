@@ -1,7 +1,8 @@
 // src/modules/EditarCamiones.jsx
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import "../styles/editar-camiones.css"; // nueva hoja de estilos
+import camionesService from "../services/camionesService.js";
+import "../styles/editar-camiones.css";
 import Logo from "../assets/logo.png";
 
 export default function EditarCamiones() {
@@ -12,24 +13,51 @@ export default function EditarCamiones() {
     marca: "",
     modelo: "",
     color: "",
-    tipo: ""
+    tipo: "",
+    tarjetaCirculacion: ""
   });
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
+  // Cargar datos del camión
   useEffect(() => {
-    // Datos simulados
-    const data = [
-      { id: 1, placa: "P-123FDS", marca: "Freightliner", modelo: "Cascadia", color: "Blanco", tipo: "Tráiler" },
-      { id: 2, placa: "P-456ASD", marca: "Kenworth", modelo: "T680", color: "Azul", tipo: "Camión pesado" },
-      { id: 3, placa: "P-789QWE", marca: "Volvo", modelo: "VNL", color: "Rojo", tipo: "Tráiler" },
-      { id: 4, placa: "P-321RTY", marca: "International", modelo: "LT", color: "Negro", tipo: "Camión mediano" },
-      { id: 5, placa: "P-654FGH", marca: "Mack", modelo: "Anthem", color: "Gris", tipo: "Tráiler" },
-      { id: 6, placa: "P-987JKL", marca: "Mercedes", modelo: "Actros", color: "Blanco", tipo: "Camión pesado" },
-    ];
+    const cargarCamion = async () => {
+      try {
+        setLoading(true);
+        setError("");
 
-    const found = data.find(c => c.id === parseInt(id));
-    if (found) {
-      setCamion(found);
-    }
+        if (id) {
+          // Cargar datos del camión desde la base de datos
+          const response = await camionesService.getCamionById(id);
+          
+          if (response.success) {
+            const camionData = response.data;
+            console.log('Datos del camión recibidos:', camionData);
+            
+            setCamion({
+              placa: camionData.placa || "",
+              marca: camionData.marca || "",
+              modelo: camionData.modelo || "",
+              color: camionData.color || "",
+              tipo: camionData.tipo || "",
+              tarjetaCirculacion: camionData.tarjeta_circulacion || ""
+            });
+          } else {
+            setError("Error al cargar los datos del camión");
+          }
+        } else {
+          setError("Camión no encontrado");
+        }
+      } catch (error) {
+        console.error("Error cargando camión:", error);
+        setError("Error al cargar los datos del camión: " + error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    cargarCamion();
   }, [id]);
 
   const handleChange = (e) => {
@@ -37,14 +65,61 @@ export default function EditarCamiones() {
     setCamion(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Camión editado:", camion);
-    alert("Camión actualizado (simulado)");
-    navigate("/camiones");
+    setSaving(true);
+    setError("");
+
+    try {
+      console.log("Actualizando camión:", id, camion);
+      
+      // Mapear los datos del frontend al formato que espera el backend
+      const camionData = {
+        placa: camion.placa,
+        marca: camion.marca,
+        modelo: camion.modelo,
+        color: camion.color,
+        tipo: camion.tipo,
+        tarjeta_circulacion: camion.tarjetaCirculacion
+      };
+      
+      const response = await camionesService.updateCamion(id, camionData);
+      
+      if (response.success) {
+        alert("Camión actualizado exitosamente");
+        navigate("/camiones");
+      } else {
+        setError(response.message || "Error al actualizar el camión");
+      }
+    } catch (error) {
+      console.error("Error actualizando camión:", error);
+      setError("Error al actualizar el camión: " + error.message);
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleClose = () => navigate("/camiones");
+
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>Cargando datos del camión...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="error-container">
+        <div className="error-message">{error}</div>
+        <button onClick={() => navigate("/camiones")} className="form-button">
+          Volver a Camiones
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="editar-chofer-wrapper">
@@ -81,9 +156,24 @@ export default function EditarCamiones() {
             <input type="text" name="tipo" value={camion.tipo} onChange={handleChange} required />
           </div>
 
+          <div className="form-group">
+            <label>Tarjeta de circulación</label>
+            <input type="text" name="tarjetaCirculacion" value={camion.tarjetaCirculacion} onChange={handleChange} required />
+          </div>
+
+          {error && (
+            <div className="error-message" style={{ marginBottom: '10px', padding: '8px', backgroundColor: '#fee2e2', color: '#dc2626', borderRadius: '4px' }}>
+              {error}
+            </div>
+          )}
+
           <div className="button-group">
-            <button type="submit" className="form-button ingresar-btn">Guardar Cambios</button>
-            <button type="button" className="form-button close-button" onClick={handleClose}>Cerrar</button>
+            <button type="submit" className="form-button ingresar-btn" disabled={saving}>
+              {saving ? "Guardando..." : "Guardar Cambios"}
+            </button>
+            <button type="button" className="form-button close-button" onClick={handleClose} disabled={saving}>
+              Cerrar
+            </button>
           </div>
         </form>
       </div>
