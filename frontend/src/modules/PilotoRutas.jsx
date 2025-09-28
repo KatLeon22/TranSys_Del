@@ -141,7 +141,6 @@ export default function PilotoRutas() {
               <p><strong>Origen:</strong> {ruta.origen}</p>
               <p><strong>Destino:</strong> {ruta.destino}</p>
               <p><strong>Fecha:</strong> {ruta.fecha}</p>
-              <p><strong>Hora:</strong> {ruta.hora}</p>
               <p><strong>Camion:</strong> {ruta.camion_placa} ({ruta.camion_marca} {ruta.camion_modelo})</p>
               {ruta.ayudante_nombre && (
                 <p><strong>Ayudante:</strong> {ruta.ayudante_nombre} {ruta.ayudante_apellido}</p>

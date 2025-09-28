@@ -254,14 +254,102 @@
   box-shadow: 0 0 0 2px rgba(16, 48, 83, 0.1);
 }
 
+/* Responsive para móviles */
 @media (max-width: 768px) {
+  .dashboard {
+    padding: 10px;
+  }
+  
+  .dashboard-cards {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  .card {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .card h3 {
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+  
+  .card p {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .dashboard-section {
+    margin: 20px 0;
+  }
+  
+  .dashboard-section h3 {
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+  }
+  
+  .rutas-tabla {
+    font-size: 0.75rem;
+    overflow-x: auto;
+  }
+  
+  .rutas-tabla th,
+  .rutas-tabla td {
+    padding: 6px 4px;
+    white-space: nowrap;
+  }
+  
   .dashboard-filtro {
     flex-direction: column;
     align-items: stretch;
     gap: 6px;
+    margin-bottom: 15px;
   }
   
   .dashboard-filtro label {
     text-align: center;
+    font-size: 0.85rem;
+  }
+  
+  .dashboard-filtro select {
+    width: 100%;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard {
+    padding: 5px;
+  }
+  
+  .dashboard-cards {
+    gap: 10px;
+  }
+  
+  .card {
+    padding: 15px;
+  }
+  
+  .card h3 {
+    font-size: 0.9rem;
+  }
+  
+  .card p {
+    font-size: 1.2rem;
+  }
+  
+  .rutas-tabla {
+    font-size: 0.7rem;
+  }
+  
+  .rutas-tabla th,
+  .rutas-tabla td {
+    padding: 4px 2px;
+  }
+  
+  .dashboard-section h3 {
+    font-size: 1rem;
   }
 }

@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import authService from "../services/authService.js";
 import "../styles/sidebar.css";
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen = false }) {
   const [personalOpen, setPersonalOpen] = useState(false);
 
   // Mostrar permisos del usuario
@@ -22,13 +22,19 @@ export default function Sidebar() {
     return hasPermission('gestionar_catalogos');
   };
 
+  // Verificar si es administrador
+  const isAdmin = () => {
+    const user = authService.getCurrentUser();
+    return user?.rol_nombre === 'administrador';
+  };
+
   // Verificar si tiene permisos de rutas
   const hasRoutePermission = () => {
     return hasPermission('ver_rutas') || hasPermission('crear_rutas') || hasPermission('editar_rutas') || hasPermission('eliminar_rutas');
   };
 
   return (
-    <aside className="sidebar">
+    <aside className={`sidebar ${isOpen ? 'open' : ''}`}>
       {/* Header del sidebar con texto e icono */}
       <div className="sidebar-header">
         <div className="sidebar-title" style={{ color: '#ffffff' }}>
@@ -38,8 +44,8 @@ export default function Sidebar() {
       </div>
       <nav>
         {/* Dashboard - solo para administradores */}
-        {hasPermission('gestionar_catalogos') && (
-          <NavLink to="/dashboard">Dashboard</NavLink>
+        {isAdmin() && (
+          <NavLink to="/admin-dashboard">Dashboard</NavLink>
         )}
         
         {/* Usuarios - solo si tiene permisos de gestión */}

@@ -1,169 +1,119 @@
-/* Estilos para el sidebar de pilotos */
+/* Sidebar específico para pilotos */
 .piloto-sidebar {
   width: 280px;
   height: 100vh;
-  background: linear-gradient(180deg, #2c3e50 0%, #34495e 100%);
-  color: white;
-  display: flex;
-  flex-direction: column;
+  background: linear-gradient(135deg, #103053 0%, #103053 50%, #213547 100%);
   position: fixed;
   left: 0;
   top: 0;
   z-index: 1000;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  box-shadow: 2px 0 10px rgba(0,0,0,0.1);
 }
 
 .sidebar-header {
-  padding: 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 30px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  text-align: center;
 }
 
-.user-info {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.user-avatar {
-  width: 50px;
-  height: 50px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
+.sidebar-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
-  border: 2px solid rgba(255, 255, 255, 0.2);
+  gap: 10px;
 }
 
-.user-details h3 {
-  margin: 0;
-  font-size: 1.1rem;
+.truck-icon {
+  font-size: 2rem;
+}
+
+.company-name {
+  font-size: 1.2rem;
   font-weight: 600;
+  letter-spacing: 1px;
 }
 
-.user-role {
+.pilot-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.pilot-icon {
+  font-size: 1.2rem;
+}
+
+.pilot-name {
   font-size: 0.9rem;
-  opacity: 0.8;
-  background: rgba(52, 152, 219, 0.2);
-  padding: 2px 8px;
-  border-radius: 12px;
-  border: 1px solid rgba(52, 152, 219, 0.3);
 }
 
-.sidebar-nav {
-  flex: 1;
+.piloto-sidebar nav {
   padding: 20px 0;
 }
 
-.nav-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.nav-item {
-  margin-bottom: 5px;
-}
-
-.nav-link {
-  display: flex;
-  align-items: center;
-  padding: 15px 20px;
-  color: rgba(255, 255, 255, 0.8);
+.piloto-sidebar nav a {
+  display: block;
+  padding: 15px 25px;
+  color: #ffffff;
   text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
   transition: all 0.3s ease;
   border-left: 3px solid transparent;
 }
 
-.nav-link:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: white;
-  border-left-color: #3498db;
+.piloto-sidebar nav a:hover {
+  background: rgba(255,255,255,0.1);
+  border-left-color: #ffffff;
+  transform: translateX(5px);
 }
 
-.nav-link.active {
-  background: rgba(52, 152, 219, 0.2);
-  color: white;
-  border-left-color: #3498db;
-}
-
-.nav-icon {
-  font-size: 1.5rem;
-  margin-right: 15px;
-  width: 30px;
-  text-align: center;
-}
-
-.nav-content {
-  display: flex;
-  flex-direction: column;
-}
-
-.nav-label {
+.piloto-sidebar nav a.active {
+  background: rgba(255,255,255,0.15);
+  border-left-color: #ffffff;
   font-weight: 600;
-  font-size: 1rem;
-  margin-bottom: 2px;
 }
 
-.nav-description {
-  font-size: 0.8rem;
-  opacity: 0.7;
-  line-height: 1.2;
-}
-
-.sidebar-footer {
-  padding: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.piloto-permissions h4 {
-  margin: 0 0 15px 0;
-  font-size: 1rem;
-  color: #ecf0f1;
-}
-
-.permissions-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.permissions-list li {
-  font-size: 0.85rem;
-  margin-bottom: 8px;
-  padding: 5px 0;
-  opacity: 0.9;
-}
-
-.permissions-list li:last-child {
-  margin-bottom: 0;
-}
-
-/* Responsive */
+/* Responsive para móviles */
 @media (max-width: 768px) {
   .piloto-sidebar {
     width: 100%;
     height: auto;
     position: relative;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 1000;
   }
   
-  .user-info {
-    flex-direction: column;
-    text-align: center;
+  .piloto-sidebar.open {
+    transform: translateX(0);
   }
   
-  .nav-link {
-    padding: 12px 15px;
+  .sidebar-header {
+    padding: 20px 15px;
   }
   
-  .nav-icon {
+  .sidebar-title {
     font-size: 1.2rem;
-    margin-right: 10px;
+  }
+  
+  .truck-icon {
+    font-size: 1.5rem;
+  }
+  
+  .piloto-sidebar nav {
+    padding: 15px 0;
+  }
+  
+  .piloto-sidebar nav a {
+    padding: 12px 20px;
+    font-size: 0.9rem;
   }
 }
-
-
-
-
-

@@ -9,10 +9,7 @@ import crypto from 'crypto';
 // Obtener todos los usuarios
 export const getAllUsuarios = async (req, res) => {
     try {
-        console.log('🔄 Obteniendo todos los usuarios...');
         const usuarios = await User.findAll();
-        console.log('📋 Usuarios encontrados:', usuarios.length);
-        console.log('📋 Primer usuario:', usuarios[0]);
         
         res.json({
             success: true,
