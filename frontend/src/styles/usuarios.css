@@ -689,7 +689,7 @@
 }
 
 .btn-permissions {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #103053;
   color: white;
   border: none;
   border-radius: 8px;
@@ -707,7 +707,7 @@
 .btn-permissions:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+  background: #0d2540;
 }
 
 .selected-permissions {
@@ -948,10 +948,62 @@
   
   .form-actions {
     flex-direction: column;
+    gap: 10px;
   }
   
   .btn-primary,
   .btn-secondary {
     width: 100%;
+    padding: 12px;
+    font-size: 0.9rem;
+  }
+  
+  .form-container {
+    width: 100%;
+    padding: 15px;
+    margin: 10px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+  }
+  
+  .form-group input,
+  .form-group select {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+  
+  .permisos-button-container {
+    gap: 10px;
+  }
+  
+  .btn-permissions {
+    padding: 10px 15px;
+    font-size: 0.85rem;
+  }
+  
+  .usuarios-table {
+    font-size: 0.7rem;
+  }
+  
+  .usuarios-table th,
+  .usuarios-table td {
+    padding: 6px 4px;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    gap: 3px;
+  }
+  
+  .action-buttons button {
+    padding: 6px;
+    font-size: 1rem;
   }
 }

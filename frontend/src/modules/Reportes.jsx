@@ -1,6 +1,7 @@
 // src/modules/Reportes.jsx
 import React, { useState, useEffect } from "react";
 import reportesService from "../services/reportesService.js";
+import LimitedAccessMenu from "../components/LimitedAccessMenu.jsx";
 import "../styles/reportes.css";
 import Logo from "../assets/logo.png";
 import jsPDF from 'jspdf';
@@ -522,6 +523,8 @@ export default function Reportes() {
         <img src={Logo} alt="Logo Empresa" className="logo" />
       </div>
 
+      <LimitedAccessMenu />
+      
       <h2 className="reportes-title">Reportes de Rutas</h2>
 
       {error && (

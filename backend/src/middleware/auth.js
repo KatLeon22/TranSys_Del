@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { User } from '../models/User.js';
+import { executeQuery } from '../config/db.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'tu_secreto_super_seguro_aqui';
 
@@ -20,21 +20,30 @@ export const authenticateToken = async (req, res, next) => {
         const decoded = jwt.verify(token, JWT_SECRET);
         
         // Buscar usuario en la base de datos
-        const user = await User.findById(decoded.id);
+        const userQuery = `
+            SELECT u.id, u.username, u.rol_id, r.nombre as rol_nombre, u.piloto_id
+            FROM usuarios u
+            LEFT JOIN roles r ON u.rol_id = r.id
+            WHERE u.id = ?
+        `;
+        const users = await executeQuery(userQuery, [decoded.id]);
         
-        if (!user) {
+        if (users.length === 0) {
             return res.status(401).json({
                 success: false,
                 message: 'Usuario no encontrado'
             });
         }
 
+        const user = users[0];
+
         // Agregar información del usuario a la request
         req.user = {
             id: user.id,
             username: user.username,
             rol_id: user.rol_id,
-            rol_nombre: user.rol_nombre
+            rol_nombre: user.rol_nombre,
+            piloto_id: user.piloto_id
         };
         next();
 
@@ -123,14 +132,22 @@ export const optionalAuth = async (req, res, next) => {
 
         if (token) {
             const decoded = jwt.verify(token, JWT_SECRET);
-            const user = await User.findById(decoded.id);
+            const userQuery = `
+                SELECT u.id, u.username, u.rol_id, r.nombre as rol_nombre, u.piloto_id
+                FROM usuarios u
+                LEFT JOIN roles r ON u.rol_id = r.id
+                WHERE u.id = ?
+            `;
+            const users = await executeQuery(userQuery, [decoded.id]);
             
-            if (user) {
+            if (users.length > 0) {
+                const user = users[0];
                 req.user = {
                     id: user.id,
                     username: user.username,
                     rol_id: user.rol_id,
-                    rol_nombre: user.rol_nombre
+                    rol_nombre: user.rol_nombre,
+                    piloto_id: user.piloto_id
                 };
             }
         }

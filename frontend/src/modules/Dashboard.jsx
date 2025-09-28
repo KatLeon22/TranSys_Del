@@ -39,11 +39,11 @@ export default function Dashboard() {
       // Buscar rutas de hoy
       const rutasHoyData = response?.data?.rutasPorFecha?.find(grupo => grupo.fecha === hoy);
       
-      // Si no encuentra rutas para hoy, buscar rutas del 27 de septiembre específicamente
+      // Si no encuentra rutas para hoy, buscar rutas del 28 de septiembre específicamente
       if (!rutasHoyData || rutasHoyData.rutas.length === 0) {
-        const rutas27Sept = response?.data?.rutasPorFecha?.find(grupo => grupo.fecha === '2025-09-27');
-        if (rutas27Sept && rutas27Sept.rutas.length > 0) {
-          setRutasHoy(rutas27Sept.rutas);
+        const rutas28Sept = response?.data?.rutasPorFecha?.find(grupo => grupo.fecha === '2025-09-28');
+        if (rutas28Sept && rutas28Sept.rutas.length > 0) {
+          setRutasHoy(rutas28Sept.rutas);
         } else {
           setRutasHoy([]);
         }
@@ -78,22 +78,8 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+      <div style={{ marginBottom: '20px' }}>
         <h2>Resumen del día</h2>
-        <button 
-          onClick={cargarDatos}
-          style={{
-            padding: '8px 16px',
-            backgroundColor: '#103053',
-            color: 'white',
-            border: 'none',
-            borderRadius: '6px',
-            cursor: 'pointer',
-            fontSize: '14px'
-          }}
-        >
-          🔄 Actualizar
-        </button>
       </div>
       
       {/* Tarjetas de estadísticas con iconos */}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import authService from '../services/authService.js';
+import AccessDenied from './AccessDenied.jsx';
 
 const ProtectedRoute = ({ children, requiredRole = null, requiredPermission = null, requiredPermissions = [] }) => {
   const [isLoading, setIsLoading] = useState(true);
@@ -93,34 +94,7 @@ const ProtectedRoute = ({ children, requiredRole = null, requiredPermission = nu
   }
 
   if (!hasAccess) {
-    return (
-      <div style={{ 
-        display: 'flex', 
-        flexDirection: 'column',
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '100vh',
-        fontSize: '18px',
-        textAlign: 'center'
-      }}>
-        <h2>Acceso Denegado</h2>
-        <p>No tienes permisos para acceder a esta página.</p>
-        <button 
-          onClick={() => window.history.back()}
-          style={{
-            padding: '10px 20px',
-            fontSize: '16px',
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '5px',
-            cursor: 'pointer'
-          }}
-        >
-          Volver
-        </button>
-      </div>
-    );
+    return <AccessDenied />;
   }
 
   return children;

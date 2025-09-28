@@ -437,6 +437,17 @@ const Usuarios = () => {
                       type="button" 
                       className="btn-permissions"
                       onClick={handleOpenPermissionsModal}
+                      style={{
+                        backgroundColor: '#103053',
+                        color: 'white',
+                        border: 'none',
+                        padding: '10px 16px',
+                        borderRadius: '8px',
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                        fontWeight: '500',
+                        transition: 'all 0.3s ease'
+                      }}
                     >
                       🔐 Seleccionar Permisos ({formData.permisos.length} seleccionados)
                     </button>

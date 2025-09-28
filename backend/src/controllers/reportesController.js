@@ -4,28 +4,8 @@ import { ReportesModel } from '../models/ReportesModel.js';
 export const getReportes = async (req, res) => {
     try {
         const { filtro = 'dia', fechaInicio, fechaFin } = req.query;
-        
-        console.log('Generando reportes:', { filtro, fechaInicio, fechaFin });
 
         const reportes = await ReportesModel.getReportes(filtro, fechaInicio, fechaFin);
-        console.log('📊 Resultados de la consulta:', reportes);
-        
-        // Debug detallado de cada resultado
-        if (reportes && reportes.length > 0) {
-            reportes.forEach((row, index) => {
-                console.log(`📊 Resultado ${index + 1}:`, {
-                    periodo: row.periodo,
-                    total_rutas: row.total_rutas,
-                    rutas_pendientes: row.rutas_pendientes,
-                    rutas_en_curso: row.rutas_en_curso,
-                    rutas_entregadas: row.rutas_entregadas,
-                    rutas_incidentes: row.rutas_incidentes,
-                    ingresos_totales: row.ingresos_totales
-                });
-            });
-        } else {
-            console.log('⚠️ No se encontraron resultados para la consulta');
-        }
         
         // Formatear los datos para el frontend
         const reportesFormateados = reportes.map(reporte => ({

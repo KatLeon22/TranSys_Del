@@ -40,17 +40,10 @@ export const testConnection = async () => {
 // Función para ejecutar consultas
 export const executeQuery = async (query, params = []) => {
     try {
-        console.log('Ejecutando consulta:', query);
-        console.log('Parámetros:', params);
         const [results] = await pool.execute(query, params);
-        console.log('Resultado de la consulta:', results);
         return results;
     } catch (error) {
         console.error('Error ejecutando consulta:', error.message);
-        console.error('Código de error:', error.code);
-        console.error('SQL State:', error.sqlState);
-        console.error('Query:', query);
-        console.error('Params:', params);
         throw error;
     }
 };

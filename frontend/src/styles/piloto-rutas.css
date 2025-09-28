@@ -1,8 +1,14 @@
 /* Estilos para el módulo de rutas de pilotos */
 .piloto-rutas-container {
-  padding: 20px;
+  padding: 20px 20px 20px 0;
   max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0;
+  margin-left: -50px;
 }
 
 .piloto-header {
@@ -12,6 +18,8 @@
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border-radius: 10px;
+  width: 100%;
+  max-width: 1200px;
 }
 
 .piloto-header h1 {
@@ -20,8 +28,32 @@
 }
 
 .piloto-header p {
-  margin: 0;
+  margin: 0 0 15px 0;
   opacity: 0.9;
+}
+
+.btn-recargar {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.btn-recargar:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.btn-recargar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .loading {
@@ -38,14 +70,21 @@
   border-radius: 5px;
   margin-bottom: 20px;
   border: 1px solid #f5c6cb;
+  width: 100%;
+  max-width: 1200px;
+  text-align: left;
+  margin-left: -30px;
 }
 
 .no-rutas {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   min-height: 400px;
-  text-align: center;
+  text-align: left;
+  width: 100%;
+  max-width: 1200px;
+  margin-left: -30px;
 }
 
 .no-rutas-content {
@@ -65,15 +104,33 @@
 
 .no-rutas-content p {
   color: #868e96;
-  margin: 0;
+  margin: 0 0 15px 0;
   font-size: 1rem;
+}
+
+.piloto-info {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 15px;
+  border-left: 4px solid #007bff;
+}
+
+.piloto-info p {
+  margin: 5px 0;
+  color: #555;
+  font-size: 14px;
 }
 
 .rutas-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   margin-bottom: 30px;
+  width: 100%;
+  max-width: 1200px;
+  justify-content: flex-start;
+  margin-left: -30px;
 }
 
 .ruta-card {
@@ -255,9 +312,38 @@
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+  .rutas-grid {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 100%;
+  }
+}
+
 @media (max-width: 768px) {
+  .piloto-rutas-container {
+    padding: 15px 15px 15px 0;
+    margin-left: -20px;
+  }
+  
   .rutas-grid {
     grid-template-columns: 1fr;
+    max-width: 100%;
+    margin-left: -20px;
+  }
+  
+  .piloto-header {
+    max-width: 100%;
+    padding: 15px;
+  }
+  
+  .no-rutas {
+    max-width: 100%;
+    margin-left: -20px;
+  }
+  
+  .error-message {
+    max-width: 100%;
+    margin-left: -20px;
   }
   
   .modal-content {
@@ -272,5 +358,25 @@
   .btn-cancelar,
   .btn-guardar {
     width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .piloto-rutas-container {
+    padding: 10px 10px 10px 0;
+    margin-left: -10px;
+  }
+  
+  .rutas-grid {
+    gap: 15px;
+    margin-left: -10px;
+  }
+  
+  .ruta-card {
+    padding: 15px;
+  }
+  
+  .piloto-header h1 {
+    font-size: 1.5rem;
   }
 }

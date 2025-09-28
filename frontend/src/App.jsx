@@ -4,6 +4,10 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout";
 import PilotoLayout from "./components/PilotoLayout";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AutoRedirect from "./components/AutoRedirect";
+
+// Importar estilos responsive
+import "./styles/mobile-responsive.css";
 
 // Módulos
 import Dashboard from "./modules/Dashboard";
@@ -50,10 +54,18 @@ export default function App() {
             <ProtectedRoute>
               <Layout>
                 <Routes>
+                  {/* Redirección automática según permisos */}
+                  <Route path="/" element={<AutoRedirect />} />
+                  
                   <Route 
                     path="/dashboard" 
+                    element={<AutoRedirect />}
+                  />
+                  
+                  <Route 
+                    path="/admin-dashboard" 
                     element={
-                      <ProtectedRoute requiredPermissions={['gestionar_catalogos']}>
+                      <ProtectedRoute requiredRole="administrador">
                         <Dashboard />
                       </ProtectedRoute>
                     } 

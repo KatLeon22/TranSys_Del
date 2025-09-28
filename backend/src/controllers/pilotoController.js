@@ -28,9 +28,51 @@ export const getAllPilotos = async (req, res) => {
 // Obtener rutas de un piloto específico
 export const getRutasByPiloto = async (req, res) => {
     try {
-        const pilotoId = req.user.id; // ID del usuario logueado
+        const userId = req.user?.id; // ID del usuario logueado
+        const pilotoId = req.user?.piloto_id; // ID del piloto asociado
         
-        const rutas = await PilotoModel.getRutasByPiloto(pilotoId);
+        if (!pilotoId) {
+            return res.status(400).json({
+                success: false,
+                message: 'Usuario no tiene piloto asociado'
+            });
+        }
+        
+        // Obtener fecha actual
+        const hoy = new Date().toISOString().split('T')[0];
+        
+        // Consulta directa usando el piloto_id y filtrando por fecha actual
+        const query = `
+            SELECT 
+                r.id,
+                r.no_ruta,
+                r.servicio,
+                r.mercaderia,
+                r.combustible,
+                r.origen,
+                r.destino,
+                r.fecha,
+                r.hora,
+                r.precio,
+                r.comentario,
+                r.estado,
+                c.nombre as cliente_nombre,
+                c.apellido as cliente_apellido,
+                c.telefono as cliente_telefono,
+                cam.placa as camion_placa,
+                cam.marca as camion_marca,
+                cam.modelo as camion_modelo,
+                a.nombre as ayudante_nombre,
+                a.apellido as ayudante_apellido
+            FROM rutas r
+            LEFT JOIN clientes c ON r.cliente_id = c.id
+            LEFT JOIN camiones cam ON r.camion_id = cam.id
+            LEFT JOIN ayudantes a ON r.ayudante_id = a.id
+            WHERE r.chofer_id = ? AND r.fecha = ?
+            ORDER BY r.hora ASC
+        `;
+        
+        const rutas = await executeQuery(query, [pilotoId, hoy]);
         
         res.json({
             success: true,
@@ -39,7 +81,7 @@ export const getRutasByPiloto = async (req, res) => {
         });
         
     } catch (error) {
-        console.error('Error obteniendo rutas del piloto:', error);
+        console.error('❌ Error obteniendo rutas del piloto:', error);
         res.status(500).json({
             success: false,
             message: 'Error interno del servidor',
