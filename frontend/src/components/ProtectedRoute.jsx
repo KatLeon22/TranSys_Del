@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import authService from '../services/authService.js';
 
-const ProtectedRoute = ({ children, requiredRole = null, requiredPermission = null }) => {
+const ProtectedRoute = ({ children, requiredRole = null, requiredPermission = null, requiredPermissions = [] }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [hasAccess, setHasAccess] = useState(false);
@@ -39,6 +39,18 @@ const ProtectedRoute = ({ children, requiredRole = null, requiredPermission = nu
                 setHasAccess(false);
               }
             }
+
+            // Verificar múltiples permisos si es requerido
+            if (requiredPermissions && requiredPermissions.length > 0 && hasAccess) {
+              const hasAnyPermission = requiredPermissions.some(permission => 
+                authService.hasPermission(permission)
+              );
+              if (hasAnyPermission) {
+                setHasAccess(true);
+              } else {
+                setHasAccess(false);
+              }
+            }
           } else {
             // Token inválido, limpiar datos
             authService.logout();
@@ -59,7 +71,7 @@ const ProtectedRoute = ({ children, requiredRole = null, requiredPermission = nu
     };
 
     checkAuth();
-  }, [requiredRole, requiredPermission]);
+  }, [requiredRole, requiredPermission, requiredPermissions]);
 
   if (isLoading) {
     return (

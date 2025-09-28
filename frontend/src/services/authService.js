@@ -69,8 +69,10 @@ class AuthService {
             localStorage.removeItem('token');
             localStorage.removeItem('user');
             localStorage.removeItem('permissions');
+            console.log('🧹 Sesión limpiada completamente');
         }
     }
+
 
     // Verificar si el usuario está autenticado
     isAuthenticated() {

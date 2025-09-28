@@ -1,4 +1,29 @@
 import { PilotoModel } from '../models/PilotoModel.js';
+import { executeQuery } from '../config/db.js';
+
+// Obtener todos los pilotos (para asignación de usuarios)
+export const getAllPilotos = async (req, res) => {
+    try {
+        const query = `
+            SELECT id, nombre, apellido, telefono, tipo_licencia, vencimiento
+            FROM pilotos 
+            ORDER BY nombre, apellido
+        `;
+        const pilotos = await executeQuery(query);
+        
+        res.json({
+            success: true,
+            data: pilotos
+        });
+    } catch (error) {
+        console.error('Error obteniendo pilotos:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error interno del servidor',
+            error: error.message
+        });
+    }
+};
 
 // Obtener rutas de un piloto específico
 export const getRutasByPiloto = async (req, res) => {
