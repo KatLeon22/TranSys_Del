@@ -1,15 +1,23 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-import "../styles/layout.css";
+import "../styles/sidebar.css";
 
 export default function Sidebar() {
   const [personalOpen, setPersonalOpen] = useState(false);
 
   return (
     <aside className="sidebar">
-      <div className="sidebar-header">S DE LEON</div>
+      {/* Header del sidebar con texto e icono */}
+      <div className="sidebar-header">
+        <div className="sidebar-title" style={{ color: '#ffffff' }}>
+          <span className="truck-icon">🚚</span>
+          S DE LEON
+        </div>
+      </div>
       <nav>
+        
         <NavLink to="/Dashboard">Dashboard</NavLink>
+         <NavLink to="/Usuarios">Usuarios</NavLink>
          <NavLink to="/rutas">Rutas</NavLink>
         <div>
           {/* Personal desplegable */}

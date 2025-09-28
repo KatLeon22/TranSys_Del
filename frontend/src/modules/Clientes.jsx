@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import clientesService from "../services/clientesService.js";
+import PopUp from "../components/PopUp.jsx";
 import "../styles/reutilizar.css";
 
 export default function Clientes() {
@@ -13,6 +14,8 @@ export default function Clientes() {
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const navigate = useNavigate();
 
@@ -67,7 +70,9 @@ export default function Clientes() {
       if (response.success) {
         setClientes(prev => prev.filter(c => c.id !== clienteToDelete.id));
         setModalVisible(false);
-        alert("Cliente eliminado exitosamente");
+        setClienteToDelete(null);
+        setSuccessMessage('Cliente eliminado con éxito');
+        setShowSuccessModal(true);
       } else {
         setError('Error al eliminar el cliente');
       }
@@ -214,6 +219,14 @@ export default function Clientes() {
           </div>
         </div>
       )}
+
+      {/* PopUp de éxito */}
+      <PopUp
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        message={successMessage}
+        type="delete"
+      />
     </div>
   );
 }

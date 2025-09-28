@@ -5,14 +5,20 @@ export const getNextRutaNumber = async (req, res) => {
     try {
         const result = await RutasModel.getNextRutaNumber();
         
+        console.log('Resultado de la consulta:', result);
+        
         let nextNumber = 1;
         if (result.length > 0) {
             const lastRuta = result[0].no_ruta;
+            console.log('Última ruta encontrada:', lastRuta);
             const lastNumber = parseInt(lastRuta.substring(4)); // Extraer número después de "RUTA"
+            console.log('Último número extraído:', lastNumber);
             nextNumber = lastNumber + 1;
         }
         
         const nextRutaNumber = `RUTA${nextNumber.toString().padStart(3, '0')}`;
+        
+        console.log('Siguiente número calculado:', nextRutaNumber);
         
         res.status(200).json({
             success: true,
@@ -83,6 +89,8 @@ export const getRutaById = async (req, res) => {
 // Crear nueva ruta
 export const createRuta = async (req, res) => {
     try {
+        console.log('Datos recibidos:', req.body);
+        
         const { 
             no_ruta, 
             cliente_id, 
@@ -102,6 +110,14 @@ export const createRuta = async (req, res) => {
         
         // Validar datos requeridos
         if (!no_ruta || !cliente_id || !camion_id || !chofer_id || !fecha || !hora) {
+            console.log('Datos faltantes:', {
+                no_ruta: !!no_ruta,
+                cliente_id: !!cliente_id,
+                camion_id: !!camion_id,
+                chofer_id: !!chofer_id,
+                fecha: !!fecha,
+                hora: !!hora
+            });
             return res.status(400).json({
                 success: false,
                 message: 'No ruta, cliente, camión, chofer, fecha y hora son requeridos'
@@ -118,10 +134,22 @@ export const createRuta = async (req, res) => {
             });
         }
         
+        // Manejar valores nulos/undefined
         const result = await RutasModel.create(
-            no_ruta, cliente_id, servicio, mercaderia, camion_id, 
-            combustible, origen, destino, chofer_id, ayudante_id, 
-            fecha, hora, precio, comentario
+            no_ruta, 
+            cliente_id, 
+            servicio || null, 
+            mercaderia || null, 
+            camion_id, 
+            combustible || null, 
+            origen || null, 
+            destino || null, 
+            chofer_id, 
+            ayudante_id || null, 
+            fecha, 
+            hora, 
+            precio || null, 
+            comentario || null
         );
         
         // Obtener la ruta creada
@@ -188,9 +216,22 @@ export const updateRuta = async (req, res) => {
         }
         
         await RutasModel.update(
-            id, no_ruta, cliente_id, servicio, mercaderia, 
-            camion_id, combustible, origen, destino, chofer_id, 
-            ayudante_id, fecha, hora, precio, comentario, estado
+            id, 
+            no_ruta, 
+            cliente_id, 
+            servicio || null, 
+            mercaderia || null, 
+            camion_id, 
+            combustible || null, 
+            origen || null, 
+            destino || null, 
+            chofer_id, 
+            ayudante_id || null, 
+            fecha, 
+            hora, 
+            precio || null, 
+            comentario || null, 
+            estado || 'Pendiente'
         );
         
         // Obtener la ruta actualizada
@@ -244,6 +285,92 @@ export const deleteRuta = async (req, res) => {
             success: false,
             message: 'Error interno del servidor',
             error: error.message
+        });
+    }
+};
+
+// Endpoint de prueba sin autenticación
+export const testRutas = async (req, res) => {
+    try {
+        console.log('=== TEST ENDPOINT ===');
+        const rutas = await RutasModel.getAll();
+        console.log('Rutas encontradas:', rutas?.length || 0);
+        
+        res.json({
+            success: true,
+            message: 'Test endpoint funcionando',
+            totalRutas: rutas?.length || 0,
+            rutas: rutas?.slice(0, 3) || [] // Solo las primeras 3 para prueba
+        });
+    } catch (error) {
+        console.error('Error en test endpoint:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error en test endpoint'
+        });
+    }
+};
+
+// Obtener rutas recientes para el dashboard
+export const getRutasRecientes = async (req, res) => {
+    try {
+        // Obtener todas las rutas de la base de datos
+        const rutas = await RutasModel.getAll();
+        
+        if (!rutas || rutas.length === 0) {
+            return res.status(200).json({
+                success: true,
+                data: {
+                    totalRutas: 0,
+                    rutasHoy: 0,
+                    rutasPorFecha: []
+                }
+            });
+        }
+
+        // Agrupar rutas por fecha
+        const rutasPorFecha = {};
+        const hoy = new Date().toISOString().split('T')[0];
+        let rutasHoy = 0;
+
+        rutas.forEach(ruta => {
+            // Convertir fecha a formato YYYY-MM-DD para comparación
+            const fechaRuta = new Date(ruta.fecha).toISOString().split('T')[0];
+            if (!rutasPorFecha[fechaRuta]) {
+                rutasPorFecha[fechaRuta] = [];
+            }
+            rutasPorFecha[fechaRuta].push(ruta);
+            
+            if (fechaRuta === hoy) {
+                rutasHoy++;
+            }
+        });
+
+        // Convertir a array y ordenar por fecha descendente
+        const rutasPorFechaArray = Object.keys(rutasPorFecha)
+            .sort((a, b) => new Date(b) - new Date(a))
+            .map(fecha => ({
+                fecha,
+                cantidad: rutasPorFecha[fecha].length,
+                rutas: rutasPorFecha[fecha]
+            }));
+
+        const estadisticas = {
+            totalRutas: rutas.length,
+            rutasHoy,
+            rutasPorFecha: rutasPorFechaArray
+        };
+        
+        res.status(200).json({
+            success: true,
+            data: estadisticas
+        });
+        
+    } catch (error) {
+        console.error('Error obteniendo rutas recientes:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error interno del servidor'
         });
     }
 };

@@ -40,7 +40,7 @@
 }
 /* Encabezados centrados */
 .reutilizar-table th {
-  background-color: #213547; /* azul moderno */
+  background-color: #103053; /* azul moderno */
   color: white;
   font-weight: 600;
   font-size: 1rem;
@@ -187,7 +187,7 @@
   transition: 0.3s;
   color: #fff;
   margin: 0 5px;
-  background-color: #374151; /* gris oscuro */
+  background-color: #103053; /* azul moderno */
 }
 
 .form-button:hover, .close-button:hover {
@@ -301,7 +301,7 @@
 }
 
 .reutilizar-button {
-  background-color: #374151;
+  background-color: #103053;
   color: white;
   padding: 6px 12px;
   border: none;
@@ -427,7 +427,7 @@
 
 /* Encabezados con fondo y borde */
 .reutilizar-table th {
-  background-color: #213547;
+  background-color: #103053;
   color: white;
   font-weight: 600;
   font-size: 1rem;

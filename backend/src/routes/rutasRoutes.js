@@ -6,16 +6,22 @@ import {
     createRuta, 
     updateRuta, 
     deleteRuta,
-    getNextRutaNumber
+    getNextRutaNumber,
+    getRutasRecientes,
+    testRutas
 } from "../controllers/rutasController.js";
 
 const router = express.Router();
 
-// Todas las rutas requieren autenticación
+// Ruta de prueba sin autenticación
+router.get("/test", testRutas);
+
+// Todas las demás rutas requieren autenticación
 router.use(authenticateToken);
 
 // Rutas CRUD para rutas
 router.get("/", getAllRutas);
+router.get("/recientes", getRutasRecientes);
 router.get("/next-number", getNextRutaNumber);
 router.get("/:id", getRutaById);
 router.post("/", createRuta);

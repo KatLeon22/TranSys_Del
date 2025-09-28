@@ -14,10 +14,18 @@ export default function Reportes() {
   const [fechaInicio, setFechaInicio] = useState("");
   const [fechaFin, setFechaFin] = useState("");
   const [mostrarReporte, setMostrarReporte] = useState(false);
+  const [filtroDias, setFiltroDias] = useState(7); // Filtro de días para mostrar
+  const [paginaActual, setPaginaActual] = useState(1);
+  const [elementosPorPagina, setElementosPorPagina] = useState(10); // Elementos por página
 
   useEffect(() => {
     cargarReportes();
   }, [filtro, fechaInicio, fechaFin]);
+
+  // Resetear página cuando cambien los filtros
+  useEffect(() => {
+    setPaginaActual(1);
+  }, [filtroDias, elementosPorPagina]);
 
   const cargarReportes = async () => {
     try {
@@ -79,6 +87,59 @@ export default function Reportes() {
 
   const handleFechaFinChange = (e) => {
     setFechaFin(e.target.value);
+  };
+
+  const handleFiltroDiasChange = (e) => {
+    setFiltroDias(parseInt(e.target.value));
+  };
+
+  const handleElementosPorPaginaChange = (e) => {
+    setElementosPorPagina(parseInt(e.target.value));
+    setPaginaActual(1); // Reset a la primera página
+  };
+
+  // Función para filtrar datos por número de días
+  const filtrarDatosPorDias = (datos, dias) => {
+    if (!datos || datos.length === 0) return datos;
+    
+    // Si es "todos los datos", devolver todo
+    if (dias === 999) return datos;
+    
+    // Devolver solo los primeros N días
+    return datos.slice(0, dias);
+  };
+
+  // Función para obtener datos paginados
+  const obtenerDatosPaginados = (datos) => {
+    const inicio = (paginaActual - 1) * elementosPorPagina;
+    const fin = inicio + elementosPorPagina;
+    return datos.slice(inicio, fin);
+  };
+
+  // Función para calcular el total de páginas
+  const calcularTotalPaginas = (datos) => {
+    return Math.ceil(datos.length / elementosPorPagina);
+  };
+
+  // Función para cambiar de página
+  const cambiarPagina = (nuevaPagina) => {
+    setPaginaActual(nuevaPagina);
+  };
+
+  // Función para ir a la página anterior
+  const paginaAnterior = () => {
+    if (paginaActual > 1) {
+      setPaginaActual(paginaActual - 1);
+    }
+  };
+
+  // Función para ir a la página siguiente
+  const paginaSiguiente = () => {
+    const datosFiltrados = filtrarDatosPorDias(reportes, filtroDias);
+    const totalPaginas = calcularTotalPaginas(datosFiltrados);
+    if (paginaActual < totalPaginas) {
+      setPaginaActual(paginaActual + 1);
+    }
   };
 
 
@@ -375,7 +436,7 @@ export default function Reportes() {
       doc.setTextColor(colorGris[0], colorGris[1], colorGris[2]);
       doc.setFont('helvetica', 'normal');
       doc.text('Reporte generado automáticamente por el Sistema de Administración de Transporte', 148.5, pageHeight - 15, { align: 'center' });
-      doc.text('© 2024 S DE LEON - Todos los derechos reservados', 148.5, pageHeight - 10, { align: 'center' });
+      doc.text('© 2025 S DE LEON - Todos los derechos reservados', 148.5, pageHeight - 10, { align: 'center' });
       
       // === GUARDAR PDF ===
       const fileName = `reporte_rutas_${filtro}_${new Date().toISOString().split('T')[0]}.pdf`;
@@ -507,6 +568,7 @@ export default function Reportes() {
           />
         </div>
 
+
         <div className="filtro-actions">
               <button onClick={exportarReporte} className="btn-exportar">
                 👁️ Ver Reporte
@@ -533,6 +595,34 @@ export default function Reportes() {
         
         {!loading && (
           <>
+            {/* Controles de filtros y paginación arriba de la tabla */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <div>
+                <h3>Reporte Histórico</h3>
+              </div>
+              
+              <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                {/* Selector de elementos por página */}
+                {reportes.length > 0 && (
+                  <div className="paginacion-elementos">
+                    <label htmlFor="elementosPorPagina">Páginas:</label>
+                    <select
+                      id="elementosPorPagina"
+                      value={elementosPorPagina}
+                      onChange={handleElementosPorPaginaChange}
+                      className="paginacion-select"
+                    >
+                      <option value={5}>5 por página</option>
+                      <option value={10}>10 por página</option>
+                      <option value={20}>20 por página</option>
+                      <option value={50}>50 por página</option>
+                      <option value={100}>100 por página</option>
+                    </select>
+                  </div>
+                )}
+              </div>
+            </div>
+            
             <table className="reportes-table">
                   <thead>
                     <tr>
@@ -546,7 +636,7 @@ export default function Reportes() {
                     </tr>
                   </thead>
                   <tbody>
-                    {reportes.map((reporte, index) => (
+                    {obtenerDatosPaginados(reportes).map((reporte, index) => (
                       <tr key={index}>
                         <td>{reporte.periodo}</td>
                         <td>{reporte.total_rutas}</td>
@@ -566,54 +656,63 @@ export default function Reportes() {
                 <p>Haz clic en "🔍 Debug" para ver más información en la consola</p>
               </div>
             )}
+
+            {/* Navegación de páginas abajo de la tabla */}
+            {reportes.length > 0 && (() => {
+              const totalPaginas = calcularTotalPaginas(reportes);
+              const inicio = (paginaActual - 1) * elementosPorPagina + 1;
+              const fin = Math.min(paginaActual * elementosPorPagina, reportes.length);
+              
+              if (totalPaginas > 1) {
+                return (
+                  <div className="paginacion-container">
+                    <div className="paginacion-info">
+                      <span>
+                        Mostrando {inicio}-{fin} de {reportes.length} registros
+                      </span>
+                    </div>
+                    
+                    <div className="paginacion-controls">
+                      <button 
+                        onClick={paginaAnterior}
+                        disabled={paginaActual === 1}
+                        className="paginacion-btn"
+                        title="Página anterior"
+                      >
+                        ◀️ Anterior
+                      </button>
+                      
+                      <div className="paginacion-numeros">
+                        {Array.from({ length: totalPaginas }, (_, i) => i + 1).map(numero => (
+                          <button
+                            key={numero}
+                            onClick={() => cambiarPagina(numero)}
+                            className={`paginacion-numero ${paginaActual === numero ? 'activa' : ''}`}
+                          >
+                            {numero}
+                          </button>
+                        ))}
+                      </div>
+                      
+                      <button 
+                        onClick={paginaSiguiente}
+                        disabled={paginaActual === totalPaginas}
+                        className="paginacion-btn"
+                        title="Página siguiente"
+                      >
+                        Siguiente ▶️
+                      </button>
+                    </div>
+                  </div>
+                );
+              }
+              return null;
+            })()}
+
           </>
         )}
       </div>
 
-      {/* Resumen */}
-      {reportes.length > 0 && (
-        <div className="resumen-container">
-          <h3>Resumen General</h3>
-          <div className="resumen-stats">
-            <div className="stat-item">
-              <span className="stat-label">Total de Rutas:</span>
-              <span className="stat-value">
-                {reportes.reduce((sum, r) => sum + r.total_rutas, 0)}
-              </span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-label">Rutas Pendientes:</span>
-              <span className="stat-value">
-                {reportes.reduce((sum, r) => sum + r.rutas_pendientes, 0)}
-              </span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-label">Rutas En Curso:</span>
-              <span className="stat-value">
-                {reportes.reduce((sum, r) => sum + r.rutas_en_curso, 0)}
-              </span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-label">Rutas Entregadas:</span>
-              <span className="stat-value">
-                {reportes.reduce((sum, r) => sum + r.rutas_entregadas, 0)}
-              </span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-label">Rutas con Incidentes:</span>
-              <span className="stat-value">
-                {reportes.reduce((sum, r) => sum + r.rutas_incidentes, 0)}
-              </span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-label">Ingresos Totales:</span>
-              <span className="stat-value">
-                Q {reportes.reduce((sum, r) => sum + (r.ingresos_totales || 0), 0).toFixed(2)}
-              </span>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Reporte Visual */}
       {mostrarReporte && (
@@ -744,7 +843,7 @@ export default function Reportes() {
                       </tr>
                     </thead>
                     <tbody>
-                      {reportes.map((reporte, index) => (
+                      {filtrarDatosPorDias(reportes, filtroDias).map((reporte, index) => (
                         <tr key={index}>
                           <td>{reporte.periodo}</td>
                           <td>{reporte.total_rutas}</td>
@@ -769,7 +868,7 @@ export default function Reportes() {
                     </button>
                   </div>
                   <p>Reporte generado automáticamente por el Sistema de Administración de Transporte</p>
-                  <p>© 2024 S DE LEON - Todos los derechos reservados</p>
+                  <p>© 2025 S DE LEON - Todos los derechos reservados</p>
                 </div>
           </div>
         </div>

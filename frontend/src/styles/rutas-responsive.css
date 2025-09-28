@@ -1,0 +1,195 @@
+/* Contenedor con scroll horizontal solo para tabla */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 12px;
+  background-color: #fff;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.table-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-container::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.table-container::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* ----------------------------- */
+/* Responsive */
+@media (max-width: 1024px) {
+  .rutas-table th, .rutas-table td { font-size: 0.7rem; padding: 3px 5px; }
+  .rutas-search, .rutas-select, .rutas-button { font-size: 0.7rem; padding: 3px 5px; }
+}
+
+@media (max-width: 768px) {
+  .rutas-table th, .rutas-table td { font-size: 0.65rem; padding: 2px 4px; }
+  .rutas-search, .rutas-select, .rutas-button { font-size: 0.65rem; padding: 2px 3px; }
+}
+
+/* ========================================== */
+/* ANCHOS DE COLUMNAS ESPECÍFICOS */
+/* ========================================== */
+
+/* No. Ruta - Ampliar para mejor visualización */
+.rutas-responsive-table th:nth-child(1),
+.rutas-responsive-table td:nth-child(1) { 
+  width: 50px; 
+  min-width: 50px; 
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.8rem;
+}
+
+/* Cliente - Mejorar visualización */
+.rutas-responsive-table th:nth-child(2),
+.rutas-responsive-table td:nth-child(2) { 
+  width: 80px; 
+  min-width: 80px; 
+  word-break: break-word;
+  white-space: normal;
+}
+
+/* Servicio - Mejorar visualización */
+.rutas-responsive-table th:nth-child(3),
+.rutas-responsive-table td:nth-child(3) { 
+  width: 70px; 
+  min-width: 70px; 
+  word-break: break-word;
+  white-space: normal;
+  font-size: 0.8rem;
+}
+
+/* Mercadería - Mejorar visualización */
+.rutas-responsive-table th:nth-child(4),
+.rutas-responsive-table td:nth-child(4) { 
+  width: 80px; 
+  min-width: 80px; 
+  word-break: break-word;
+  white-space: normal;
+  font-size: 0.8rem;
+}
+
+/* Chofer - Mejorar visualización */
+.rutas-responsive-table th:nth-child(9),
+.rutas-responsive-table td:nth-child(9) { 
+  width: 80px; 
+  min-width: 80px; 
+  word-break: break-word;
+  white-space: normal;
+}
+
+/* Origen - Mejorar visualización */
+.rutas-responsive-table th:nth-child(7),
+.rutas-responsive-table td:nth-child(7) { 
+  width: 60px; 
+  min-width: 60px; 
+  word-break: break-word;
+  white-space: normal;
+  font-size: 0.8rem;
+}
+
+/* Destino - Mejorar visualización */
+.rutas-responsive-table th:nth-child(8),
+.rutas-responsive-table td:nth-child(8) { 
+  width: 60px; 
+  min-width: 60px; 
+  word-break: break-word;
+  white-space: normal;
+  font-size: 0.8rem;
+}
+
+/* Fecha - Mejorar visualización */
+.rutas-responsive-table th:nth-child(11),
+.rutas-responsive-table td:nth-child(11) { 
+  width: 80px; 
+  min-width: 80px; 
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.8rem;
+}
+
+/* Hora - Mejorar visualización */
+.rutas-responsive-table th:nth-child(12),
+.rutas-responsive-table td:nth-child(12) { 
+  width: 50px; 
+  min-width: 50px; 
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+/* Comentario - Mejorar visualización */
+.rutas-responsive-table th:nth-child(14),
+.rutas-responsive-table td:nth-child(14) { 
+  width: 80px; 
+  min-width: 80px; 
+  word-break: break-word;
+  white-space: normal;
+  font-size: 0.75rem;
+}
+
+/* Ayudante - Mejorar visualización */
+.rutas-responsive-table th:nth-child(10),
+.rutas-responsive-table td:nth-child(10) { 
+  width: 70px; 
+  min-width: 70px; 
+  word-break: break-word;
+  white-space: normal;
+  font-size: 0.8rem;
+}
+
+/* Camión - Mejorar visualización */
+.rutas-responsive-table th:nth-child(5),
+.rutas-responsive-table td:nth-child(5) { 
+  width: 60px; 
+  min-width: 60px; 
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+/* Combustible - Mejorar visualización */
+.rutas-responsive-table th:nth-child(6),
+.rutas-responsive-table td:nth-child(6) { 
+  width: 60px; 
+  min-width: 60px; 
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+/* Precio del viaje - Mejorar visualización */
+.rutas-responsive-table th:nth-child(13),
+.rutas-responsive-table td:nth-child(13) { 
+  width: 60px; 
+  min-width: 60px; 
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.75rem;
+}
+
+/* Estado - Mejorar visualización */
+.rutas-responsive-table th:nth-child(15),
+.rutas-responsive-table td:nth-child(15) { 
+  width: 70px; 
+  min-width: 70px; 
+  text-align: center;
+}
+
+/* Acciones - Mejorar visualización */
+.rutas-responsive-table th:nth-child(16),
+.rutas-responsive-table td:nth-child(16) { 
+  width: 80px; 
+  min-width: 80px; 
+  text-align: center;
+}
+

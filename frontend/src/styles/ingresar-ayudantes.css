@@ -93,9 +93,9 @@
 }
 
 .ayudantes-table th {
-  background-color: #f3f4f6;
+  background-color: #103053;
   font-weight: 600;
-  color: #374151;
+  color: white;
 }
 
 .ayudantes-select {
@@ -124,7 +124,7 @@
   padding: 8px 14px;
   border: none;
   border-radius: 8px;
-  background-color: #374151;
+  background-color: #103053;
   color: #fff;
   cursor: pointer;
   font-weight: 600;
@@ -177,7 +177,7 @@
   cursor: pointer;
   transition: 0.3s;
   color: #fff;
-  background-color: #374151;
+  background-color: #103053;
 }
 
 .form-button:hover, .close-button:hover {

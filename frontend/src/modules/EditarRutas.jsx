@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import rutaService from "../services/rutaService.js";
 import clientesService from "../services/clientesService.js";
+import PopUp from "../components/PopUp.jsx";
 import "../styles/editar-rutas.css";
 import Logo from "../assets/logo.png";
 
@@ -31,30 +32,18 @@ export default function EditarRutas() {
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
   const [choferesDisponibles, setChoferesDisponibles] = useState([]);
   const [ayudantesDisponibles, setAyudantesDisponibles] = useState([]);
   const [camionesDisponibles, setCamionesDisponibles] = useState([]);
   const [clientesDisponibles, setClientesDisponibles] = useState([]);
-  const [showClientesList, setShowClientesList] = useState(false);
   const estados = ["Pendiente", "En curso", "Entregado", "Incidente"];
 
   useEffect(() => {
     cargarDatos();
   }, []);
 
-  // Cerrar dropdown al hacer click fuera
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (showClientesList && !event.target.closest('.cliente-combobox-container')) {
-        setShowClientesList(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [showClientesList]);
 
   const cargarDatos = async () => {
     try {
@@ -86,7 +75,7 @@ export default function EditarRutas() {
           mercaderia: ruta.mercaderia || '',
           camion: ruta.camion_placa || '',
           combustible: ruta.combustible || '',
-          chofer: ruta.chofer_nombre || '',
+          chofer: ruta.piloto_nombre || '',
           ayudante: ruta.ayudante_nombre || '',
           origen: ruta.origen || '',
           destino: ruta.destino || '',
@@ -100,8 +89,11 @@ export default function EditarRutas() {
         console.log('FormData establecido:', {
           noRuta: ruta.no_ruta || '',
           cliente: ruta.cliente_nombre || '',
+          chofer: ruta.piloto_nombre || '',
+          ayudante: ruta.ayudante_nombre || '',
+          camion: ruta.camion_placa || '',
           fecha: fechaFormateada,
-          // ... otros campos
+          estado: ruta.estado || ''
         });
       } else {
         setError('Error al cargar los datos de la ruta');
@@ -181,8 +173,8 @@ export default function EditarRutas() {
       const response = await rutaService.updateRuta(rutaId, rutaData);
       
       if (response.success) {
-        alert('Ruta actualizada exitosamente');
-        navigate("/rutas");
+        setSuccessMessage('La ruta ha sido actualizada exitosamente');
+        setShowSuccessModal(true);
       } else {
         setError(response.message || 'Error al actualizar la ruta');
       }
@@ -243,53 +235,10 @@ export default function EditarRutas() {
           <div className="form-row">
             <div className="form-group">
               <label>Cliente:</label>
-              <div className="cliente-combobox-container">
-                <div className="cliente-input-wrapper">
-                  <input 
-                    type="text" 
-                    name="cliente" 
-                    value={formData.cliente} 
-                    onChange={handleChange} 
-                    onFocus={() => setShowClientesList(true)}
-                    placeholder="Seleccionar cliente o escribir nuevo..."
-                    className="cliente-combobox-input"
-                    required
-                  />
-                  <button 
-                    type="button" 
-                    className="cliente-dropdown-btn"
-                    onClick={() => setShowClientesList(!showClientesList)}
-                  >
-                    ▼
-                  </button>
-                </div>
-                
-                {showClientesList && (
-                  <div className="cliente-dropdown">
-                    <div className="cliente-dropdown-header">
-                      <span>Clientes disponibles</span>
-                    </div>
-                    
-                    <div className="cliente-options">
-                      {clientesDisponibles.map(cliente => (
-                        <div 
-                          key={cliente.id} 
-                          className={`cliente-option ${formData.cliente === cliente.nombre ? 'selected' : ''}`}
-                          onClick={() => {
-                            setFormData(prev => ({ ...prev, cliente: cliente.nombre }));
-                            setShowClientesList(false);
-                          }}
-                        >
-                          <div className="cliente-option-name">{cliente.nombre}</div>
-                          {cliente.id === 'nuevo' && (
-                            <span className="cliente-new-badge">Nuevo</span>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
+              <select name="cliente" value={formData.cliente} onChange={handleChange} required>
+                <option value="">Seleccionar cliente</option>
+                {clientesDisponibles.map(c => <option key={c.id} value={c.nombre}>{c.nombre}</option>)}
+              </select>
             </div>
             <div className="form-group">
               <label>Servicio:</label>
@@ -331,8 +280,8 @@ export default function EditarRutas() {
           <div className="form-row">
             <div className="form-group">
               <label>Ayudante:</label>
-              <select name="ayudante" value={formData.ayudante} onChange={handleChange} required>
-                <option value="">Seleccionar</option>
+              <select name="ayudante" value={formData.ayudante} onChange={handleChange}>
+                <option value="">Sin ayudante</option>
                 {ayudantesDisponibles.map(a => <option key={a.id} value={a.nombre}>{a.nombre}</option>)}
               </select>
             </div>
@@ -391,6 +340,17 @@ export default function EditarRutas() {
           </div>
         </form>
       </div>
+      
+      {/* PopUp de éxito */}
+      <PopUp
+        isOpen={showSuccessModal}
+        onClose={() => {
+          setShowSuccessModal(false);
+          navigate("/rutas");
+        }}
+        message={successMessage}
+        type="edit"
+      />
     </div>
   );
 }

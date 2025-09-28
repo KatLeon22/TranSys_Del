@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import camionesService from "../services/camionesService.js";
+import PopUp from "../components/PopUp.jsx";
 import "../styles/reutilizar.css"; // reutilizamos el mismo estilo
 import Logo from "../assets/logo.png"; // asegúrate de tener el logo
 
@@ -17,6 +18,8 @@ export default function IngresarCamiones() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,7 +47,8 @@ export default function IngresarCamiones() {
       const response = await camionesService.createCamion(camionData);
       
       if (response.success) {
-        alert("Camión creado exitosamente");
+        setSuccessMessage('Camión creado exitosamente');
+        setShowSuccessModal(true);
         
         // Reiniciar formulario
         setFormData({
@@ -55,9 +59,6 @@ export default function IngresarCamiones() {
           tipo: "",
           tarjetaCirculacion: ""
         });
-        
-        // Redirigir a la lista de camiones
-        navigate("/camiones");
       } else {
         setError(response.message || "Error al crear el camión");
       }
@@ -168,6 +169,17 @@ export default function IngresarCamiones() {
           </div>
         </form>
       </div>
+
+      {/* PopUp de éxito */}
+      <PopUp
+        isOpen={showSuccessModal}
+        onClose={() => {
+          setShowSuccessModal(false);
+          navigate("/camiones");
+        }}
+        message={successMessage}
+        type="success"
+      />
     </div>
   );
 }

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "../styles/ingresar-choferes.css";
 import Logo from "../assets/logo.png";
 import choferesService from "../services/choferesService";
+import PopUp from "../components/PopUp.jsx";
 
 export default function IngresarChoferes() {
   const navigate = useNavigate();
@@ -16,6 +17,8 @@ export default function IngresarChoferes() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -42,7 +45,8 @@ export default function IngresarChoferes() {
       const response = await choferesService.createChofer(choferData);
       
       if (response.success) {
-        alert("Piloto creado exitosamente");
+        setSuccessMessage('Piloto creado exitosamente');
+        setShowSuccessModal(true);
         
         // Reiniciar formulario
         setChofer({
@@ -155,6 +159,17 @@ export default function IngresarChoferes() {
           </div>
         </form>
       </div>
+
+      {/* PopUp de éxito */}
+      <PopUp
+        isOpen={showSuccessModal}
+        onClose={() => {
+          setShowSuccessModal(false);
+          navigate("/choferes");
+        }}
+        message={successMessage}
+        type="success"
+      />
     </div>
   );
 }

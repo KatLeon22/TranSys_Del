@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import rutaService from "../services/rutaService.js";
 import clientesService from "../services/clientesService.js";
+import PopUp from "../components/PopUp.jsx";
 import "../styles/ingresar-rutas.css";
 import Logo from "../assets/logo.png";
 
@@ -28,31 +29,19 @@ export default function IngresarRutas() {
   const [nextRutaNumber, setNextRutaNumber] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const [choferesDisponibles, setChoferesDisponibles] = useState([]);
   const [ayudantesDisponibles, setAyudantesDisponibles] = useState([]);
   const [camionesDisponibles, setCamionesDisponibles] = useState([]);
   const [clientesDisponibles, setClientesDisponibles] = useState([]);
-  const [showClientesList, setShowClientesList] = useState(false);
   const estados = ["Pendiente", "En curso", "Entregado", "Incidente"];
 
   useEffect(() => {
     cargarDatos();
   }, []);
 
-  // Cerrar dropdown al hacer click fuera
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (showClientesList && !event.target.closest('.cliente-combobox-container')) {
-        setShowClientesList(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [showClientesList]);
 
   const cargarDatos = async () => {
     try {
@@ -126,47 +115,49 @@ export default function IngresarRutas() {
       setLoading(true);
       setError('');
       
-      // Buscar o crear cliente
-      let clienteId = clientesDisponibles.find(c => c.nombre === formData.cliente)?.id;
+      // Buscar cliente existente
+      const clienteId = clientesDisponibles.find(c => c.nombre === formData.cliente)?.id;
       
-      // Si no existe el cliente, crear uno nuevo
+      // Validar que el cliente exista
       if (!clienteId) {
-        try {
-          const nombreCompleto = formData.cliente.trim();
-          const partesNombre = nombreCompleto.split(' ');
-          const nombre = partesNombre[0] || nombreCompleto;
-          const apellido = partesNombre.slice(1).join(' ') || 'Cliente';
-          
-          const nuevoCliente = await clientesService.createCliente({
-            nombre: nombre,
-            apellido: apellido,
-            telefono: '' // Se puede agregar un campo de teléfono si es necesario
-          });
-          
-          if (nuevoCliente.success) {
-            clienteId = nuevoCliente.data.id;
-          } else {
-            throw new Error('Error al crear el cliente');
-          }
-        } catch (error) {
-          console.error('Error creando cliente:', error);
-          setError('Error al crear el cliente. Verifica que el nombre sea válido.');
-          return;
-        }
+        setError('Cliente no encontrado. Verifica que el cliente seleccionado sea válido.');
+        return;
       }
 
       // Preparar datos para la API
+      const camionId = camionesDisponibles.find(c => c.placa === formData.camion)?.id;
+      const choferId = choferesDisponibles.find(c => c.nombre === formData.chofer)?.id;
+      const ayudanteId = ayudantesDisponibles.find(a => a.nombre === formData.ayudante)?.id;
+      
+      console.log('IDs encontrados:', {
+        clienteId,
+        camionId,
+        choferId,
+        ayudanteId
+      });
+      
+      // Validar que los IDs requeridos existan
+      if (!camionId) {
+        setError('Camión no encontrado. Verifica que el camión seleccionado sea válido.');
+        return;
+      }
+      
+      if (!choferId) {
+        setError('Chofer no encontrado. Verifica que el chofer seleccionado sea válido.');
+        return;
+      }
+      
       const rutaData = {
         no_ruta: formData.noRuta,
         cliente_id: clienteId,
         servicio: formData.servicio,
         mercaderia: formData.mercaderia,
-        camion_id: camionesDisponibles.find(c => c.placa === formData.camion)?.id,
+        camion_id: camionId,
         combustible: parseFloat(formData.combustible) || null,
         origen: formData.origen,
         destino: formData.destino,
-        chofer_id: choferesDisponibles.find(c => c.nombre === formData.chofer)?.id,
-        ayudante_id: ayudantesDisponibles.find(a => a.nombre === formData.ayudante)?.id,
+        chofer_id: choferId,
+        ayudante_id: ayudanteId || null,
         fecha: formData.fecha,
         hora: formData.hora,
         precio: parseFloat(formData.precio) || null,
@@ -174,12 +165,32 @@ export default function IngresarRutas() {
         estado: formData.estado || 'Pendiente'
       };
       
+      console.log('Datos a enviar:', rutaData);
+      
       // Crear la ruta usando el servicio
       const response = await rutaService.createRuta(rutaData);
       
       if (response.success) {
-        alert('Ruta creada exitosamente');
-        navigate("/rutas");
+        setSuccessMessage('La ruta ha sido creada exitosamente');
+        setShowSuccessModal(true);
+        // Limpiar formulario
+        setFormData({
+          noRuta: nextRutaNumber,
+          cliente: "",
+          servicio: "",
+          mercaderia: "",
+          camion: "",
+          combustible: "",
+          chofer: "",
+          ayudante: "",
+          origen: "",
+          destino: "",
+          fecha: "",
+          hora: "",
+          precio: "",
+          comentario: "",
+          estado: "Pendiente",
+        });
       } else {
         setError(response.message || 'Error al crear la ruta');
       }
@@ -248,53 +259,10 @@ export default function IngresarRutas() {
           <div className="form-row">
             <div className="form-group">
               <label>Cliente:</label>
-              <div className="cliente-combobox-container">
-                <div className="cliente-input-wrapper">
-                  <input 
-                    type="text" 
-                    name="cliente" 
-                    value={formData.cliente} 
-                    onChange={handleChange} 
-                    onFocus={() => setShowClientesList(true)}
-                    placeholder="Seleccionar cliente o escribir nuevo..."
-                    className="cliente-combobox-input"
-                    required
-                  />
-                  <button 
-                    type="button" 
-                    className="cliente-dropdown-btn"
-                    onClick={() => setShowClientesList(!showClientesList)}
-                  >
-                    ▼
-                  </button>
-                </div>
-                
-                {showClientesList && (
-                  <div className="cliente-dropdown">
-                    <div className="cliente-dropdown-header">
-                      <span>Clientes disponibles</span>
-                    </div>
-                    
-                    <div className="cliente-options">
-                      {clientesDisponibles.map(cliente => (
-                        <div 
-                          key={cliente.id} 
-                          className={`cliente-option ${formData.cliente === cliente.nombre ? 'selected' : ''}`}
-                          onClick={() => {
-                            setFormData(prev => ({ ...prev, cliente: cliente.nombre }));
-                            setShowClientesList(false);
-                          }}
-                        >
-                          <div className="cliente-option-name">{cliente.nombre}</div>
-                          {cliente.id === 'nuevo' && (
-                            <span className="cliente-new-badge">Nuevo</span>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
+              <select name="cliente" value={formData.cliente} onChange={handleChange} required>
+                <option value="">Seleccionar cliente</option>
+                {clientesDisponibles.map(c => <option key={c.id} value={c.nombre}>{c.nombre}</option>)}
+              </select>
             </div>
             <div className="form-group">
               <label>Servicio:</label>
@@ -406,6 +374,17 @@ export default function IngresarRutas() {
 
         </form>
       </div>
+      
+      {/* PopUp de éxito */}
+      <PopUp
+        isOpen={showSuccessModal}
+        onClose={() => {
+          setShowSuccessModal(false);
+          navigate("/rutas");
+        }}
+        message={successMessage}
+        type="success"
+      />
     </div>
   );
 }

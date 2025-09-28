@@ -7,7 +7,7 @@ export class RutasModel {
             SELECT no_ruta 
             FROM rutas 
             WHERE no_ruta LIKE 'RUTA%' 
-            ORDER BY CAST(SUBSTRING(no_ruta, 5) AS UNSIGNED) ASC 
+            ORDER BY CAST(SUBSTRING(no_ruta, 5) AS UNSIGNED) DESC 
             LIMIT 1
         `;
         
@@ -94,6 +94,12 @@ export class RutasModel {
 
     // Crear nueva ruta
     static async create(no_ruta, cliente_id, servicio, mercaderia, camion_id, combustible, origen, destino, chofer_id, ayudante_id, fecha, hora, precio, comentario) {
+        console.log('Parámetros para crear ruta:', {
+            no_ruta, cliente_id, servicio, mercaderia, camion_id, 
+            combustible, origen, destino, chofer_id, ayudante_id, 
+            fecha, hora, precio, comentario
+        });
+        
         const query = `
             INSERT INTO rutas (
                 no_ruta, cliente_id, servicio, mercaderia, camion_id, 
@@ -102,11 +108,15 @@ export class RutasModel {
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'Pendiente')
         `;
         
-        return await executeQuery(query, [
+        const params = [
             no_ruta, cliente_id, servicio, mercaderia, camion_id, 
             combustible, origen, destino, chofer_id, ayudante_id, 
             fecha, hora, precio, comentario
-        ]);
+        ];
+        
+        console.log('Parámetros SQL:', params);
+        
+        return await executeQuery(query, params);
     }
 
     // Obtener ruta creada con información completa
@@ -195,6 +205,41 @@ export class RutasModel {
     static async delete(id) {
         const query = `DELETE FROM rutas WHERE id = ?`;
         return await executeQuery(query, [id]);
+    }
+
+    // Obtener rutas recientes para el dashboard
+    static async getRutasRecientes() {
+        const query = `
+            SELECT 
+                r.id,
+                r.no_ruta,
+                r.servicio,
+                r.mercaderia,
+                r.combustible,
+                r.origen,
+                r.destino,
+                r.fecha,
+                r.hora,
+                r.precio,
+                r.estado,
+                r.comentario,
+                c.nombre as cliente_nombre,
+                c.apellido as cliente_apellido,
+                p.nombre as piloto_nombre,
+                p.apellido as piloto_apellido,
+                a.nombre as ayudante_nombre,
+                a.apellido as ayudante_apellido,
+                cam.placa as camion_placa
+            FROM rutas r
+            LEFT JOIN clientes c ON r.cliente_id = c.id
+            LEFT JOIN pilotos p ON r.piloto_id = p.id
+            LEFT JOIN ayudantes a ON r.ayudante_id = a.id
+            LEFT JOIN camiones cam ON r.camion_id = cam.id
+            ORDER BY r.fecha DESC, r.hora DESC
+            LIMIT 20
+        `;
+        
+        return await executeQuery(query);
     }
 }
 

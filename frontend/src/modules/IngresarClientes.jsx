@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import clientesService from "../services/clientesService.js";
+import PopUp from "../components/PopUp.jsx";
 import "../styles/ingresar-clientes.css"; // tu CSS específico
 import Logo from "../assets/logo.png";
 
@@ -13,6 +14,8 @@ export default function IngresarClientes() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,7 +33,8 @@ export default function IngresarClientes() {
       const response = await clientesService.createCliente(cliente);
       
       if (response.success) {
-        alert("Cliente creado exitosamente");
+        setSuccessMessage('Cliente creado exitosamente');
+        setShowSuccessModal(true);
         
         // Reiniciar formulario
         setCliente({
@@ -38,9 +42,6 @@ export default function IngresarClientes() {
           apellido: "",
           telefono: ""
         });
-        
-        // Redirigir a la lista de clientes
-        navigate("/clientes");
       } else {
         setError(response.message || "Error al crear el cliente");
       }
@@ -95,6 +96,16 @@ export default function IngresarClientes() {
           </div>
         </form>
       </div>
+      {/* PopUp de éxito */}
+      <PopUp
+        isOpen={showSuccessModal}
+        onClose={() => {
+          setShowSuccessModal(false);
+          navigate("/clientes");
+        }}
+        message={successMessage}
+        type="success"
+      />
     </div>
   );
 }

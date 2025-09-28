@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ayudantesService from "../services/ayudantesService.js";
+import PopUp from "../components/PopUp.jsx";
 import "../styles/reutilizar.css"; // reutilizamos el mismo estilo
 import Logo from "../assets/logo.png";
 
@@ -14,6 +15,8 @@ export default function IngresarAyudante() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,7 +34,8 @@ export default function IngresarAyudante() {
       const response = await ayudantesService.createAyudante(formData);
       
       if (response.success) {
-        alert("Ayudante creado exitosamente");
+        setSuccessMessage('Ayudante creado exitosamente');
+        setShowSuccessModal(true);
         
         // Reiniciar formulario
         setFormData({
@@ -39,9 +43,6 @@ export default function IngresarAyudante() {
           apellido: "",
           telefono: ""
         });
-        
-        // Redirigir a la lista de ayudantes
-        navigate("/ayudantes");
       } else {
         setError(response.message || "Error al crear el ayudante");
       }
@@ -116,6 +117,16 @@ export default function IngresarAyudante() {
           </div>
         </form>
       </div>
+      {/* PopUp de éxito */}
+      <PopUp
+        isOpen={showSuccessModal}
+        onClose={() => {
+          setShowSuccessModal(false);
+          navigate("/ayudantes");
+        }}
+        message={successMessage}
+        type="success"
+      />
     </div>
   );
 }
