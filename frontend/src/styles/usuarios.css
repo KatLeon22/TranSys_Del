@@ -1,0 +1,957 @@
+/* =========================
+   ESTILOS MÓDULO USUARIOS
+   ========================= */
+
+.usuarios-container {
+  padding: 20px;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+.usuarios-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.usuarios-header h1 {
+  color: #2c3e50;
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+/* =========================
+   FORMULARIOS
+   ========================= */
+
+.main-form-container {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  margin-bottom: 30px;
+}
+
+.form-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.form-container {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  max-width: 600px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.form-container h2 {
+  color: #2c3e50;
+  margin-bottom: 25px;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.usuario-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group select {
+  padding: 12px;
+  border: 2px solid #e1e8ed;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.password-input-group {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.password-input-group input {
+  flex: 1;
+}
+
+.btn-hash {
+  background: #f39c12;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  min-width: 50px;
+}
+
+.btn-hash:hover {
+  background: #e67e22;
+  transform: scale(1.05);
+}
+
+/* =========================
+   CAMPO DE PERMISOS
+   ========================= */
+
+.permissions-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.permissions-button {
+  background: #f8f9fa;
+  border: 2px dashed #bdc3c7;
+  color: #7f8c8d;
+  padding: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  text-align: left;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.permissions-button:hover {
+  background: #e3f2fd;
+  border-color: #3498db;
+  color: #3498db;
+}
+
+.permissions-button::after {
+  content: '⚙️';
+  font-size: 1.2rem;
+}
+
+.selected-permissions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.permission-tag {
+  background: #e8f5e8;
+  color: #27ae60;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid #27ae60;
+}
+
+.pilot-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #e3f2fd;
+  border: 1px solid #3498db;
+  border-radius: 8px;
+  padding: 12px 15px;
+  margin-top: 10px;
+}
+
+.info-icon {
+  font-size: 1.2rem;
+  color: #3498db;
+}
+
+.info-text {
+  color: #2c3e50;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* =========================
+   BOTONES
+   ========================= */
+
+.form-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 25px;
+  padding-top: 20px;
+  border-top: 1px solid #e1e8ed;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #3498db, #2980b9);
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+.btn-secondary {
+  background: #95a5a6;
+  color: white;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background: #7f8c8d;
+  transform: translateY(-1px);
+}
+
+/* =========================
+   TABLA DE USUARIOS
+   ========================= */
+
+.usuarios-table-container {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.usuarios-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.usuarios-table th {
+  background: linear-gradient(135deg, #2c3e50, #34495e);
+  color: white;
+  padding: 15px 12px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.usuarios-table td {
+  padding: 15px 12px;
+  border-bottom: 1px solid #e1e8ed;
+  font-size: 0.9rem;
+}
+
+.usuarios-table tbody tr:hover {
+  background-color: #f8f9fa;
+}
+
+.usuarios-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* =========================
+   BADGES DE ROLES
+   ========================= */
+
+.role-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.role-piloto {
+  background: #e8f5e8;
+  color: #27ae60;
+  border: 1px solid #27ae60;
+}
+
+.role-administrador {
+  background: #fef9e7;
+  color: #f39c12;
+  border: 1px solid #f39c12;
+}
+
+.role-gestor {
+  background: #e3f2fd;
+  color: #3498db;
+  border: 1px solid #3498db;
+}
+
+/* =========================
+   BADGES DE ESTADO
+   ========================= */
+
+.status-badge {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-activo {
+  background: #e8f5e8;
+  color: #27ae60;
+  border: 1px solid #27ae60;
+}
+
+.status-inactivo {
+  background: #fdf2f2;
+  color: #e74c3c;
+  border: 1px solid #e74c3c;
+}
+
+.piloto-assigned {
+  background: #e8f5e8;
+  color: #27ae60;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid #27ae60;
+}
+
+.no-piloto {
+  color: #bdc3c7;
+  font-style: italic;
+}
+
+.loading-pilotos {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  color: #7f8c8d;
+  font-size: 0.9rem;
+}
+
+.loading-spinner-small {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* =========================
+   BOTONES DE ACCIÓN
+   ========================= */
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.action-buttons button {
+  background: none;
+  border: none;
+  padding: 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 35px;
+  height: 35px;
+}
+
+.btn-edit {
+  background: #fef9e7;
+  color: #f39c12;
+}
+
+.btn-edit:hover {
+  background: #f39c12;
+  color: white;
+  transform: scale(1.1);
+}
+
+.btn-delete {
+  background: #fdf2f2;
+  color: #e74c3c;
+}
+
+.btn-delete:hover {
+  background: #e74c3c;
+  color: white;
+  transform: scale(1.1);
+}
+
+.btn-status {
+  background: #f39c12;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  margin: 0 2px;
+}
+
+.btn-status:hover {
+  transform: scale(1.1);
+}
+
+.btn-activate {
+  background: #27ae60;
+}
+
+.btn-activate:hover {
+  background: #229954;
+}
+
+.btn-deactivate {
+  background: #e74c3c;
+}
+
+.btn-deactivate:hover {
+  background: #c0392b;
+}
+
+/* =========================
+   MODAL DE PERMISOS
+   ========================= */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal-container {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 30px;
+  border-bottom: 1px solid #e0e0e0;
+  background: #f8f9fa;
+}
+
+.modal-header h3 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 1.5rem;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #7f8c8d;
+  padding: 5px;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+  background: #e74c3c;
+  color: white;
+}
+
+.modal-body {
+  padding: 30px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.permissions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.permission-item {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 15px;
+  transition: all 0.3s ease;
+}
+
+.permission-item:hover {
+  border-color: #3498db;
+  box-shadow: 0 2px 8px rgba(52, 152, 219, 0.1);
+}
+
+.permission-checkbox {
+  display: flex;
+  align-items: flex-start;
+  cursor: pointer;
+  gap: 15px;
+}
+
+.permission-checkbox input[type="checkbox"] {
+  display: none;
+}
+
+.checkmark {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #bdc3c7;
+  border-radius: 4px;
+  position: relative;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.permission-checkbox input[type="checkbox"]:checked + .checkmark {
+  background: #3498db;
+  border-color: #3498db;
+}
+
+.permission-checkbox input[type="checkbox"]:checked + .checkmark::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.permission-info {
+  flex: 1;
+}
+
+.permission-name {
+  font-weight: 600;
+  color: #2c3e50;
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+  text-transform: capitalize;
+}
+
+.permission-description {
+  color: #7f8c8d;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  padding: 20px 30px;
+  border-top: 1px solid #e0e0e0;
+  background: #f8f9fa;
+}
+
+.loading-permissions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  text-align: center;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 15px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.no-permissions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  text-align: center;
+  color: #7f8c8d;
+}
+
+.no-permissions p {
+  margin-bottom: 20px;
+  font-size: 1.1rem;
+}
+
+/* =========================
+   LOADING
+   ========================= */
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px;
+  font-size: 1.2rem;
+  color: #7f8c8d;
+}
+
+/* =========================
+   PERMISOS MODAL Y BOTONES
+   ========================= */
+
+.permisos-button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.btn-permissions {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.btn-permissions:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+}
+
+.selected-permissions {
+  background: #f8f9fa;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 15px;
+}
+
+.selected-permissions strong {
+  color: #374151;
+  font-size: 14px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.permissions-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.permission-tag {
+  background: #3b82f6;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.user-role-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 10px;
+}
+
+.user-role-info .info-icon {
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.user-role-info .info-text {
+  color: #92400e;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.user-role-info .info-text strong {
+  color: #78350f;
+  font-weight: 600;
+}
+
+/* =========================
+   PERMISOS CHECKBOXES
+   ========================= */
+
+.permisos-group {
+  width: 100%;
+}
+
+.permisos-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 15px;
+  margin-top: 10px;
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: #f9fafb;
+}
+
+.permiso-item {
+  background: white;
+  border-radius: 8px;
+  padding: 0;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+}
+
+.permiso-item:hover {
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  transform: translateY(-1px);
+}
+
+.permiso-checkbox {
+  display: flex;
+  align-items: flex-start;
+  padding: 15px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+  position: relative;
+}
+
+.permiso-checkbox:hover {
+  background-color: #f3f4f6;
+}
+
+.permiso-checkbox input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  height: 20px;
+  width: 20px;
+  background-color: #e5e7eb;
+  border-radius: 4px;
+  margin-right: 12px;
+  flex-shrink: 0;
+  position: relative;
+  transition: all 0.2s ease;
+  border: 2px solid #d1d5db;
+}
+
+.permiso-checkbox:hover .checkmark {
+  background-color: #d1d5db;
+  border-color: #9ca3af;
+}
+
+.permiso-checkbox input:checked ~ .checkmark {
+  background-color: #3b82f6;
+  border-color: #3b82f6;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+  left: 6px;
+  top: 2px;
+  width: 6px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.permiso-checkbox input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.permiso-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.permiso-nombre {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 14px;
+  text-transform: capitalize;
+}
+
+.permiso-descripcion {
+  font-size: 12px;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+/* Responsive para permisos */
+@media (max-width: 768px) {
+  .permisos-container {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .permiso-checkbox {
+    padding: 12px;
+  }
+  
+  .permiso-nombre {
+    font-size: 13px;
+  }
+  
+  .permiso-descripcion {
+    font-size: 11px;
+  }
+}
+
+/* =========================
+   RESPONSIVE
+   ========================= */
+
+@media (max-width: 768px) {
+  .usuarios-container {
+    padding: 10px;
+  }
+  
+  .usuarios-header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .form-container {
+    width: 95%;
+    padding: 20px;
+  }
+  
+  .usuarios-table-container {
+    overflow-x: auto;
+  }
+  
+  .usuarios-table {
+    min-width: 600px;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .usuarios-header h1 {
+    font-size: 1.5rem;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
+}

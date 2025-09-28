@@ -66,6 +66,14 @@ export const login = async (req, res) => {
 
         const user = users[0];
 
+        // Verificar que el usuario esté activo
+        if (user.estado !== 'activo') {
+            return res.status(401).json({
+                success: false,
+                message: 'Usuario desactivado. Contacta al administrador.'
+            });
+        }
+
         // Verificar contraseña
         const isValidPassword = await verifyPassword(password, user.password);
         
@@ -143,6 +151,14 @@ export const verifyToken = async (req, res) => {
         }
 
         const user = users[0];
+
+        // Verificar que el usuario esté activo
+        if (user.estado !== 'activo') {
+            return res.status(401).json({
+                success: false,
+                message: 'Usuario desactivado. Contacta al administrador.'
+            });
+        }
 
         // Obtener permisos actualizados
         const permissions = await User.getPermissions(user.rol_id);

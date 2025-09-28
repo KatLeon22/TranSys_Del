@@ -31,6 +31,7 @@ import EditarRutas from "./modules/EditarRutas";
 import MostrarRuta from "./modules/MostrarRutas";
 import Login from "./modules/login";
 import PilotoRutas from "./modules/PilotoRutas";
+import Usuarios from "./modules/Usuarios";
 
 export default function App() {
   const [rutas, setRutas] = useState([]);
@@ -49,7 +50,14 @@ export default function App() {
             <ProtectedRoute>
               <Layout>
                 <Routes>
-                  <Route path="/dashboard" element={<Dashboard />} />
+                  <Route 
+                    path="/dashboard" 
+                    element={
+                      <ProtectedRoute requiredPermissions={['gestionar_catalogos']}>
+                        <Dashboard />
+                      </ProtectedRoute>
+                    } 
+                  />
                   
                   {/* Ruta especial para pilotos */}
                   <Route 
@@ -61,42 +69,239 @@ export default function App() {
                     } 
                   />
 
-                {/* Módulos */}
-                <Route path="/choferes" element={<Choferes />} />
-                <Route path="/rutas" element={<Rutas rutas={rutas} setRutas={setRutas} />} />
-                <Route path="/mantenimientos" element={<Mantenimientos />} />
-                <Route path="/reportes" element={<Reportes />} />
-                <Route path="/clientes" element={<Clientes />} />
-                <Route path="/camiones" element={<Camiones />} />
-                <Route path="/ayudantes" element={<Ayudantes />} />
+                {/* Módulos con verificación de permisos */}
+                <Route 
+                  path="/choferes" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['gestionar_catalogos']}>
+                      <Choferes />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/rutas" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['ver_rutas', 'crear_rutas', 'editar_rutas', 'eliminar_rutas']}>
+                      <Rutas rutas={rutas} setRutas={setRutas} />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/mantenimientos" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['gestionar_catalogos']}>
+                      <Mantenimientos />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/reportes" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['generar_reportes']}>
+                      <Reportes />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/clientes" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['gestionar_catalogos']}>
+                      <Clientes />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/camiones" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['gestionar_catalogos']}>
+                      <Camiones />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/ayudantes" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['gestionar_catalogos']}>
+                      <Ayudantes />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/usuarios" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['gestionar_catalogos']}>
+                      <Usuarios />
+                    </ProtectedRoute>
+                  } 
+                />
 
-                {/* Ingreso */}
-                <Route path="/ingresar-choferes" element={<IngresarChoferes />} />
-                <Route path="/ingresar-ayudante" element={<IngresarAyudante />} />
-                <Route path="/ingresar-clientes" element={<IngresarClientes />} />
-                <Route path="/ingresar-camiones" element={<IngresarCamiones />} />
-                <Route path="/ingresar-ruta" element={<IngresarRuta rutas={rutas} setRutas={setRutas} />} />
+                {/* Ingreso con verificación de permisos */}
+                <Route 
+                  path="/ingresar-choferes" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['gestionar_catalogos']}>
+                      <IngresarChoferes />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/ingresar-ayudante" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['gestionar_catalogos']}>
+                      <IngresarAyudante />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/ingresar-clientes" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['gestionar_catalogos']}>
+                      <IngresarClientes />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/ingresar-camiones" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['gestionar_catalogos']}>
+                      <IngresarCamiones />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/ingresar-ruta" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['crear_rutas']}>
+                      <IngresarRuta rutas={rutas} setRutas={setRutas} />
+                    </ProtectedRoute>
+                  } 
+                />
 
-                {/* Edición */}
-                <Route path="/editar-choferes/:id" element={<EditarChoferes />} />
-                <Route path="/editar-ayudantes/:id" element={<EditarAyudantes />} />
-                <Route path="/editar-clientes/:id" element={<EditarClientes />} />
-                <Route path="/editar-camiones/:id" element={<EditarCamiones />} />
-                <Route path="/editar-ruta/:id" element={<EditarRutas rutas={rutas} setRutas={setRutas} />} />
+                {/* Edición con verificación de permisos */}
+                <Route 
+                  path="/editar-choferes/:id" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['gestionar_catalogos']}>
+                      <EditarChoferes />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/editar-ayudantes/:id" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['gestionar_catalogos']}>
+                      <EditarAyudantes />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/editar-clientes/:id" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['gestionar_catalogos']}>
+                      <EditarClientes />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/editar-camiones/:id" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['gestionar_catalogos']}>
+                      <EditarCamiones />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/editar-ruta/:id" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['editar_rutas']}>
+                      <EditarRutas rutas={rutas} setRutas={setRutas} />
+                    </ProtectedRoute>
+                  } 
+                />
 
-                {/* Mostrar / Detalles */}
-                <Route path="/mostrar-choferes/:id" element={<VerChoferes />} />
-                <Route path="/mostrar-ayudante/:id" element={<MostrarAyudante />} />
-                <Route path="/mostrar-clientes/:id" element={<MostrarClientes />} />
-                <Route path="/mostrar-camiones/:id" element={<MostrarCamiones />} />
-                <Route path="/mostrar-ruta/:id" element={<MostrarRuta rutas={rutas} />} />
+                {/* Mostrar / Detalles con verificación de permisos */}
+                <Route 
+                  path="/mostrar-choferes/:id" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['gestionar_catalogos']}>
+                      <VerChoferes />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/mostrar-ayudante/:id" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['gestionar_catalogos']}>
+                      <MostrarAyudante />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/mostrar-clientes/:id" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['gestionar_catalogos']}>
+                      <MostrarClientes />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/mostrar-camiones/:id" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['gestionar_catalogos']}>
+                      <MostrarCamiones />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/mostrar-ruta/:id" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['ver_rutas']}>
+                      <MostrarRuta rutas={rutas} />
+                    </ProtectedRoute>
+                  } 
+                />
 
-                {/* Alias */}
-                <Route path="/ver-ayudantes/:id" element={<MostrarAyudante />} />
-                <Route path="/ver-ruta/:id" element={<MostrarRuta rutas={rutas} />} />
-                <Route path="/ver-camiones/:id" element={<MostrarCamiones />} />
-                <Route path="/ver-choferes/:id" element={<VerChoferes />} />
-                <Route path="/ver-clientes/:id" element={<MostrarClientes />} />
+                {/* Alias con verificación de permisos */}
+                <Route 
+                  path="/ver-ayudantes/:id" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['gestionar_catalogos']}>
+                      <MostrarAyudante />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/ver-ruta/:id" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['ver_rutas']}>
+                      <MostrarRuta rutas={rutas} />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/ver-camiones/:id" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['gestionar_catalogos']}>
+                      <MostrarCamiones />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/ver-choferes/:id" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['gestionar_catalogos']}>
+                      <VerChoferes />
+                    </ProtectedRoute>
+                  } 
+                />
+                <Route 
+                  path="/ver-clientes/:id" 
+                  element={
+                    <ProtectedRoute requiredPermissions={['gestionar_catalogos']}>
+                      <MostrarClientes />
+                    </ProtectedRoute>
+                  } 
+                />
                 </Routes>
               </Layout>
             </ProtectedRoute>

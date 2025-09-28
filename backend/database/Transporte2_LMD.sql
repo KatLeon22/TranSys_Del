@@ -5,7 +5,8 @@ USE transporte2;
 -- =========================
 INSERT IGNORE INTO roles (id, nombre) VALUES
 (1, 'administrador'),
-(2, 'piloto');
+(2, 'piloto'),
+(3, 'usuario');
 
 -- =========================
 -- USUARIOS
@@ -51,6 +52,10 @@ INSERT IGNORE INTO rol_permisos (rol_id, permiso_id) VALUES
 INSERT IGNORE INTO rol_permisos (rol_id, permiso_id) VALUES
 (2, 4), -- ver_rutas
 (2, 5); -- cambiar_estado
+
+-- (El usuario no tiene permisos predefinidos - se asignan manualmente)
+-- INSERT IGNORE INTO rol_permisos (rol_id, permiso_id) VALUES
+-- (3, 4); -- ver_rutas (comentado - se asigna manualmente)
 
 -- =========================
 -- CLIENTES

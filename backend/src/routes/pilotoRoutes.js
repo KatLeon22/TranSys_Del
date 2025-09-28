@@ -1,6 +1,7 @@
 import express from 'express';
 import { authenticateToken } from '../middleware/auth.js';
 import { 
+    getAllPilotos,
     getRutasByPiloto, 
     updateEstadoRuta, 
     getHistorialRuta 
@@ -8,7 +9,10 @@ import {
 
 const router = express.Router();
 
-// Todas las rutas requieren autenticación
+// Obtener todos los pilotos (sin autenticación para uso en formularios)
+router.get('/', getAllPilotos);
+
+// Todas las demás rutas requieren autenticación
 router.use(authenticateToken);
 
 // Obtener rutas del piloto logueado

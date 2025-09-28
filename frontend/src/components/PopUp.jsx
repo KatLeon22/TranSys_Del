@@ -9,9 +9,11 @@ const PopUp = ({ isOpen, onClose, message, type = 'success' }) => {
       case 'success':
         return '✅';
       case 'edit':
-        return '✏️';
+        return '🔄';
       case 'delete':
         return '🗑️';
+      case 'error':
+        return '❌';
       default:
         return '✅';
     }
@@ -22,9 +24,11 @@ const PopUp = ({ isOpen, onClose, message, type = 'success' }) => {
       case 'success':
         return 'Datos ingresados con éxito';
       case 'edit':
-        return 'Editado con éxito';
+        return 'Estado actualizado';
       case 'delete':
         return 'Eliminado con éxito';
+      case 'error':
+        return 'Error en la operación';
       default:
         return 'Operación exitosa';
     }

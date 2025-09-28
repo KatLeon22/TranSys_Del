@@ -11,6 +11,8 @@ import ayudantesRoutes from "./routes/ayudantesRoutes.js";
 import rutasRoutes from "./routes/rutasRoutes.js";
 import mantenimientosRoutes from "./routes/mantenimientosRoutes.js";
 import reportesRoutes from "./routes/reportesRoutes.js";
+import usuariosRoutes from "./routes/usuariosRoutes.js";
+import permisosRoutes from "./routes/permisosRoutes.js";
 
 // Cargar variables de entorno
 dotenv.config();
@@ -58,6 +60,8 @@ app.use("/api/ayudantes", ayudantesRoutes);
 app.use("/api/rutas", rutasRoutes);
 app.use("/api/mantenimientos", mantenimientosRoutes);
 app.use("/api/reportes", reportesRoutes);
+app.use("/api/usuarios", usuariosRoutes);
+app.use("/api/permisos", permisosRoutes);
 
 export default app;
 
