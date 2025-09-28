@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import clientesService from "../services/clientesService.js";
+import PopUp from "../components/PopUp.jsx";
 import "../styles/editar-clientes.css";
 import Logo from "../assets/logo.png";
 
@@ -17,6 +18,8 @@ export default function EditarClientes() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
     cargarCliente();
@@ -65,8 +68,8 @@ export default function EditarClientes() {
       const response = await clientesService.updateCliente(clienteId, cliente);
       
       if (response.success) {
-        alert("Cliente actualizado exitosamente");
-        navigate("/clientes");
+        setSuccessMessage('Cliente actualizado exitosamente');
+        setShowSuccessModal(true);
       } else {
         setError(response.message || "Error al actualizar el cliente");
       }
@@ -177,6 +180,17 @@ export default function EditarClientes() {
           </div>
         </form>
       </div>
+
+      {/* PopUp de éxito */}
+      <PopUp
+        isOpen={showSuccessModal}
+        onClose={() => {
+          setShowSuccessModal(false);
+          navigate("/clientes");
+        }}
+        message={successMessage}
+        type="edit"
+      />
     </div>
   );
 }

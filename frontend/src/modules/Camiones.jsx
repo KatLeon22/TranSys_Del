@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import camionesService from "../services/camionesService.js";
+import PopUp from "../components/PopUp.jsx";
 import "../styles/reutilizar.css";
 
 export default function Camiones() {
@@ -13,6 +14,8 @@ export default function Camiones() {
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const navigate = useNavigate();
 
@@ -70,7 +73,8 @@ export default function Camiones() {
         setModalVisible(false);
         setCamionToDelete(null);
         setError(''); // Limpiar errores anteriores
-        alert("Camión eliminado exitosamente");
+        setSuccessMessage('Camión eliminado con éxito');
+        setShowSuccessModal(true);
       } else {
         setError(response.message || 'Error al eliminar el camión');
       }
@@ -240,6 +244,14 @@ export default function Camiones() {
           </div>
         </div>
       )}
+
+      {/* PopUp de éxito */}
+      <PopUp
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        message={successMessage}
+        type="delete"
+      />
     </div>
   );
 }

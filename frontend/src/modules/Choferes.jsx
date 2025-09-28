@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import choferesService from "../services/choferesService.js";
+import PopUp from "../components/PopUp.jsx";
 import "../styles/reutilizar.css";
 
 export default function Choferes() {
@@ -13,6 +14,8 @@ export default function Choferes() {
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const navigate = useNavigate();
 
@@ -81,6 +84,8 @@ export default function Choferes() {
         setModalVisible(false);
         setChoferToDelete(null);
         setError(''); // Limpiar errores anteriores
+        setSuccessMessage('Chofer eliminado con éxito');
+        setShowSuccessModal(true);
       } else {
         setError(response.message || 'Error al eliminar el chofer');
       }
@@ -233,6 +238,14 @@ export default function Choferes() {
           </div>
         </div>
       )}
+
+      {/* PopUp de éxito */}
+      <PopUp
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        message={successMessage}
+        type="delete"
+      />
     </div>
   );
 }

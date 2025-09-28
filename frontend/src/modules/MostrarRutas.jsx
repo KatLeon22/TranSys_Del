@@ -110,7 +110,7 @@ export default function MostrarRuta() {
             </div>
             <div className="form-group">
               <label>Chofer:</label>
-              <input type="text" value={rutaData?.chofer_nombre || ''} readOnly className="full-input" />
+              <input type="text" value={rutaData?.piloto_nombre || ''} readOnly className="full-input" />
             </div>
           </div>
 
@@ -118,7 +118,7 @@ export default function MostrarRuta() {
           <div className="form-row">
             <div className="form-group">
               <label>Ayudante:</label>
-              <input type="text" value={rutaData?.ayudante_nombre || ''} readOnly className="full-input" />
+              <input type="text" value={rutaData?.ayudante_nombre || 'Sin ayudante'} readOnly className="full-input" />
             </div>
             <div className="form-group">
               <label>Origen:</label>

@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import "../styles/editar-choferes.css";
 import Logo from "../assets/logo.png";
 import choferesService from "../services/choferesService";
+import PopUp from "../components/PopUp.jsx";
 
 export default function EditarChoferes() {
   const navigate = useNavigate();
@@ -21,6 +22,8 @@ export default function EditarChoferes() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   // Cargar datos del chofer
   useEffect(() => {
@@ -102,8 +105,8 @@ export default function EditarChoferes() {
       const response = await choferesService.updateChofer(chofer.id, choferData);
       
       if (response.success) {
-        alert("Piloto actualizado exitosamente");
-        navigate("/choferes");
+        setSuccessMessage('Piloto actualizado exitosamente');
+        setShowSuccessModal(true);
       } else {
         setError(response.message || "Error al actualizar el piloto");
       }
@@ -218,6 +221,17 @@ export default function EditarChoferes() {
           </div>
         </form>
       </div>
+
+      {/* PopUp de éxito */}
+      <PopUp
+        isOpen={showSuccessModal}
+        onClose={() => {
+          setShowSuccessModal(false);
+          navigate("/choferes");
+        }}
+        message={successMessage}
+        type="edit"
+      />
     </div>
   );
 }

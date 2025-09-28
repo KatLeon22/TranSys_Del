@@ -2,17 +2,22 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import rutaService from "../services/rutaService.js";
+import PopUp from "../components/PopUp.jsx";
 import "../styles/rutas.css";
+import "../styles/rutas-responsive.css";
 
 export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
   const navigate = useNavigate();
   const [rutas, setRutas] = useState([]);
   const [busqueda, setBusqueda] = useState("");
+  const [tipoBusqueda, setTipoBusqueda] = useState("todos");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [modal, setModal] = useState({ show: false, rutaId: null });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
   const [choferesDisponibles, setChoferesDisponibles] = useState([]);
   const [ayudantesDisponibles, setAyudantesDisponibles] = useState([]);
   const [camionesDisponibles, setCamionesDisponibles] = useState([]);
@@ -24,6 +29,18 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
   useEffect(() => {
     cargarDatos();
   }, []);
+
+  // Debug: mostrar información cuando cambie la búsqueda
+  useEffect(() => {
+    if (busqueda && tipoBusqueda === "servicio") {
+      console.log('🔍 Cambio en búsqueda:', {
+        busqueda: busqueda,
+        tipoBusqueda: tipoBusqueda,
+        totalRutas: rutas.length,
+        rutasFiltradas: rutas.filter(r => r.servicio?.toLowerCase().trim().includes(busqueda.toLowerCase().trim())).length
+      });
+    }
+  }, [busqueda, tipoBusqueda, rutas]);
 
   const cargarDatos = async () => {
     try {
@@ -45,6 +62,8 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
           id: ruta.id,
           noRuta: ruta.no_ruta,
           cliente: `${ruta.cliente_nombre} ${ruta.cliente_apellido}`,
+          clienteNombre: ruta.cliente_nombre,
+          clienteApellido: ruta.cliente_apellido,
           servicio: ruta.servicio,
           mercaderia: ruta.mercaderia,
           camion: ruta.camion_placa,
@@ -52,7 +71,11 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
           origen: ruta.origen,
           destino: ruta.destino,
           chofer: `${ruta.piloto_nombre} ${ruta.piloto_apellido}`,
+          choferNombre: ruta.piloto_nombre,
+          choferApellido: ruta.piloto_apellido,
           ayudante: ruta.ayudante_nombre ? `${ruta.ayudante_nombre} ${ruta.ayudante_apellido}` : '',
+          ayudanteNombre: ruta.ayudante_nombre,
+          ayudanteApellido: ruta.ayudante_apellido,
           fecha: ruta.fecha,
           hora: ruta.hora,
           estado: ruta.estado,
@@ -105,13 +128,37 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
     }
   };
 
-  const rutasFiltradas = rutas.filter(
-    r =>
-      r.noRuta.toLowerCase().includes(busqueda.toLowerCase()) ||
-      r.cliente.toLowerCase().includes(busqueda.toLowerCase()) ||
-      r.servicio.toLowerCase().includes(busqueda.toLowerCase()) ||
-      r.chofer.toLowerCase().includes(busqueda.toLowerCase())
-  );
+  const rutasFiltradas = rutas.filter(r => {
+    if (!busqueda) return true;
+    
+    const busquedaLower = busqueda.toLowerCase().trim();
+    
+    // Debug: mostrar datos de búsqueda solo para servicio
+    if (tipoBusqueda === "servicio") {
+      console.log('🔍 Búsqueda en servicio:', {
+        busqueda: busqueda,
+        busquedaLower: busquedaLower,
+        servicio: r.servicio,
+        servicioLower: r.servicio?.toLowerCase()?.trim(),
+        incluye: r.servicio?.toLowerCase()?.trim().includes(busquedaLower)
+      });
+    }
+    
+    switch (tipoBusqueda) {
+      case "no_ruta":
+        return r.noRuta?.toLowerCase().trim().includes(busquedaLower);
+      case "cliente":
+        return r.cliente?.toLowerCase().trim().includes(busquedaLower);
+      case "servicio":
+        return r.servicio?.toLowerCase().trim().includes(busquedaLower);
+      case "todos":
+      default:
+        return r.noRuta?.toLowerCase().trim().includes(busquedaLower) ||
+               r.cliente?.toLowerCase().trim().includes(busquedaLower) ||
+               r.servicio?.toLowerCase().trim().includes(busquedaLower) ||
+               r.chofer?.toLowerCase().trim().includes(busquedaLower);
+    }
+  });
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -171,6 +218,8 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
         setRutas(updated);
         if (setRutasProp) setRutasProp(updated);
         setModal({ show: false, rutaId: null });
+        setSuccessMessage('La ruta ha sido eliminada exitosamente');
+        setShowSuccessModal(true);
       } else {
         setError('Error al eliminar la ruta');
       }
@@ -233,15 +282,47 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
         </div>
 
         <div className="rutas-search-center">
+          <label htmlFor="tipo-busqueda">Buscar por:</label>
+          <select
+            id="tipo-busqueda"
+            className="rutas-select"
+            value={tipoBusqueda}
+            onChange={e => setTipoBusqueda(e.target.value)}
+          >
+            <option value="todos">Todos los campos</option>
+            <option value="no_ruta">No. Ruta</option>
+            <option value="cliente">Cliente</option>
+            <option value="servicio">Servicio</option>
+          </select>
+          
           <label htmlFor="busqueda">Búsqueda:</label>
           <input
             id="busqueda"
             type="text"
-            placeholder="Buscar ruta..."
+            placeholder={
+              tipoBusqueda === "no_ruta" ? "Buscar por número de ruta..." :
+              tipoBusqueda === "cliente" ? "Buscar por cliente..." :
+              tipoBusqueda === "servicio" ? "Buscar por servicio..." :
+              "Buscar en todos los campos..."
+            }
             className="rutas-search"
             value={busqueda}
             onChange={e => setBusqueda(e.target.value)}
           />
+          
+          {busqueda && (
+            <button
+              type="button"
+              className="rutas-button"
+              onClick={() => {
+                setBusqueda("");
+                setTipoBusqueda("todos");
+              }}
+              style={{ marginLeft: "10px", padding: "5px 10px", fontSize: "0.8rem" }}
+            >
+              Limpiar
+            </button>
+          )}
         </div>
 
 
@@ -253,12 +334,13 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
         </button>
       </div>
 
-      <table className="rutas-table">
+      <div className="rutas-responsive-container">
+        <table className="rutas-table rutas-responsive-table">
         <thead>
           <tr>
-            <th>No. Ruta</th>
-            <th>Cliente</th>
-            <th>Servicio</th>
+            <th>No.<br />Ruta</th>
+            <th style={{minWidth: "120px"}}>Cliente</th>
+            <th style={{minWidth: "100px"}}>Servicio</th>
             <th>Mercadería</th>
             <th>Camión</th>
             <th>Combustible<br />(gal.)</th>
@@ -268,7 +350,7 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
             <th>Ayudante</th>
             <th>Fecha</th>
             <th>Hora</th>
-            <th>Precio del viaje</th>
+            <th>Precio del<br />viaje</th>
             <th style={{width: "50px"}}>Comentario</th>
             <th>Estado</th>
             <th>Acciones</th>
@@ -277,64 +359,90 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
         <tbody>
           {currentRutas.map(ruta => (
             <tr key={ruta.id}>
-              <td>{ruta.noRuta}</td>
-              <td>{ruta.cliente}</td>
-              <td>{ruta.servicio}</td>
-              <td>{ruta.mercaderia}</td>
-              <td>
-                <select value={ruta.camion} onChange={e => handleChange(ruta.id,'camion',e.target.value)}>
-                  {camionesDisponibles.map(c => <option key={c.id} value={c.placa}>{c.placa}</option>)}
-                </select>
+              <td style={{minWidth: "50px", padding: "2px", textAlign: "center", fontSize: "0.8rem", fontWeight: "600"}}>
+                {ruta.noRuta.replace(/RUTA/gi, '').replace(/\s+/g, '')}
               </td>
-              <td>
-                <input
-                  type="number"
-                  value={ruta.combustible}
-                  onChange={e => handleChange(ruta.id, 'combustible', parseFloat(e.target.value))}
-                  min="0"
-                />
+              <td style={{lineHeight: "1.1", minWidth: "80px", padding: "2px"}}>
+                <div style={{fontWeight: "600", color: "#1f2937", marginBottom: "1px", fontSize: "0.8rem"}}>{ruta.clienteNombre}</div>
+                <div style={{fontSize: "0.75em", color: "#6b7280", fontStyle: "italic"}}>{ruta.clienteApellido}</div>
               </td>
-              <td>{ruta.origen}</td>
-              <td>{ruta.destino}</td>
-              <td>
-                <select value={ruta.chofer} onChange={e => handleChange(ruta.id,'chofer',e.target.value)}>
-                  {choferesDisponibles.map(c => (
-                    <option key={c.id} value={c.nombre} disabled={choferesOcupados.includes(c.nombre) && c.nombre !== ruta.chofer}>{c.nombre}</option>
-                  ))}
-                </select>
+              <td style={{minWidth: "70px", padding: "2px", fontSize: "0.8rem", wordBreak: "break-word", whiteSpace: "normal"}}>{ruta.servicio}</td>
+              <td style={{minWidth: "80px", padding: "2px", fontSize: "0.8rem", wordBreak: "break-word", whiteSpace: "normal"}}>{ruta.mercaderia}</td>
+              <td style={{minWidth: "60px", padding: "2px", fontSize: "0.8rem", textAlign: "center"}}>{ruta.camion}</td>
+              <td style={{minWidth: "60px", padding: "2px", fontSize: "0.8rem", textAlign: "center"}}>{Math.round(ruta.combustible)} gal.</td>
+              <td style={{minWidth: "60px", padding: "2px", fontSize: "0.8rem"}}>{ruta.origen}</td>
+              <td style={{minWidth: "60px", padding: "2px", fontSize: "0.8rem"}}>{ruta.destino}</td>
+              <td style={{lineHeight: "1.1", minWidth: "80px", padding: "2px"}}>
+                <div style={{fontWeight: "600", color: "#1f2937", marginBottom: "1px", fontSize: "0.8rem"}}>{ruta.choferNombre}</div>
+                <div style={{fontSize: "0.75em", color: "#6b7280", fontStyle: "italic"}}>{ruta.choferApellido}</div>
               </td>
-              <td>
-                <select value={ruta.ayudante} onChange={e => handleChange(ruta.id,'ayudante',e.target.value)}>
-                  <option value="">Sin ayudante</option>
-                  {ayudantesDisponibles.map(a => (
-                    <option key={a.id} value={a.nombre} disabled={ayudantesOcupados.includes(a.nombre) && a.nombre !== ruta.ayudante}>{a.nombre}</option>
-                  ))}
-                </select>
+              <td style={{lineHeight: "1.1", minWidth: "70px", padding: "2px"}}>
+                {ruta.ayudanteNombre ? (
+                  <>
+                    <div style={{fontWeight: "600", color: "#1f2937", marginBottom: "1px", fontSize: "0.8rem"}}>{ruta.ayudanteNombre}</div>
+                    <div style={{fontSize: "0.75em", color: "#6b7280", fontStyle: "italic"}}>{ruta.ayudanteApellido}</div>
+                  </>
+                ) : (
+                  <div style={{fontSize: "0.8rem", color: "#9ca3af", fontStyle: "italic"}}>Sin ayudante</div>
+                )}
               </td>
-              <td>{ruta.fecha}</td>
-              <td>{ruta.hora}</td>
-              <td>Q{ruta.precio}</td>
-              <td style={{maxWidth: "50px", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis"}}>
-                {ruta.comentario || "-"}
+              <td style={{fontWeight: "500", color: "#374151", minWidth: "80px", padding: "2px", fontSize: "0.8rem"}}>
+                {ruta.fecha ? new Date(ruta.fecha).toLocaleDateString() : '-'}
               </td>
-              <td>
-                <select
-                  className="estado-select"
-                  value={ruta.estado}
-                  onChange={e => handleChange(ruta.id,'estado',e.target.value)}
+              <td style={{minWidth: "50px", padding: "2px", fontSize: "0.8rem", textAlign: "center"}}>{ruta.hora ? ruta.hora.substring(0, 5) : '-'}</td>
+              <td style={{fontWeight: "600", textAlign: "center", minWidth: "60px", padding: "2px", fontSize: "0.75rem"}}>
+                Q{ruta.precio}
+              </td>
+              <td 
+                style={{
+                  minWidth: "80px", 
+                  padding: "2px", 
+                  fontSize: "0.75rem", 
+                  wordBreak: "break-word", 
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  cursor: "help"
+                }}
+                title={ruta.comentario || "Sin comentarios"}
+              >
+                {ruta.comentario ? 
+                  (ruta.comentario.length > 25 ? `${ruta.comentario.substring(0, 25)}...` : ruta.comentario) 
+                  : "-"
+                }
+              </td>
+              <td style={{textAlign: "center", minWidth: "70px", padding: "2px"}}>
+                <span
                   style={{
                     backgroundColor: ruta.estado === "Pendiente" ? "#facc15" :
                                      ruta.estado === "En curso" ? "#2563eb" :
                                      ruta.estado === "Entregado" ? "#16a34a" :
                                      ruta.estado === "Incidente" ? "#dc2626" : "#f3f4f6",
-                    color: ruta.estado === "Pendiente" ? "#1f2937" : "white"
+                    color: ruta.estado === "Pendiente" ? "#1f2937" : "white",
+                    padding: "2px 6px",
+                    borderRadius: "3px",
+                    fontSize: "0.75rem",
+                    fontWeight: "600",
+                    display: "inline-block",
+                    minWidth: "60px",
+                    textAlign: "center"
                   }}
                 >
-                  {estados.map(e => <option key={e} value={e}>{e}</option>)}
-                </select>
+                  {ruta.estado}
+                </span>
               </td>
-              <td>
-                <select onChange={e => handleAccionChange(ruta.id,e.target.value)}>
+              <td style={{minWidth: "80px", padding: "2px"}}>
+                <select 
+                  onChange={e => handleAccionChange(ruta.id,e.target.value)}
+                  style={{
+                    width: "100%",
+                    padding: "2px 4px",
+                    fontSize: "0.75rem",
+                    border: "1px solid #d1d5db",
+                    borderRadius: "3px",
+                    backgroundColor: "white"
+                  }}
+                >
                   <option value="">Seleccionar</option>
                   {acciones.map(a => <option key={a} value={a}>{a}</option>)}
                 </select>
@@ -342,7 +450,8 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
             </tr>
           ))}
         </tbody>
-      </table>
+        </table>
+      </div>
 
       <div className="rutas-pagination">
         <button onClick={() => setCurrentPage(prev => Math.max(prev-1,1))} disabled={currentPage===1} className="rutas-button">Anterior</button>
@@ -361,6 +470,14 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
           </div>
         </div>
       )}
+      
+      {/* PopUp de éxito */}
+      <PopUp
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        message={successMessage}
+        type="delete"
+      />
     </div>
   );
 }

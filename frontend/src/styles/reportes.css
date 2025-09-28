@@ -114,7 +114,7 @@
 }
 
 .reportes-table th {
-  background-color: #34495e;
+  background-color: #103053;
   color: white;
   padding: 15px 10px;
   text-align: left;
@@ -610,5 +610,222 @@
   .reporte-visual-tabla td {
     padding: 12px 15px;
     font-size: 14px;
+  }
+}
+
+/* Filtro de días */
+.filtro-dias {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8fafc;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  min-width: 150px;
+}
+
+.filtro-dias label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #374151;
+  white-space: nowrap;
+}
+
+.filtro-dias select {
+  padding: 6px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: white;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex: 1;
+}
+
+.filtro-dias select:hover {
+  border-color: #103053;
+  box-shadow: 0 0 0 1px #103053;
+}
+
+.filtro-dias select:focus {
+  outline: none;
+  border-color: #103053;
+  box-shadow: 0 0 0 2px rgba(16, 48, 83, 0.1);
+}
+
+/* Paginación */
+.paginacion-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  padding: 15px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.paginacion-info {
+  font-size: 0.9rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.paginacion-controls {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.paginacion-elementos {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f8fafc;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+}
+
+.paginacion-elementos label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #374151;
+  white-space: nowrap;
+}
+
+.paginacion-select {
+  padding: 6px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: white;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+}
+
+.paginacion-select:hover {
+  border-color: #103053;
+  box-shadow: 0 0 0 1px #103053;
+}
+
+.paginacion-select:focus {
+  outline: none;
+  border-color: #103053;
+  box-shadow: 0 0 0 2px rgba(16, 48, 83, 0.1);
+}
+
+.paginacion-btn {
+  padding: 8px 16px;
+  background: #103053;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.paginacion-btn:hover:not(:disabled) {
+  background: #0d2540;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(16, 48, 83, 0.2);
+}
+
+.paginacion-btn:disabled {
+  background: #d1d5db;
+  color: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.paginacion-numeros {
+  display: flex;
+  gap: 5px;
+}
+
+.paginacion-numero {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #374151;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.paginacion-numero:hover {
+  border-color: #103053;
+  background: #f8fafc;
+  transform: translateY(-1px);
+}
+
+.paginacion-numero.activa {
+  background: #103053;
+  color: white;
+  border-color: #103053;
+  box-shadow: 0 2px 4px rgba(16, 48, 83, 0.2);
+}
+
+.paginacion-numero.activa:hover {
+  background: #0d2540;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .filtro-dias {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    min-width: 120px;
+  }
+  
+  .filtro-dias label {
+    text-align: center;
+  }
+
+  .paginacion-elementos {
+    flex-direction: column;
+    gap: 6px;
+    min-width: 120px;
+  }
+
+  .paginacion-elementos label {
+    text-align: center;
+  }
+
+  .paginacion-numeros {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .paginacion-numero {
+    width: 35px;
+    height: 35px;
+    font-size: 0.8rem;
+  }
+
+  .paginacion-select {
+    min-width: 100px;
+    font-size: 0.8rem;
+  }
+
+  .paginacion-btn {
+    padding: 6px 12px;
+    font-size: 0.8rem;
   }
 }

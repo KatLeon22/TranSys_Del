@@ -87,7 +87,7 @@ html, body {
 }
 
 .rutas-button {
-  background-color: #374151;
+  background-color: #103053;
   color: white;
   padding: 5px 10px;
   border: none;
@@ -139,7 +139,7 @@ html, body {
 }
 
 .rutas-table th {
-  background-color: #213547;
+  background-color: #103053;
   color: white;
   font-weight: 600;
 }

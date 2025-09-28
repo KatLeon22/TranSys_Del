@@ -30,6 +30,26 @@ class RutasService {
         }
     }
 
+    // Obtener rutas recientes para el dashboard
+    async getRutasRecientes() {
+        try {
+            const response = await fetch(`${API_BASE_URL}/rutas/recientes`, {
+                method: 'GET',
+                headers: this.getAuthHeaders()
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data;
+        } catch (error) {
+            console.error('Error obteniendo rutas recientes:', error);
+            throw error;
+        }
+    }
+
     // Obtener una ruta por ID
     async getRutaById(id) {
         try {

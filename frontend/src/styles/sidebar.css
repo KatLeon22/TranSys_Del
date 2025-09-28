@@ -1,0 +1,342 @@
+/* Sidebar Moderno */
+.sidebar {
+  width: 280px;
+  background: linear-gradient(135deg, #2B4358 0%, #103053 50%, #213547 100%);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  box-shadow: 4px 0 25px rgba(59, 130, 246, 0.2);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.sidebar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(45deg, rgba(43, 67, 88, 0.15) 0%, rgba(33, 53, 71, 0.1) 100%);
+  pointer-events: none;
+}
+
+/* Sidebar Header */
+.sidebar-header {
+  padding: 30px 20px;
+  background: linear-gradient(135deg, #103053 0%, #103053 50%, #213547 100%);
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80px;
+}
+
+/* Logo del sidebar */
+.sidebar-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo-image {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.logo-image:hover {
+  transform: scale(1.05);
+}
+
+/* Título del sidebar */
+.sidebar-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Icono del camión */
+.truck-icon {
+  font-size: 1.8rem;
+  filter: brightness(1.2) contrast(1.1) saturate(0.8);
+  display: inline-block;
+  animation: truckBounce 2s infinite;
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+@keyframes truckBounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+/* Sidebar Navigation */
+.sidebar nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* Sidebar Links */
+.sidebar nav a {
+  padding: 15px 25px;
+  color: #d1d5db;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+  font-weight: 500;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-left: 3px solid transparent;
+}
+
+.sidebar nav a::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, #374151 0%, #1f2937 100%);
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+}
+
+.sidebar nav a:hover {
+  background: linear-gradient(90deg, rgba(43, 67, 88, 0.2) 0%, rgba(16, 48, 83, 0.15) 50%, rgba(33, 53, 71, 0.1) 100%);
+  color: #ffffff;
+  transform: translateX(5px);
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+.sidebar nav a:hover::before {
+  transform: scaleY(1);
+}
+
+.sidebar nav a.active {
+  background: linear-gradient(90deg, rgba(43, 67, 88, 0.3) 0%, rgba(16, 48, 83, 0.25) 50%, rgba(33, 53, 71, 0.2) 100%);
+  color: #ffffff;
+  border-left-color: #103053;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(16, 48, 83, 0.3);
+}
+
+.sidebar nav a.active::before {
+  transform: scaleY(1);
+}
+
+/* Dropdown Button */
+.sidebar-dropdown-btn {
+  background: none;
+  border: none;
+  color: #d1d5db;
+  padding: 15px 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-align: left;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  border-left: 3px solid transparent;
+}
+
+.sidebar-dropdown-btn::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, #a8aaab 0%, #384e70 50%, #1f2937 100%);
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+}
+
+.sidebar-dropdown-btn::after {
+  content: '▼';
+  font-size: 0.8rem;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-dropdown-btn:hover {
+  background: linear-gradient(90deg, rgba(43, 67, 88, 0.2) 0%, rgba(16, 48, 83, 0.15) 50%, rgba(33, 53, 71, 0.1) 100%);
+  color: #ffffff;
+  transform: translateX(5px);
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+.sidebar-dropdown-btn:hover::before {
+  transform: scaleY(1);
+}
+
+.sidebar-dropdown-btn:hover::after {
+  transform: rotate(180deg);
+}
+
+/* Dropdown Content */
+.sidebar-dropdown-content {
+  background: linear-gradient(180deg, rgba(31, 41, 55, 0.9) 0%, rgba(17, 24, 39, 0.95) 100%);
+  border-left: 3px solid #374151;
+  margin-left: 20px;
+  border-radius: 0 8px 8px 0;
+  overflow: hidden;
+  animation: slideDown 0.3s ease;
+  box-shadow: 0 4px 20px rgba(55, 65, 81, 0.3);
+}
+
+.sidebar-dropdown-content a {
+  padding: 12px 20px;
+  color: #9ca3af;
+  text-decoration: none;
+  display: block;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+  border-left: 2px solid transparent;
+  position: relative;
+}
+
+.sidebar-dropdown-content a::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, #a8aaab 0%, #384e70 50%, #1f2937 100%);
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+}
+
+.sidebar-dropdown-content a:hover {
+  background: linear-gradient(90deg, rgba(43, 67, 88, 0.2) 0%, rgba(16, 48, 83, 0.15) 50%, rgba(33, 53, 71, 0.1) 100%);
+  color: #ffffff;
+  transform: translateX(3px);
+  border-left-color: #103053;
+  box-shadow: 0 2px 10px rgba(16, 48, 83, 0.2);
+}
+
+.sidebar-dropdown-content a:hover::before {
+  transform: scaleY(1);
+}
+
+.sidebar-dropdown-content a.active {
+  background: linear-gradient(90deg, rgba(43, 67, 88, 0.3) 0%, rgba(16, 48, 83, 0.25) 50%, rgba(33, 53, 71, 0.2) 100%);
+  color: #ffffff;
+  border-left-color: #103053;
+  font-weight: 600;
+  box-shadow: 0 2px 10px rgba(16, 48, 83, 0.3);
+}
+
+.sidebar-dropdown-content a.active::before {
+  transform: scaleY(1);
+}
+
+/* Animaciones */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+    position: relative;
+  }
+  
+  .sidebar-header {
+    padding: 25px;
+    min-height: 70px;
+  }
+  
+  .sidebar-title {
+    font-size: 1.3rem;
+  }
+  
+  .truck-icon {
+    font-size: 1.5rem;
+  }
+  
+  .sidebar nav {
+    padding: 15px 0;
+  }
+  
+  .sidebar nav a,
+  .sidebar-dropdown-btn {
+    padding: 12px 20px;
+    font-size: 0.9rem;
+  }
+  
+  .sidebar-dropdown-content {
+    margin-left: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    width: 100%;
+  }
+  
+  .sidebar-header {
+    padding: 20px;
+    min-height: 60px;
+  }
+  
+  .sidebar-title {
+    font-size: 1.2rem;
+  }
+  
+  .truck-icon {
+    font-size: 1.4rem;
+  }
+  
+  .sidebar nav a,
+  .sidebar-dropdown-btn {
+    padding: 10px 15px;
+    font-size: 0.85rem;
+  }
+  
+  .sidebar-dropdown-content {
+    margin-left: 10px;
+  }
+}

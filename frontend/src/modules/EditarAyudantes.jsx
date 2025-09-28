@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import "../styles/editar-ayudantes.css";
 import Logo from "../assets/logo.png";
+import PopUp from "../components/PopUp.jsx";
 
 export default function EditarAyudantes() {
   const navigate = useNavigate();
@@ -15,6 +16,9 @@ export default function EditarAyudantes() {
     apellido: "",
     telefono: ""
   });
+
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
     if (location.state && location.state.ayudante) {
@@ -38,8 +42,8 @@ export default function EditarAyudantes() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Ayudante actualizado:", ayudante);
-    alert("Ayudante actualizado (simulado)");
-    navigate("/ayudantes");
+    setSuccessMessage('Ayudante actualizado exitosamente');
+    setShowSuccessModal(true);
   };
 
   const handleClose = () => {
@@ -95,6 +99,17 @@ export default function EditarAyudantes() {
           </div>
         </form>
       </div>
+
+      {/* PopUp de éxito */}
+      <PopUp
+        isOpen={showSuccessModal}
+        onClose={() => {
+          setShowSuccessModal(false);
+          navigate("/ayudantes");
+        }}
+        message={successMessage}
+        type="edit"
+      />
     </div>
   );
 }

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react"; 
 import { useNavigate } from "react-router-dom";
 import ayudantesService from "../services/ayudantesService.js";
+import PopUp from "../components/PopUp.jsx";
 import "../styles/reutilizar.css";
 
 export default function Ayudantes() {
@@ -13,6 +14,8 @@ export default function Ayudantes() {
   const [itemsPerPage, setItemsPerPage] = useState(5);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const navigate = useNavigate();
 
@@ -68,7 +71,8 @@ export default function Ayudantes() {
         setModalVisible(false);
         setAyudanteToDelete(null);
         setError(''); // Limpiar errores anteriores
-        alert("Ayudante eliminado exitosamente");
+        setSuccessMessage('Ayudante eliminado con éxito');
+        setShowSuccessModal(true);
       } else {
         setError(response.message || 'Error al eliminar el ayudante');
       }
@@ -224,6 +228,14 @@ export default function Ayudantes() {
           </div>
         </div>
       )}
+
+      {/* PopUp de éxito */}
+      <PopUp
+        isOpen={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        message={successMessage}
+        type="delete"
+      />
     </div>
   );
 }

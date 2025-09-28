@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import camionesService from "../services/camionesService.js";
+import PopUp from "../components/PopUp.jsx";
 import "../styles/editar-camiones.css";
 import Logo from "../assets/logo.png";
 
@@ -19,6 +20,8 @@ export default function EditarCamiones() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   // Cargar datos del camión
   useEffect(() => {
@@ -86,8 +89,8 @@ export default function EditarCamiones() {
       const response = await camionesService.updateCamion(id, camionData);
       
       if (response.success) {
-        alert("Camión actualizado exitosamente");
-        navigate("/camiones");
+        setSuccessMessage('Camión actualizado exitosamente');
+        setShowSuccessModal(true);
       } else {
         setError(response.message || "Error al actualizar el camión");
       }
@@ -177,6 +180,17 @@ export default function EditarCamiones() {
           </div>
         </form>
       </div>
+
+      {/* PopUp de éxito */}
+      <PopUp
+        isOpen={showSuccessModal}
+        onClose={() => {
+          setShowSuccessModal(false);
+          navigate("/camiones");
+        }}
+        message={successMessage}
+        type="edit"
+      />
     </div>
   );
 }
