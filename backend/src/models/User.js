@@ -78,6 +78,16 @@ export class User {
 
     // Eliminar usuario
     static async delete(id) {
+        // Primero eliminar registros relacionados en bitácora
+        try {
+            await executeQuery(`DELETE FROM bitacora WHERE usuario_id = ?`, [id]);
+            console.log('✅ Registros de bitácora eliminados para usuario:', id);
+        } catch (error) {
+            console.log('⚠️ No se pudieron eliminar registros de bitácora (continuando):', error.message);
+            // Continuar aunque falle la bitácora
+        }
+        
+        // Luego eliminar el usuario
         const query = `DELETE FROM usuarios WHERE id = ?`;
         return await executeQuery(query, [id]);
     }
@@ -117,5 +127,11 @@ export class User {
     static async changeStatus(id, estado) {
         const query = `UPDATE usuarios SET estado = ? WHERE id = ?`;
         return await executeQuery(query, [estado, id]);
+    }
+
+    // Registrar acción en bitácora
+    static async logAction(usuario_id, accion, detalle) {
+        const query = `INSERT INTO bitacora (usuario_id, accion, detalle) VALUES (?, ?, ?)`;
+        return await executeQuery(query, [usuario_id, accion, detalle]);
     }
 }

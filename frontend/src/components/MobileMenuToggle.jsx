@@ -24,3 +24,4 @@ const MobileMenuToggle = ({ isOpen, onToggle }) => {
 };
 
 export default MobileMenuToggle;
+

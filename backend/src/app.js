@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import { testConnection } from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import pilotoRoutes from "./routes/pilotoRoutes.js";
 import choferesRoutes from "./routes/choferesRoutes.js";
@@ -13,38 +12,27 @@ import mantenimientosRoutes from "./routes/mantenimientosRoutes.js";
 import reportesRoutes from "./routes/reportesRoutes.js";
 import usuariosRoutes from "./routes/usuariosRoutes.js";
 import permisosRoutes from "./routes/permisosRoutes.js";
+import systemRoutes from "./routes/systemRoutes.js";
 
 // Cargar variables de entorno
 dotenv.config();
 
 const app = express();
+
+// =========================
+// CONFIGURACIÓN DE EXPRESS
+// =========================
+
+// Middlewares globales
 app.use(cors());
 app.use(express.json());
 
-// Ruta de prueba para verificar la conexión a la BD
-app.get("/api/test-db", async (req, res) => {
-    try {
-        const isConnected = await testConnection();
-        if (isConnected) {
-            res.json({ 
-                success: true, 
-                message: "Conexión a la base de datos exitosa",
-                database: process.env.DB_NAME || 'transporte2'
-            });
-        } else {
-            res.status(500).json({ 
-                success: false, 
-                message: "Error al conectar con la base de datos" 
-            });
-        }
-    } catch (error) {
-        res.status(500).json({ 
-            success: false, 
-            message: "Error interno del servidor",
-            error: error.message 
-        });
-    }
-});
+// =========================
+// RUTAS
+// =========================
+
+// Rutas del sistema
+app.use("/api", systemRoutes);
 
 // Rutas de autenticación
 app.use("/api/auth", authRoutes);
