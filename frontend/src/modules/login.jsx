@@ -39,6 +39,9 @@ export default function Login() {
 
   return (
     <div className="login-container">
+      {/* Camión animado */}
+      <div className="truck-animation"></div>
+      
       <div className="login-card">
         <h2 className="login-title">Iniciar Sesión</h2>
         <form onSubmit={handleSubmit} className="login-form">

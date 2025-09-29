@@ -2,6 +2,10 @@ import express from 'express';
 import { authenticateToken } from '../middleware/auth.js';
 import { 
     getAllPilotos,
+    getPilotoInfo,
+    debugPilotoCompleto,
+    debugAuth,
+    debugPermissions,
     getRutasByPiloto, 
     updateEstadoRuta, 
     getHistorialRuta 
@@ -14,6 +18,18 @@ router.get('/', getAllPilotos);
 
 // Todas las demás rutas requieren autenticación
 router.use(authenticateToken);
+
+// Debug: Obtener información del piloto
+router.get('/info', getPilotoInfo);
+
+// Debug completo: Verificar todo el flujo
+router.get('/debug-completo', debugPilotoCompleto);
+
+// Debug de autenticación
+router.get('/debug-auth', debugAuth);
+
+// Debug de permisos
+router.get('/debug-permissions', debugPermissions);
 
 // Obtener rutas del piloto logueado
 router.get('/mis-rutas', getRutasByPiloto);

@@ -1,6 +1,72 @@
 import { executeQuery } from '../config/db.js';
 
 export class PilotoModel {
+    // Obtener información detallada del usuario
+    static async getUserInfo(userId) {
+        const query = `
+            SELECT 
+                u.id,
+                u.username,
+                u.rol_id,
+                u.piloto_id,
+                u.estado,
+                r.nombre as rol_nombre,
+                p.nombre as piloto_nombre,
+                p.apellido as piloto_apellido,
+                p.telefono as piloto_telefono
+            FROM usuarios u
+            LEFT JOIN roles r ON u.rol_id = r.id
+            LEFT JOIN pilotos p ON u.piloto_id = p.id
+            WHERE u.id = ?
+        `;
+        const result = await executeQuery(query, [userId]);
+        return result[0] || null;
+    }
+
+    // Obtener todos los pilotos (para asignación de usuarios)
+    static async getAllPilotos() {
+        const query = `
+            SELECT id, nombre, apellido, telefono, tipo_licencia, vencimiento
+            FROM pilotos 
+            ORDER BY nombre, apellido
+        `;
+        return await executeQuery(query);
+    }
+
+    // Obtener rutas de un piloto específico por fecha
+    static async getRutasByPilotoAndDate(pilotoId, fecha) {
+        const query = `
+            SELECT 
+                r.id,
+                r.no_ruta,
+                r.servicio,
+                r.mercaderia,
+                r.combustible,
+                r.origen,
+                r.destino,
+                r.fecha,
+                r.hora,
+                r.precio,
+                r.comentario,
+                r.estado,
+                c.nombre as cliente_nombre,
+                c.apellido as cliente_apellido,
+                c.telefono as cliente_telefono,
+                cam.placa as camion_placa,
+                cam.marca as camion_marca,
+                cam.modelo as camion_modelo,
+                a.nombre as ayudante_nombre,
+                a.apellido as ayudante_apellido
+            FROM rutas r
+            LEFT JOIN clientes c ON r.cliente_id = c.id
+            LEFT JOIN camiones cam ON r.camion_id = cam.id
+            LEFT JOIN ayudantes a ON r.ayudante_id = a.id
+            WHERE r.chofer_id = ? AND r.fecha = ?
+            ORDER BY r.hora ASC
+        `;
+        return await executeQuery(query, [pilotoId, fecha]);
+    }
+
     // Obtener rutas de un piloto específico
     static async getRutasByPiloto(userId) {
         try {
@@ -108,6 +174,35 @@ export class PilotoModel {
         `;
         
         return await executeQuery(query, [rutaId]);
+    }
+
+    // Verificar rutas en BD para un piloto específico
+    static async verificarRutasEnBD(pilotoId) {
+        const query = `
+            SELECT 
+                r.id,
+                r.no_ruta,
+                r.fecha,
+                r.estado,
+                r.chofer_id
+            FROM rutas r
+            WHERE r.chofer_id = ?
+            ORDER BY r.fecha DESC
+        `;
+        
+        return await executeQuery(query, [pilotoId]);
+    }
+
+    // Obtener permisos de un usuario específico
+    static async getUserPermissions(userId) {
+        const query = `
+            SELECT p.nombre_permiso, p.descripcion 
+            FROM permisos p
+            JOIN rol_permisos rp ON p.id = rp.permiso_id
+            JOIN usuarios u ON rp.rol_id = u.rol_id
+            WHERE u.id = ?
+        `;
+        return await executeQuery(query, [userId]);
     }
 }
 

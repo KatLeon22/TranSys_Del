@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { User } from '../models/User.js';
-import { executeQuery } from '../config/db.js';
 
 // =========================
 // CONTROLADOR AUTENTICACIÓN - SOLO LÓGICA DE NEGOCIO
@@ -92,12 +91,10 @@ export const login = async (req, res) => {
 
         // Registrar en bitácora (opcional)
         try {
-            await executeQuery(
-                'INSERT INTO bitacora (usuario_id, accion, detalle) VALUES (?, ?, ?)',
-                [user.id, 'LOGIN', `Usuario ${username} inició sesión`]
-            );
+            await User.logAction(user.id, 'LOGIN', `Usuario ${username} inició sesión`);
         } catch (error) {
-            console.log('Bitácora no disponible:', error.message);
+            console.log('⚠️ Bitácora no disponible (continuando):', error.message);
+            // No fallar por la bitácora, solo registrar el error
         }
 
         res.json({
@@ -211,12 +208,10 @@ export const logout = async (req, res) => {
             
             // Registrar logout en bitácora (opcional)
             try {
-                await executeQuery(
-                    'INSERT INTO bitacora (usuario_id, accion, detalle) VALUES (?, ?, ?)',
-                    [decoded.id, 'LOGOUT', `Usuario ${decoded.username} cerró sesión`]
-                );
+                await User.logAction(decoded.id, 'LOGOUT', `Usuario ${decoded.username} cerró sesión`);
             } catch (error) {
-                console.log('Bitácora no disponible:', error.message);
+                console.log('⚠️ Bitácora no disponible (continuando):', error.message);
+                // No fallar por la bitácora, solo registrar el error
             }
         }
 

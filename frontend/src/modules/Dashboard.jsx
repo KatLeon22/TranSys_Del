@@ -29,26 +29,26 @@ export default function Dashboard() {
       
       // Obtener datos del servicio
       const response = await rutasService.getRutasRecientes();
+      console.log('📊 Respuesta completa del servidor:', response);
       
       // Guardar datos completos
       setData(response);
       
       // Obtener solo las rutas de hoy
       const hoy = new Date().toISOString().split('T')[0];
+      console.log('📅 Buscando rutas para la fecha:', hoy);
+      console.log('📋 Fechas disponibles:', response?.data?.rutasPorFecha?.map(grupo => grupo.fecha));
       
       // Buscar rutas de hoy
       const rutasHoyData = response?.data?.rutasPorFecha?.find(grupo => grupo.fecha === hoy);
       
-      // Si no encuentra rutas para hoy, buscar rutas del 28 de septiembre específicamente
-      if (!rutasHoyData || rutasHoyData.rutas.length === 0) {
-        const rutas28Sept = response?.data?.rutasPorFecha?.find(grupo => grupo.fecha === '2025-09-28');
-        if (rutas28Sept && rutas28Sept.rutas.length > 0) {
-          setRutasHoy(rutas28Sept.rutas);
-        } else {
-          setRutasHoy([]);
-        }
-      } else {
+      if (rutasHoyData && rutasHoyData.rutas.length > 0) {
+        console.log('✅ Rutas encontradas para hoy:', rutasHoyData.rutas.length);
         setRutasHoy(rutasHoyData.rutas);
+      } else {
+        console.log('⚠️ No se encontraron rutas para hoy');
+        console.log('📋 Mostrando todas las fechas disponibles:', response?.data?.rutasPorFecha);
+        setRutasHoy([]);
       }
     } catch (error) {
       console.error('Error cargando datos del dashboard:', error);

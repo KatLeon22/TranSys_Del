@@ -1,10 +1,29 @@
 import { User } from '../models/User.js';
-import { executeQuery } from '../config/db.js';
+import { PermisosModel } from '../models/PermisosModel.js';
 import crypto from 'crypto';
 
 // =========================
 // CONTROLADOR USUARIOS - LÓGICA DE NEGOCIO
 // =========================
+
+// Endpoint de prueba para verificar que el servidor funciona
+export const testEndpoint = async (req, res) => {
+    try {
+        console.log('🧪 TEST ENDPOINT - Servidor funcionando correctamente');
+        res.json({
+            success: true,
+            message: 'Servidor funcionando correctamente',
+            timestamp: new Date().toISOString()
+        });
+    } catch (error) {
+        console.error('❌ Error en test endpoint:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error en test endpoint',
+            error: error.message
+        });
+    }
+};
 
 // Obtener todos los usuarios
 export const getAllUsuarios = async (req, res) => {
@@ -123,22 +142,17 @@ export const createUsuario = async (req, res) => {
 
         // Asignar los permisos
         for (const permisoId of permisosParaAsignar) {
-            await executeQuery(
-                'INSERT IGNORE INTO rol_permisos (rol_id, permiso_id) VALUES (?, ?)',
-                [rol_id, permisoId]
-            );
+            await PermisosModel.assignPermissionToRole(rol_id, permisoId);
         }
 
         // Registrar en bitácora (solo si hay usuario autenticado)
         try {
             if (req.user && req.user.id) {
-                await executeQuery(
-                    'INSERT INTO bitacora (usuario_id, accion, detalle) VALUES (?, ?, ?)',
-                    [req.user.id, 'CREAR_USUARIO', `Usuario ${username} creado`]
-                );
+                await User.logAction(req.user.id, 'CREAR_USUARIO', `Usuario ${username} creado`);
             }
         } catch (error) {
-            console.log('Bitácora no disponible:', error.message);
+            console.log('⚠️ Bitácora no disponible (continuando):', error.message);
+            // No fallar por la bitácora, solo registrar el error
         }
 
         console.log('🎉 Usuario creado completamente');
@@ -228,13 +242,11 @@ export const updateUsuario = async (req, res) => {
         try {
             if (req.user && req.user.id) {
                 const usernameForLog = username || usuarios[0].username;
-                await executeQuery(
-                    'INSERT INTO bitacora (usuario_id, accion, detalle) VALUES (?, ?, ?)',
-                    [req.user.id, 'ACTUALIZAR_USUARIO', `Usuario ${usernameForLog} actualizado`]
-                );
+                await User.logAction(req.user.id, 'ACTUALIZAR_USUARIO', `Usuario ${usernameForLog} actualizado`);
             }
         } catch (error) {
-            console.log('Bitácora no disponible:', error.message);
+            console.log('⚠️ Bitácora no disponible (continuando):', error.message);
+            // No fallar por la bitácora, solo registrar el error
         }
 
         res.json({
@@ -258,57 +270,40 @@ export const deleteUsuario = async (req, res) => {
         const { id } = req.params;
         
         console.log('🗑️ Eliminando usuario:', { id });
-        console.log('🔍 req.user:', req.user);
 
         // Verificar si el usuario existe
         const usuarios = await User.findById(id);
         if (usuarios.length === 0) {
-            console.log('❌ Usuario no encontrado:', id);
             return res.status(404).json({
                 success: false,
                 message: 'Usuario no encontrado'
             });
         }
 
-        // No permitir eliminar el usuario actual (solo si hay usuario autenticado)
+        // No permitir eliminar el usuario actual
         if (req.user && parseInt(id) === req.user.id) {
-            console.log('❌ Intento de eliminar usuario propio');
             return res.status(400).json({
                 success: false,
                 message: 'No puedes eliminar tu propio usuario'
             });
         }
 
-        console.log('✅ Procediendo a eliminar usuario:', usuarios[0].username);
-
-        // Eliminar usuario
+        // Eliminar usuario (ahora maneja automáticamente la bitácora)
         await User.delete(id);
 
-        // Registrar en bitácora (solo si hay usuario autenticado)
-        try {
-            if (req.user && req.user.id) {
-                await executeQuery(
-                    'INSERT INTO bitacora (usuario_id, accion, detalle) VALUES (?, ?, ?)',
-                    [req.user.id, 'ELIMINAR_USUARIO', `Usuario ${usuarios[0].username} eliminado`]
-                );
-                console.log('📝 Bitácora registrada');
-            }
-        } catch (error) {
-            console.log('Bitácora no disponible:', error.message);
-        }
+        console.log('✅ Usuario eliminado exitosamente:', usuarios[0].username);
 
         res.json({
             success: true,
-            message: 'Usuario eliminado exitosamente'
+            message: 'Usuario eliminado exitosamente',
+            data: {
+                deletedUser: usuarios[0].username,
+                deletedId: id
+            }
         });
 
     } catch (error) {
-        console.error('❌ Error eliminando usuario:', error);
-        console.error('📋 Detalles del error:', {
-            message: error.message,
-            stack: error.stack,
-            name: error.name
-        });
+        console.error('Error eliminando usuario:', error);
         res.status(500).json({
             success: false,
             message: 'Error interno del servidor',
@@ -357,13 +352,11 @@ export const changeUserStatus = async (req, res) => {
         // Registrar en bitácora (solo si hay usuario autenticado)
         try {
             if (req.user && req.user.id) {
-                await executeQuery(
-                    'INSERT INTO bitacora (usuario_id, accion, detalle) VALUES (?, ?, ?)',
-                    [req.user.id, 'CAMBIAR_ESTADO', `Usuario ${usuarios[0].username} ${estado === 'activo' ? 'activado' : 'desactivado'}`]
-                );
+                await User.logAction(req.user.id, 'CAMBIAR_ESTADO', `Usuario ${usuarios[0].username} ${estado === 'activo' ? 'activado' : 'desactivado'}`);
             }
         } catch (error) {
-            console.log('Bitácora no disponible:', error.message);
+            console.log('⚠️ Bitácora no disponible (continuando):', error.message);
+            // No fallar por la bitácora, solo registrar el error
         }
 
         res.json({

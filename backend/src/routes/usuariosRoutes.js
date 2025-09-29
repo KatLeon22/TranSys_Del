@@ -2,6 +2,7 @@ import express from 'express';
 import { authenticateToken } from '../middleware/auth.js';
 import { checkPermission } from '../middleware/permissions.js';
 import {
+    testEndpoint,
     getAllUsuarios,
     getUsuarioById,
     createUsuario,
@@ -15,6 +16,9 @@ const router = express.Router();
 // =========================
 // RUTAS USUARIOS
 // =========================
+
+// Endpoint de prueba (sin autenticación)
+router.get('/test', testEndpoint);
 
 // Obtener todos los usuarios (solo autenticación)
 router.get('/', authenticateToken, getAllUsuarios);

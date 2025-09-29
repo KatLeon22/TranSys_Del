@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { usuariosService } from '../services/usuariosService';
 import PopUp from '../components/PopUp';
+import ConfirmDialog from '../components/ConfirmDialog';
 import '../styles/usuarios.css';
 
 const Usuarios = () => {
@@ -23,6 +24,9 @@ const Usuarios = () => {
   const [showUsersModal, setShowUsersModal] = useState(false);
   const [showPermissionsModal, setShowPermissionsModal] = useState(false);
   const [tempPermissions, setTempPermissions] = useState([]);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [confirmAction, setConfirmAction] = useState(null);
+  const [confirmData, setConfirmData] = useState(null);
 
   // Estados del formulario
   const [formData, setFormData] = useState({
@@ -196,16 +200,21 @@ const Usuarios = () => {
     setShowForm(false);
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
-      try {
-        await usuariosService.delete(id);
-        showMessage('Usuario eliminado exitosamente', 'delete');
-        loadData();
-      } catch (error) {
-        console.error('Error eliminando usuario:', error);
-        showMessage('Error eliminando usuario', 'error');
-      }
+  const handleDelete = (id) => {
+    const usuario = usuarios.find(u => u.id === id);
+    setConfirmData({ id, usuario });
+    setConfirmAction('delete');
+    setShowConfirmDialog(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      await usuariosService.delete(confirmData.id);
+      showMessage('Usuario eliminado exitosamente', 'delete');
+      loadData();
+    } catch (error) {
+      console.error('Error eliminando usuario:', error);
+      showMessage('Error eliminando usuario', 'error');
     }
   };
 
@@ -287,20 +296,56 @@ const Usuarios = () => {
     }
   };
 
-  const handleChangeStatus = async (usuario) => {
+  const handleChangeStatus = (usuario) => {
     const newStatus = usuario.estado === 'activo' ? 'inactivo' : 'activo';
     const action = newStatus === 'activo' ? 'activar' : 'desactivar';
     
-    if (window.confirm(`¿Estás seguro de que quieres ${action} este usuario?`)) {
-      try {
-        await usuariosService.changeStatus(usuario.id, newStatus);
-        showMessage(`Usuario ${action}do exitosamente`, 'success');
-        loadData();
-      } catch (error) {
-        console.error('Error cambiando estado del usuario:', error);
-        showMessage('Error cambiando estado del usuario', 'error');
-      }
+    setConfirmData({ usuario, newStatus, action });
+    setConfirmAction('changeStatus');
+    setShowConfirmDialog(true);
+  };
+
+  const handleConfirmChangeStatus = async () => {
+    try {
+      await usuariosService.changeStatus(confirmData.usuario.id, confirmData.newStatus);
+      showMessage(`Usuario ${confirmData.action}do exitosamente`, 'success');
+      loadData();
+    } catch (error) {
+      console.error('Error cambiando estado del usuario:', error);
+      showMessage('Error cambiando estado del usuario', 'error');
     }
+  };
+
+  const handleConfirmAction = () => {
+    if (confirmAction === 'delete') {
+      handleConfirmDelete();
+    } else if (confirmAction === 'changeStatus') {
+      handleConfirmChangeStatus();
+    }
+  };
+
+  const getConfirmDialogProps = () => {
+    if (confirmAction === 'delete') {
+      return {
+        title: 'Confirmar eliminación',
+        message: `¿Estás seguro de que quieres eliminar al usuario "${confirmData?.usuario?.username}"? Esta acción no se puede deshacer.`,
+        confirmText: 'Eliminar',
+        cancelText: 'Cancelar'
+      };
+    } else if (confirmAction === 'changeStatus') {
+      return {
+        title: 'Confirmar cambio de estado',
+        message: `¿Estás seguro de que quieres ${confirmData?.action} al usuario "${confirmData?.usuario?.username}"?`,
+        confirmText: 'Confirmar',
+        cancelText: 'Cancelar'
+      };
+    }
+    return {
+      title: 'Confirmar acción',
+      message: '¿Estás seguro de que quieres realizar esta acción?',
+      confirmText: 'Confirmar',
+      cancelText: 'Cancelar'
+    };
   };
 
   const resetForm = () => {
@@ -1093,6 +1138,14 @@ const Usuarios = () => {
           </div>
         </div>
       )}
+
+      {/* Diálogo de confirmación personalizado */}
+      <ConfirmDialog
+        isOpen={showConfirmDialog}
+        onClose={() => setShowConfirmDialog(false)}
+        onConfirm={handleConfirmAction}
+        {...getConfirmDialogProps()}
+      />
     </div>
   );
 };

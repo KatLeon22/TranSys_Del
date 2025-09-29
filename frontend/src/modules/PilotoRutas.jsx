@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import authService from '../services/authService.js';
 import pilotoService from '../services/pilotoService.js';
+import PopUp from '../components/PopUp';
 import '../styles/piloto-rutas.css';
 
 export default function PilotoRutas() {
@@ -11,8 +12,18 @@ export default function PilotoRutas() {
   const [showModal, setShowModal] = useState(false);
   const [nuevoEstado, setNuevoEstado] = useState('');
   const [comentario, setComentario] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
+  const [popupType, setPopupType] = useState('');
 
   const user = authService.getCurrentUser();
+
+  // Función para mostrar popup
+  const showMessage = (message, type) => {
+    setPopupMessage(message);
+    setPopupType(type);
+    setShowPopup(true);
+  };
 
   // Estados disponibles para pilotos
   const estadosDisponibles = [
@@ -78,12 +89,12 @@ export default function PilotoRutas() {
         ));
 
         cerrarModal();
-        alert('Estado actualizado correctamente');
+        showMessage('Estado actualizado correctamente', 'success');
       } else {
-        setError(response.message || 'Error al actualizar el estado');
+        showMessage(response.message || 'Error al actualizar el estado', 'error');
       }
     } catch (error) {
-      setError('Error al actualizar el estado');
+      showMessage('Error al actualizar el estado', 'error');
       console.error('Error:', error);
     }
   };
@@ -210,6 +221,14 @@ export default function PilotoRutas() {
           </div>
         </div>
       )}
+
+      {/* Popup de confirmación */}
+      <PopUp
+        isOpen={showPopup}
+        onClose={() => setShowPopup(false)}
+        message={popupMessage}
+        type={popupType}
+      />
     </div>
   );
 }
