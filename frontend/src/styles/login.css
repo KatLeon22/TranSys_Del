@@ -17,121 +17,15 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("/fondo.jpg") no-repeat center center/cover;
-  opacity: 0.3;
+  background: url("/src/assets/5.jpeg") no-repeat center center/cover;
+  opacity: 0.4;
   z-index: 1;
+  filter: blur(1px);
 }
 
-/* Camión animado */
-.truck-animation {
-  position: absolute;
-  bottom: 20px;
-  right: -200px;
-  z-index: 3;
-  animation: truckMove 15s linear infinite;
-  opacity: 0.9;
-  font-family: 'Arial', sans-serif;
-}
 
-.truck-animation::before {
-  content: '🚛 S DE LEON';
-  font-size: 2.5rem;
-  display: block;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
-  white-space: nowrap;
-  font-weight: bold;
-  color: white;
-}
 
-/* Animación del camión */
-@keyframes truckMove {
-  0% {
-    left: -100px;
-    transform: translateX(0);
-  }
-  50% {
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  100% {
-    left: 100%;
-    transform: translateX(0);
-  }
-}
 
-/* Efecto de polvo detrás del camión */
-.truck-animation::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: -20px;
-  width: 40px;
-  height: 4px;
-  background: radial-gradient(ellipse, rgba(255, 255, 255, 0.6) 0%, transparent 70%);
-  border-radius: 50%;
-  animation: dustCloud 0.5s ease-in-out infinite alternate;
-}
-
-@keyframes dustCloud {
-  0% {
-    opacity: 0.3;
-    transform: scale(0.8);
-  }
-  100% {
-    opacity: 0.6;
-    transform: scale(1.2);
-  }
-}
-
-/* Efecto de vibración sutil del camión */
-@keyframes truckBounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-1px);
-  }
-}
-
-.truck-animation {
-  animation: truckMove 15s linear infinite, truckBounce 0.5s ease-in-out infinite;
-}
-
-/* Sin rotación - solo movimiento en línea recta */
-.truck-animation::before {
-  /* Sin animación de rotación */
-}
-
-/* Pausar animación cuando se hace hover en la tarjeta */
-.login-card:hover ~ .truck-animation {
-  animation-play-state: paused;
-}
-
-/* Movimiento suave en línea recta */
-.truck-animation {
-  animation: truckMove 15s linear infinite, truckBounce 0.5s ease-in-out infinite;
-  animation-timing-function: linear;
-}
-
-/* Efecto de desvanecimiento al final */
-@keyframes truckMove {
-  0% {
-    right: -200px;
-    transform: translateX(0);
-    opacity: 0.8;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    right: 100%;
-    transform: translateX(0);
-    opacity: 0;
-  }
-}
 
 /* Tarjeta blanca */
 .login-card {
@@ -154,72 +48,128 @@
   margin-bottom: 15px;
 }
 
+/* Header del login */
+.login-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.company-logo {
+  width: 140px;
+  height: 90px;
+  margin: 0 auto 15px auto;
+  display: block;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8px;
+  backdrop-filter: blur(5px);
+}
+
 /* Título */
-.login-card h2 {
+.login-title {
   font-size: 1.8rem;
   font-weight: bold;
-  margin-bottom: 25px;
+  margin: 0 0 8px 0;
   color: #1A3755;
   text-shadow: 0 2px 4px rgba(26, 55, 85, 0.1);
+}
+
+/* Subtítulo */
+.login-subtitle {
+  font-size: 0.9rem;
+  color: #6b7280;
+  font-weight: 500;
+  margin: 0 0 20px 0;
+  text-align: center;
+  opacity: 0.8;
 }
 
 /* Inputs */
 .login-card input {
   width: 100%;
-  padding: 12px 15px;
-  margin: 10px 0;
+  padding: 14px 18px;
+  margin: 12px 0;
   border: 2px solid #e5e7eb;
-  border-radius: 10px;
+  border-radius: 12px;
   font-size: 1rem;
   outline: none;
   transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  font-weight: 500;
 }
 
 .login-card input:focus {
   border-color: #1A3755;
-  box-shadow: 0 0 0 3px rgba(26, 55, 85, 0.1);
+  box-shadow: 0 0 0 4px rgba(26, 55, 85, 0.15), 0 4px 8px rgba(0, 0, 0, 0.1);
   background: rgba(255, 255, 255, 1);
+  transform: translateY(-1px);
+}
+
+.login-card input:hover {
+  border-color: #9ca3af;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .login-card input::placeholder {
-  color: #6b7280;
+  color: #9ca3af;
+  font-weight: 400;
 }
 
 /* Botón */
 .login-card button {
   width: 100%;
-  padding: 14px 15px;
+  padding: 16px 20px;
   background: linear-gradient(135deg, #1A3755 0%, #2B4A6B 100%);
   color: #fff;
   border: none;
-  border-radius: 10px;
-  font-size: 1rem;
+  border-radius: 12px;
+  font-size: 1.1rem;
   font-weight: 600;
   cursor: pointer;
-  margin-top: 20px;
+  margin-top: 25px;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(26, 55, 85, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.login-card button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
 }
 
 .login-card button:hover {
   background: linear-gradient(135deg, #2B4A6B 0%, #1A3755 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(26, 55, 85, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(26, 55, 85, 0.4);
+}
+
+.login-card button:hover::before {
+  left: 100%;
 }
 
 .login-card button:active {
-  transform: translateY(0);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(26, 55, 85, 0.3);
 }
 
 /* Labels */
 .login-card label {
   display: block;
   text-align: left;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
   color: #1A3755;
-  font-weight: 500;
-  font-size: 0.9rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.3px;
 }
 
 /* Error text */
@@ -247,13 +197,30 @@
 }
 
 /* Responsive */
+@media (max-width: 768px) {
+  .company-logo {
+    width: 130px;
+    height: 80px;
+  }
+}
+
 @media (max-width: 480px) {
   .login-card {
     margin: 20px;
     padding: 30px 20px;
   }
   
-  .login-card h2 {
+  .login-title {
     font-size: 1.5rem;
   }
+  
+  .login-subtitle {
+    font-size: 0.8rem;
+  }
+  
+  .company-logo {
+    width: 120px;
+    height: 70px;
+  }
+  
 }

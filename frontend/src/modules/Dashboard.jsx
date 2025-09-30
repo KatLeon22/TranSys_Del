@@ -10,6 +10,7 @@ export default function Dashboard() {
   const [rutasHoy, setRutasHoy] = useState([]);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [fechaActual, setFechaActual] = useState(new Date());
 
   useEffect(() => {
     // Verificar si el usuario está autenticado
@@ -23,6 +24,22 @@ export default function Dashboard() {
     }
   }, []);
 
+  // Actualizar fecha cada minuto
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFechaActual(new Date());
+    }, 60000); // Actualizar cada minuto
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Recargar datos cuando cambie la fecha
+  useEffect(() => {
+    if (data) {
+      cargarDatos();
+    }
+  }, [fechaActual]);
+
   const cargarDatos = async () => {
     try {
       setLoading(true);
@@ -34,8 +51,8 @@ export default function Dashboard() {
       // Guardar datos completos
       setData(response);
       
-      // Obtener solo las rutas de hoy
-      const hoy = new Date().toISOString().split('T')[0];
+      // Obtener solo las rutas de hoy usando la fecha actual del estado
+      const hoy = fechaActual.toISOString().split('T')[0];
       console.log('📅 Buscando rutas para la fecha:', hoy);
       console.log('📋 Fechas disponibles:', response?.data?.rutasPorFecha?.map(grupo => grupo.fecha));
       
@@ -138,7 +155,7 @@ export default function Dashboard() {
       <div className="dashboard-section">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <div>
-            <h3>Viajes de Hoy - {new Date().toLocaleDateString('es-ES', { 
+            <h3>Viajes de Hoy - {fechaActual.toLocaleDateString('es-ES', { 
               weekday: 'long', 
               year: 'numeric', 
               month: 'long', 
@@ -151,6 +168,14 @@ export default function Dashboard() {
               fontStyle: 'italic'
             }}>
               {rutasHoy.length} viaje{rutasHoy.length !== 1 ? 's' : ''} programado{rutasHoy.length !== 1 ? 's' : ''} para hoy
+              <span style={{ 
+                fontSize: '0.75rem', 
+                color: '#10b981', 
+                marginLeft: '8px',
+                fontWeight: '500'
+              }}>
+                🔄 Actualización automática
+              </span>
             </p>
           </div>
           
