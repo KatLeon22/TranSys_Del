@@ -30,7 +30,7 @@ export default function Layout({ children }) {
 
   return (
     <div className="layout">
-      <Sidebar isOpen={isMobileMenuOpen} />
+      <Sidebar />
       <div className="layout-main">
         <Navbar onToggleMobileMenu={toggleMobileMenu} />
         <div className="layout-content">{children}</div>

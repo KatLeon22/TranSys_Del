@@ -11,14 +11,22 @@
   display: flex;
   min-height: 100vh;
   background-color: #f4f6f8;
+  transition: all 0.3s ease;
 }
-
 
 /* Contenido principal */
 .layout-main {
-  flex: 1;               /* ocupa todo el espacio restante */
+  flex: 1;
   display: flex;
   flex-direction: column;
+  transition: all 0.3s ease;
+  margin-left: 64px; /* Ancho del sidebar colapsado */
+}
+
+/* Cuando el sidebar está expandido */
+.sidebar.open ~ .layout-main,
+.sidebar.pinned ~ .layout-main {
+  margin-left: 256px; /* Ancho del sidebar expandido */
 }
 
 
@@ -27,6 +35,18 @@
 .layout-content {
   padding: 30px;
   overflow-y: auto;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .layout-main {
+    margin-left: 0;
+  }
+  
+  .sidebar.open ~ .layout-main,
+  .sidebar.pinned ~ .layout-main {
+    margin-left: 0;
+  }
 }
 
 

@@ -39,11 +39,12 @@ export default function Login() {
 
   return (
     <div className="login-container">
-      {/* Camión animado */}
-      <div className="truck-animation"></div>
-      
       <div className="login-card">
-        <h2 className="login-title">Iniciar Sesión</h2>
+        <div className="login-header">
+          <img src="/src/assets/logo.png" alt="Logo S de León" className="company-logo" />
+          <h2 className="login-title">Iniciar Sesión</h2>
+          <p className="login-subtitle">Sistema de Administración de Rutas</p>
+        </div>
         <form onSubmit={handleSubmit} className="login-form">
           <div className="form-group">
             <label>Usuario</label>
