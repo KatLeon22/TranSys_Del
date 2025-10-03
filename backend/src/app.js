@@ -65,7 +65,7 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
 });
 
-// Ruta para manejar rutas del frontend (sin el wildcard problemático)
+// Ruta para manejar rutas del frontend
 app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
 });
@@ -74,8 +74,36 @@ app.get('/login', (req, res) => {
   res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
 });
 
-// Ruta para cualquier otra ruta del frontend
-app.get('/:path*', (req, res) => {
+app.get('/usuarios', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
+});
+
+app.get('/choferes', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
+});
+
+app.get('/camiones', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
+});
+
+app.get('/clientes', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
+});
+
+app.get('/rutas', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
+});
+
+app.get('/reportes', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
+});
+
+app.get('/mantenimientos', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
+});
+
+// Ruta catch-all simple (sin parámetros problemáticos)
+app.use((req, res) => {
   // Solo servir el frontend si no es una ruta de API
   if (!req.path.startsWith('/api')) {
     res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
