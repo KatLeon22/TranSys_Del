@@ -62,7 +62,12 @@ app.use("/api/permisos", permisosRoutes);
 
 // Ruta catch-all: enviar React app para cualquier ruta no manejada por la API
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
+  // Solo servir el frontend si no es una ruta de API
+  if (!req.path.startsWith('/api')) {
+    res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
+  } else {
+    res.status(404).json({ error: 'API endpoint not found' });
+  }
 });
 
 export default app;
