@@ -232,7 +232,7 @@ export class RutasModel {
                 cam.placa as camion_placa
             FROM rutas r
             LEFT JOIN clientes c ON r.cliente_id = c.id
-            LEFT JOIN pilotos p ON r.piloto_id = p.id
+            LEFT JOIN pilotos p ON r.chofer_id = p.id
             LEFT JOIN ayudantes a ON r.ayudante_id = a.id
             LEFT JOIN camiones cam ON r.camion_id = cam.id
             ORDER BY r.fecha DESC, r.hora DESC

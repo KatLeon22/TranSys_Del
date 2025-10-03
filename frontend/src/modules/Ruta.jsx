@@ -128,7 +128,24 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
     }
   };
 
+  // Determinar si es una opción de ordenamiento
+  const esOpcionOrdenamiento = tipoBusqueda === "no_ruta" && ["recientes", "antiguas", "ascendente", "descendente"].includes(busqueda);
+  
+  // Debug: mostrar información del ordenamiento
+  console.log('🔍 Debug ordenamiento:', {
+    tipoBusqueda,
+    busqueda,
+    esOpcionOrdenamiento,
+    esAscendente: busqueda === 'ascendente',
+    esDescendente: busqueda === 'descendente'
+  });
+  
   const rutasFiltradas = rutas.filter(r => {
+    // Si es una opción de ordenamiento, mostrar todas las rutas
+    if (esOpcionOrdenamiento) {
+      return true;
+    }
+    
     if (!busqueda) return true;
     
     const busquedaLower = busqueda.toLowerCase().trim();
@@ -158,6 +175,23 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
                r.servicio?.toLowerCase().trim().includes(busquedaLower) ||
                r.chofer?.toLowerCase().trim().includes(busquedaLower);
     }
+  }).sort((a, b) => {
+    // Aplicar ordenamiento solo si se seleccionó una opción de ordenamiento
+    if (esOpcionOrdenamiento) {
+      switch (busqueda) {
+        case "recientes":
+          return new Date(b.fecha) - new Date(a.fecha); // Más recientes primero
+        case "antiguas":
+          return new Date(a.fecha) - new Date(b.fecha); // Más antiguas primero
+        case "ascendente":
+          return a.noRuta.localeCompare(b.noRuta); // A-Z
+        case "descendente":
+          return b.noRuta.localeCompare(a.noRuta); // Z-A
+        default:
+          return 0; // Sin ordenamiento
+      }
+    }
+    return 0; // Sin ordenamiento
   });
 
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -281,6 +315,7 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
           datos de {rutasFiltradas.length}
         </div>
 
+
         <div className="rutas-search-center">
           <label htmlFor="tipo-busqueda">Buscar por:</label>
           <select
@@ -296,19 +331,34 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
           </select>
           
           <label htmlFor="busqueda">Búsqueda:</label>
-          <input
-            id="busqueda"
-            type="text"
-            placeholder={
-              tipoBusqueda === "no_ruta" ? "Buscar por número de ruta..." :
-              tipoBusqueda === "cliente" ? "Buscar por cliente..." :
-              tipoBusqueda === "servicio" ? "Buscar por servicio..." :
-              "Buscar en todos los campos..."
-            }
-            className="rutas-search"
-            value={busqueda}
-            onChange={e => setBusqueda(e.target.value)}
-          />
+          {tipoBusqueda === "cliente" ? (
+            <select
+              id="busqueda"
+              className="rutas-select"
+              value={busqueda}
+              onChange={e => setBusqueda(e.target.value)}
+            >
+              <option value="">Seleccionar cliente...</option>
+              {clientesDisponibles.map(cliente => (
+                <option key={cliente.id} value={cliente.nombre}>
+                  {cliente.nombre}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <input
+              id="busqueda"
+              type="text"
+              placeholder={
+                tipoBusqueda === "no_ruta" ? "Buscar por número de ruta..." :
+                tipoBusqueda === "servicio" ? "Buscar por servicio..." :
+                "Buscar en todos los campos..."
+              }
+              className="rutas-search"
+              value={busqueda}
+              onChange={e => setBusqueda(e.target.value)}
+            />
+          )}
           
           {busqueda && (
             <button

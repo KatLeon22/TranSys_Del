@@ -97,6 +97,11 @@ class AuthService {
     // Verificar si el usuario tiene un permiso específico
     hasPermission(permission) {
         const permissions = this.getPermissions();
+        // Si permissions es un array de objetos, buscar por nombre_permiso
+        if (permissions.length > 0 && typeof permissions[0] === 'object') {
+            return permissions.some(p => p.nombre_permiso === permission);
+        }
+        // Si permissions es un array de strings, buscar directamente
         return permissions.includes(permission);
     }
 
@@ -168,6 +173,7 @@ class AuthService {
 
         return fetch(url, { ...defaultOptions, ...options });
     }
+
 }
 
 // Crear instancia singleton

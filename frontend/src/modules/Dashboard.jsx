@@ -51,20 +51,28 @@ export default function Dashboard() {
       // Guardar datos completos
       setData(response);
       
-      // Obtener solo las rutas de hoy usando la fecha actual del estado
-      const hoy = fechaActual.toISOString().split('T')[0];
+      // Obtener rutas de la fecha más reciente disponible (usando zona horaria local)
+      const hoy = fechaActual.toLocaleDateString('en-CA'); // Formato YYYY-MM-DD en zona horaria local
       console.log('📅 Buscando rutas para la fecha:', hoy);
       console.log('📋 Fechas disponibles:', response?.data?.rutasPorFecha?.map(grupo => grupo.fecha));
       
-      // Buscar rutas de hoy
-      const rutasHoyData = response?.data?.rutasPorFecha?.find(grupo => grupo.fecha === hoy);
+      // Buscar rutas de hoy primero
+      let rutasHoyData = response?.data?.rutasPorFecha?.find(grupo => grupo.fecha === hoy);
+      
+      // Si no hay rutas para hoy, mostrar las de la fecha más reciente
+      if (!rutasHoyData || rutasHoyData.rutas.length === 0) {
+        console.log('⚠️ No se encontraron rutas para hoy, buscando fecha más reciente...');
+        rutasHoyData = response?.data?.rutasPorFecha?.[0]; // La primera es la más reciente
+        if (rutasHoyData) {
+          console.log('📅 Mostrando rutas de la fecha más reciente:', rutasHoyData.fecha);
+        }
+      }
       
       if (rutasHoyData && rutasHoyData.rutas.length > 0) {
-        console.log('✅ Rutas encontradas para hoy:', rutasHoyData.rutas.length);
+        console.log('✅ Rutas encontradas:', rutasHoyData.rutas.length);
         setRutasHoy(rutasHoyData.rutas);
       } else {
-        console.log('⚠️ No se encontraron rutas para hoy');
-        console.log('📋 Mostrando todas las fechas disponibles:', response?.data?.rutasPorFecha);
+        console.log('⚠️ No se encontraron rutas para ninguna fecha');
         setRutasHoy([]);
       }
     } catch (error) {
@@ -155,7 +163,7 @@ export default function Dashboard() {
       <div className="dashboard-section">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <div>
-            <h3>Viajes de Hoy - {fechaActual.toLocaleDateString('es-ES', { 
+            <h3>Viajes {data?.data?.rutasPorFecha?.[0]?.fecha === fechaActual.toLocaleDateString('en-CA') ? 'de Hoy' : 'Recientes'} - {fechaActual.toLocaleDateString('es-ES', { 
               weekday: 'long', 
               year: 'numeric', 
               month: 'long', 
@@ -167,7 +175,7 @@ export default function Dashboard() {
               margin: '4px 0 0 0',
               fontStyle: 'italic'
             }}>
-              {rutasHoy.length} viaje{rutasHoy.length !== 1 ? 's' : ''} programado{rutasHoy.length !== 1 ? 's' : ''} para hoy
+              {rutasHoy.length} viaje{rutasHoy.length !== 1 ? 's' : ''} programado{rutasHoy.length !== 1 ? 's' : ''} {data?.data?.rutasPorFecha?.[0]?.fecha === fechaActual.toLocaleDateString('en-CA') ? 'para hoy' : 'para esta fecha'}
               <span style={{ 
                 fontSize: '0.75rem', 
                 color: '#10b981', 

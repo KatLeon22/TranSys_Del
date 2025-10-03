@@ -8,7 +8,8 @@ import {
     createUsuario,
     updateUsuario,
     deleteUsuario,
-    changeUserStatus
+    changeUserStatus,
+    getAvailableUserPermissions
 } from '../controllers/usuariosController.js';
 
 const router = express.Router();
@@ -25,6 +26,9 @@ router.get('/', authenticateToken, getAllUsuarios);
 
 // Obtener usuario por ID (solo autenticación)
 router.get('/:id', authenticateToken, getUsuarioById);
+
+// Obtener permisos disponibles para usuarios (solo autenticación)
+router.get('/permissions/available', authenticateToken, getAvailableUserPermissions);
 
 // Crear nuevo usuario (solo autenticación)
 router.post('/', authenticateToken, createUsuario);

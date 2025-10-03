@@ -146,7 +146,7 @@ export default function IngresarChoferes() {
           </div>
 
           <div className="button-group">
-            <button type="submit" className="form-button" disabled={loading}>
+            <button type="submit" className="form-button" style={{ backgroundColor: '#3292D3' }} disabled={loading}>
               {loading ? "Creando..." : "Ingresar Piloto"}
             </button>
             <button

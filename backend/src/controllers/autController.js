@@ -86,7 +86,7 @@ export const login = async (req, res) => {
         // Generar token JWT
         const token = generateToken(user);
 
-        // Obtener permisos del usuario
+        // Obtener permisos específicos del usuario (no del rol)
         const permissions = await User.getPermissions(user.rol_id);
 
         // Registrar en bitácora (opcional)

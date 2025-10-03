@@ -159,8 +159,8 @@ export default function Reportes() {
       console.log('📄 Generando PDF profesional...');
       console.log('📊 Datos para PDF:', reportes);
       
-      // Crear nuevo documento PDF con orientación landscape para más espacio
-      const doc = new jsPDF('landscape', 'mm', 'a4');
+      // Crear nuevo documento PDF con orientación portrait (vertical)
+      const doc = new jsPDF('portrait', 'mm', 'a4');
       
       // Configuración de colores corporativos
       const colorPrimario = [44, 62, 80]; // Azul oscuro S DE LEON
@@ -176,13 +176,28 @@ export default function Reportes() {
       // === ENCABEZADO CORPORATIVO ===
       // Fondo del encabezado
       doc.setFillColor(colorPrimario[0], colorPrimario[1], colorPrimario[2]);
-      doc.rect(0, 0, 297, 35, 'F');
+      doc.rect(0, 0, 210, 35, 'F');
       
       // Logo y título principal
       doc.setTextColor(255, 255, 255);
       doc.setFontSize(24);
       doc.setFont('helvetica', 'bold');
-      doc.text('S DE LEON', 148.5, 15, { align: 'center' });
+      doc.text('S DE LEON', 105, 15, { align: 'center' });
+      
+      // Subtítulo del sistema
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'normal');
+      doc.text('Sistema de Administración de Transporte', 105, 25, { align: 'center' });
+      
+      // Fecha del reporte
+      const fechaActual = new Date();
+      const fechaFormateada = fechaActual.toLocaleDateString('es-ES', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+      doc.setFontSize(10);
+      doc.text(`Reporte generado el: ${fechaFormateada}`, 105, 32, { align: 'center' });
       
       // Agregar logotipo de la empresa
       try {
@@ -204,8 +219,8 @@ export default function Reportes() {
               // Convertir a base64
               const logoDataURL = canvas.toDataURL('image/png');
               
-              // Agregar logo al PDF (posicionado entre el título y el subtítulo)
-              doc.addImage(logoDataURL, 'PNG', 148.5 - 12, 20, 24, 10);
+              // Agregar logo al PDF (posicionado a la izquierda del título, más ancho)
+              doc.addImage(logoDataURL, 'PNG', 10, 5, 35, 20);
               
               console.log('✅ Logo agregado al PDF exitosamente');
               resolve();
@@ -229,11 +244,7 @@ export default function Reportes() {
         // Si no se puede cargar el logo, continuar sin él
       }
       
-      // Subtítulo (movido al fondo blanco para mejor legibilidad)
-      doc.setTextColor(0, 0, 0); // Texto negro para mejor contraste
-      doc.setFontSize(12);
-      doc.setFont('helvetica', 'normal');
-      doc.text('Sistema de Administración de Transporte', 148.5, 42, { align: 'center' });
+      // Subtítulo ya incluido en el encabezado, eliminado para evitar duplicación
       
       yPosition = 50;
       
@@ -269,57 +280,57 @@ export default function Reportes() {
       doc.text('RESUMEN EJECUTIVO', 20, yPosition);
       yPosition += 15;
       
-      // Tarjetas de estadísticas con diseño profesional
-      const cardWidth = 50;
-      const cardHeight = 30;
-      const cardSpacing = 10;
+      // Tarjetas de estadísticas con diseño profesional (más compactas)
+      const cardWidth = 35;
+      const cardHeight = 22;
+      const cardSpacing = 8;
       const startX = 20;
       
       // Total de Rutas
       doc.setFillColor(colorPrimario[0], colorPrimario[1], colorPrimario[2]);
       doc.rect(startX, yPosition, cardWidth, cardHeight, 'F');
       doc.setTextColor(255, 255, 255);
-      doc.setFontSize(18);
+      doc.setFontSize(14);
       doc.setFont('helvetica', 'bold');
-      doc.text(stats.totalRutas.toString(), startX + cardWidth/2, yPosition + 12, { align: 'center' });
-      doc.setFontSize(8);
+      doc.text(stats.totalRutas.toString(), startX + cardWidth/2, yPosition + 9, { align: 'center' });
+      doc.setFontSize(7);
       doc.setFont('helvetica', 'normal');
-      doc.text('TOTAL RUTAS', startX + cardWidth/2, yPosition + 20, { align: 'center' });
+      doc.text('TOTAL RUTAS', startX + cardWidth/2, yPosition + 16, { align: 'center' });
       
       // Rutas Pendientes
       doc.setFillColor(colorNaranja[0], colorNaranja[1], colorNaranja[2]);
       doc.rect(startX + cardWidth + cardSpacing, yPosition, cardWidth, cardHeight, 'F');
       doc.setTextColor(255, 255, 255);
-      doc.setFontSize(18);
+      doc.setFontSize(14);
       doc.setFont('helvetica', 'bold');
-      doc.text(stats.rutasPendientes.toString(), startX + cardWidth + cardSpacing + cardWidth/2, yPosition + 12, { align: 'center' });
-      doc.setFontSize(8);
+      doc.text(stats.rutasPendientes.toString(), startX + cardWidth + cardSpacing + cardWidth/2, yPosition + 9, { align: 'center' });
+      doc.setFontSize(7);
       doc.setFont('helvetica', 'normal');
-      doc.text('PENDIENTES', startX + cardWidth + cardSpacing + cardWidth/2, yPosition + 20, { align: 'center' });
+      doc.text('PENDIENTES', startX + cardWidth + cardSpacing + cardWidth/2, yPosition + 16, { align: 'center' });
       
       // Rutas En Curso
       doc.setFillColor(colorSecundario[0], colorSecundario[1], colorSecundario[2]);
       doc.rect(startX + (cardWidth + cardSpacing) * 2, yPosition, cardWidth, cardHeight, 'F');
       doc.setTextColor(255, 255, 255);
-      doc.setFontSize(18);
+      doc.setFontSize(14);
       doc.setFont('helvetica', 'bold');
-      doc.text(stats.rutasEnCurso.toString(), startX + (cardWidth + cardSpacing) * 2 + cardWidth/2, yPosition + 12, { align: 'center' });
-      doc.setFontSize(8);
+      doc.text(stats.rutasEnCurso.toString(), startX + (cardWidth + cardSpacing) * 2 + cardWidth/2, yPosition + 9, { align: 'center' });
+      doc.setFontSize(7);
       doc.setFont('helvetica', 'normal');
-      doc.text('EN CURSO', startX + (cardWidth + cardSpacing) * 2 + cardWidth/2, yPosition + 20, { align: 'center' });
+      doc.text('EN CURSO', startX + (cardWidth + cardSpacing) * 2 + cardWidth/2, yPosition + 16, { align: 'center' });
       
       // Ingresos Totales
       doc.setFillColor(colorRojo[0], colorRojo[1], colorRojo[2]);
       doc.rect(startX + (cardWidth + cardSpacing) * 3, yPosition, cardWidth, cardHeight, 'F');
       doc.setTextColor(255, 255, 255);
-      doc.setFontSize(14);
+      doc.setFontSize(12);
       doc.setFont('helvetica', 'bold');
-      doc.text(`Q${stats.ingresosTotales.toFixed(2)}`, startX + (cardWidth + cardSpacing) * 3 + cardWidth/2, yPosition + 12, { align: 'center' });
-      doc.setFontSize(8);
+      doc.text(`Q${stats.ingresosTotales.toFixed(2)}`, startX + (cardWidth + cardSpacing) * 3 + cardWidth/2, yPosition + 9, { align: 'center' });
+      doc.setFontSize(7);
       doc.setFont('helvetica', 'normal');
-      doc.text('INGRESOS TOTALES', startX + (cardWidth + cardSpacing) * 3 + cardWidth/2, yPosition + 20, { align: 'center' });
+      doc.text('INGRESOS TOTALES', startX + (cardWidth + cardSpacing) * 3 + cardWidth/2, yPosition + 16, { align: 'center' });
       
-      yPosition += 50;
+      yPosition += 35;
       
       // === GRÁFICO DE BARRAS SIMPLE ===
       if (reportes.length > 0) {
@@ -329,54 +340,102 @@ export default function Reportes() {
         doc.text('DISTRIBUCIÓN DE RUTAS POR ESTADO', 20, yPosition);
         yPosition += 15;
         
-        // Crear gráfico de barras simple
+        // Crear gráfico de barras con ejes X e Y
         const maxValue = Math.max(stats.rutasPendientes, stats.rutasEnCurso, stats.rutasEntregadas, stats.rutasIncidentes, 1);
-        const barWidth = 30;
-        const barHeight = 40;
-        const barSpacing = 50;
-        const startBarX = 20;
+        const chartWidth = 150;
+        const chartHeight = 80;
+        const barWidth = 25;
+        const barSpacing = 35;
+        const startX = 30;
+        const startY = yPosition;
+        
+        // Dibujar ejes X e Y
+        doc.setDrawColor(0, 0, 0);
+        doc.setLineWidth(1);
+        
+        // Eje Y (vertical)
+        doc.line(startX, startY, startX, startY + chartHeight);
+        
+        // Eje X (horizontal)
+        doc.line(startX, startY + chartHeight, startX + chartWidth, startY + chartHeight);
+        
+        // Líneas de cuadrícula horizontales
+        const gridLines = 5;
+        for (let i = 1; i <= gridLines; i++) {
+          const gridY = startY + (chartHeight / gridLines) * i;
+          doc.setDrawColor(200, 200, 200);
+          doc.setLineWidth(0.5);
+          doc.line(startX, gridY, startX + chartWidth, gridY);
+          
+          // Etiquetas del eje Y
+          doc.setDrawColor(0, 0, 0);
+          doc.setTextColor(0, 0, 0);
+          doc.setFontSize(8);
+          const value = Math.round((maxValue / gridLines) * (gridLines - i));
+          doc.text(value.toString(), startX - 15, gridY + 2, { align: 'right' });
+        }
+        
+        // Líneas de cuadrícula verticales
+        for (let i = 1; i <= 4; i++) {
+          const gridX = startX + (chartWidth / 4) * i;
+          doc.setDrawColor(200, 200, 200);
+          doc.setLineWidth(0.5);
+          doc.line(gridX, startY, gridX, startY + chartHeight);
+        }
         
         // Barra Pendientes
-        const pendientesHeight = (stats.rutasPendientes / maxValue) * barHeight;
+        const pendientesHeight = (stats.rutasPendientes / maxValue) * chartHeight;
+        const pendientesX = startX + 10;
         doc.setFillColor(colorNaranja[0], colorNaranja[1], colorNaranja[2]);
-        doc.rect(startBarX, yPosition + barHeight - pendientesHeight, barWidth, pendientesHeight, 'F');
+        doc.rect(pendientesX, startY + chartHeight - pendientesHeight, barWidth, pendientesHeight, 'F');
         doc.setTextColor(0, 0, 0);
         doc.setFontSize(8);
-        doc.text('Pendientes', startBarX + barWidth/2, yPosition + barHeight + 5, { align: 'center' });
-        doc.text(stats.rutasPendientes.toString(), startBarX + barWidth/2, yPosition + barHeight/2, { align: 'center' });
+        doc.text('Pendientes', pendientesX + barWidth/2, startY + chartHeight + 8, { align: 'center' });
+        doc.text(stats.rutasPendientes.toString(), pendientesX + barWidth/2, startY + chartHeight - pendientesHeight/2, { align: 'center' });
         
         // Barra En Curso
-        const enCursoHeight = (stats.rutasEnCurso / maxValue) * barHeight;
+        const enCursoHeight = (stats.rutasEnCurso / maxValue) * chartHeight;
+        const enCursoX = pendientesX + barSpacing;
         doc.setFillColor(colorSecundario[0], colorSecundario[1], colorSecundario[2]);
-        doc.rect(startBarX + barSpacing, yPosition + barHeight - enCursoHeight, barWidth, enCursoHeight, 'F');
+        doc.rect(enCursoX, startY + chartHeight - enCursoHeight, barWidth, enCursoHeight, 'F');
         doc.setTextColor(0, 0, 0);
         doc.setFontSize(8);
-        doc.text('En Curso', startBarX + barSpacing + barWidth/2, yPosition + barHeight + 5, { align: 'center' });
-        doc.text(stats.rutasEnCurso.toString(), startBarX + barSpacing + barWidth/2, yPosition + barHeight/2, { align: 'center' });
+        doc.text('En Curso', enCursoX + barWidth/2, startY + chartHeight + 8, { align: 'center' });
+        doc.text(stats.rutasEnCurso.toString(), enCursoX + barWidth/2, startY + chartHeight - enCursoHeight/2, { align: 'center' });
         
         // Barra Entregadas
-        const entregadasHeight = (stats.rutasEntregadas / maxValue) * barHeight;
+        const entregadasHeight = (stats.rutasEntregadas / maxValue) * chartHeight;
+        const entregadasX = enCursoX + barSpacing;
         doc.setFillColor(colorVerde[0], colorVerde[1], colorVerde[2]);
-        doc.rect(startBarX + barSpacing * 2, yPosition + barHeight - entregadasHeight, barWidth, entregadasHeight, 'F');
+        doc.rect(entregadasX, startY + chartHeight - entregadasHeight, barWidth, entregadasHeight, 'F');
         doc.setTextColor(0, 0, 0);
         doc.setFontSize(8);
-        doc.text('Entregadas', startBarX + barSpacing * 2 + barWidth/2, yPosition + barHeight + 5, { align: 'center' });
-        doc.text(stats.rutasEntregadas.toString(), startBarX + barSpacing * 2 + barWidth/2, yPosition + barHeight/2, { align: 'center' });
+        doc.text('Entregadas', entregadasX + barWidth/2, startY + chartHeight + 8, { align: 'center' });
+        doc.text(stats.rutasEntregadas.toString(), entregadasX + barWidth/2, startY + chartHeight - entregadasHeight/2, { align: 'center' });
         
         // Barra Incidentes
-        const incidentesHeight = (stats.rutasIncidentes / maxValue) * barHeight;
+        const incidentesHeight = (stats.rutasIncidentes / maxValue) * chartHeight;
+        const incidentesX = entregadasX + barSpacing;
         doc.setFillColor(colorRojo[0], colorRojo[1], colorRojo[2]);
-        doc.rect(startBarX + barSpacing * 3, yPosition + barHeight - incidentesHeight, barWidth, incidentesHeight, 'F');
+        doc.rect(incidentesX, startY + chartHeight - incidentesHeight, barWidth, incidentesHeight, 'F');
         doc.setTextColor(0, 0, 0);
         doc.setFontSize(8);
-        doc.text('Incidentes', startBarX + barSpacing * 3 + barWidth/2, yPosition + barHeight + 5, { align: 'center' });
-        doc.text(stats.rutasIncidentes.toString(), startBarX + barSpacing * 3 + barWidth/2, yPosition + barHeight/2, { align: 'center' });
+        doc.text('Incidentes', incidentesX + barWidth/2, startY + chartHeight + 8, { align: 'center' });
+        doc.text(stats.rutasIncidentes.toString(), incidentesX + barWidth/2, startY + chartHeight - incidentesHeight/2, { align: 'center' });
+        
+        // Título del eje Y
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Cantidad de Rutas', 5, startY + chartHeight/2, { align: 'center', angle: 90 });
         
         yPosition += 80;
       }
       
       // === TABLA DETALLADA ===
       if (reportes.length > 0) {
+        // Agregar espacio adicional antes del título de la tabla
+        yPosition += 15;
+        
         doc.setFontSize(12);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(0, 0, 0);
@@ -413,20 +472,20 @@ export default function Reportes() {
           alternateRowStyles: {
             fillColor: [248, 249, 250]
           },
-          margin: { left: 20, right: 20 },
+          margin: { left: 15, right: 15 },
           styles: {
-            cellPadding: 4,
+            cellPadding: 3,
             lineColor: [200, 200, 200],
             lineWidth: 0.5
           },
           columnStyles: {
-            0: { cellWidth: 35 }, // Período
-            1: { cellWidth: 20, halign: 'center' }, // Total
-            2: { cellWidth: 20, halign: 'center' }, // Pendientes
-            3: { cellWidth: 20, halign: 'center' }, // En Curso
-            4: { cellWidth: 20, halign: 'center' }, // Entregadas
-            5: { cellWidth: 20, halign: 'center' }, // Incidentes
-            6: { cellWidth: 25, halign: 'right' } // Ingresos
+            0: { cellWidth: 25 }, // Período
+            1: { cellWidth: 18, halign: 'center' }, // Total
+            2: { cellWidth: 18, halign: 'center' }, // Pendientes
+            3: { cellWidth: 18, halign: 'center' }, // En Curso
+            4: { cellWidth: 18, halign: 'center' }, // Entregadas
+            5: { cellWidth: 18, halign: 'center' }, // Incidentes
+            6: { cellWidth: 22, halign: 'right' } // Ingresos
           }
         });
       }
@@ -436,8 +495,8 @@ export default function Reportes() {
       doc.setFontSize(8);
       doc.setTextColor(colorGris[0], colorGris[1], colorGris[2]);
       doc.setFont('helvetica', 'normal');
-      doc.text('Reporte generado automáticamente por el Sistema de Administración de Transporte', 148.5, pageHeight - 15, { align: 'center' });
-      doc.text('© 2025 S DE LEON - Todos los derechos reservados', 148.5, pageHeight - 10, { align: 'center' });
+      doc.text('Reporte generado automáticamente por el Sistema de Administración de Transporte', 105, pageHeight - 15, { align: 'center' });
+      doc.text('© 2025 S DE LEON - Todos los derechos reservados', 105, pageHeight - 10, { align: 'center' });
       
       // === GUARDAR PDF ===
       const fileName = `reporte_rutas_${filtro}_${new Date().toISOString().split('T')[0]}.pdf`;
@@ -576,14 +635,6 @@ export default function Reportes() {
               <button onClick={exportarReporte} className="btn-exportar">
                 👁️ Ver Reporte
               </button>
-          <button onClick={() => {
-            console.log('=== PRUEBA DE CONEXIÓN ===');
-            console.log('Token en localStorage:', localStorage.getItem('token'));
-            console.log('API_BASE_URL:', 'http://localhost:4000/api');
-            cargarReportes();
-          }} className="btn-generar" style={{backgroundColor: '#e74c3c'}}>
-            🔍 Debug
-          </button>
         </div>
       </div>
 
@@ -656,7 +707,6 @@ export default function Reportes() {
             {reportes.length === 0 && !loading && (
               <div className="no-data">
                 <p>No hay datos para mostrar con los filtros seleccionados</p>
-                <p>Haz clic en "🔍 Debug" para ver más información en la consola</p>
               </div>
             )}
 
