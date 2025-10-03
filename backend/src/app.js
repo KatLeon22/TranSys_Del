@@ -60,8 +60,22 @@ app.use("/api/reportes", reportesRoutes);
 app.use("/api/usuarios", usuariosRoutes);
 app.use("/api/permisos", permisosRoutes);
 
-// Ruta catch-all: enviar React app para cualquier ruta no manejada por la API
-app.get('*', (req, res) => {
+// Ruta para servir el frontend en la raíz
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
+});
+
+// Ruta para manejar rutas del frontend (sin el wildcard problemático)
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
+});
+
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
+});
+
+// Ruta para cualquier otra ruta del frontend
+app.get('/:path*', (req, res) => {
   // Solo servir el frontend si no es una ruta de API
   if (!req.path.startsWith('/api')) {
     res.sendFile(path.join(__dirname, '../../frontend/dist/index.html'));
