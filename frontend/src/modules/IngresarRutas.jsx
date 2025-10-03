@@ -31,6 +31,12 @@ export default function IngresarRutas() {
   const [error, setError] = useState('');
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  
+  // Estados para el temporizador
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [startTime, setStartTime] = useState(null);
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const [showTimer, setShowTimer] = useState(false);
 
   const [choferesDisponibles, setChoferesDisponibles] = useState([]);
   const [ayudantesDisponibles, setAyudantesDisponibles] = useState([]);
@@ -41,6 +47,23 @@ export default function IngresarRutas() {
   useEffect(() => {
     cargarDatos();
   }, []);
+
+  // useEffect para el temporizador
+  useEffect(() => {
+    let interval = null;
+    
+    if (showTimer && startTime) {
+      interval = setInterval(() => {
+        const now = Date.now();
+        const elapsed = Math.floor((now - startTime) / 1000);
+        setElapsedTime(elapsed);
+      }, 1000);
+    } else {
+      clearInterval(interval);
+    }
+    
+    return () => clearInterval(interval);
+  }, [showTimer, startTime]);
 
 
   const cargarDatos = async () => {
@@ -106,10 +129,20 @@ export default function IngresarRutas() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // Iniciar temporizador cuando se empiece a escribir
+    if (!showTimer && value.trim() !== '') {
+      setStartTime(Date.now());
+      setShowTimer(true);
+      setElapsedTime(0);
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Marcar como procesando (el temporizador ya debería estar corriendo)
+    setIsSubmitting(true);
     
     try {
       setLoading(true);
@@ -171,9 +204,10 @@ export default function IngresarRutas() {
       const response = await rutaService.createRuta(rutaData);
       
       if (response.success) {
-        setSuccessMessage('La ruta ha sido creada exitosamente');
+        const finalTime = Math.floor((Date.now() - startTime) / 1000);
+        setSuccessMessage(`La ruta ha sido creada exitosamente en ${finalTime} segundos`);
         setShowSuccessModal(true);
-        // Limpiar formulario
+        // Limpiar formulario y resetear temporizador
         setFormData({
           noRuta: nextRutaNumber,
           cliente: "",
@@ -191,6 +225,11 @@ export default function IngresarRutas() {
           comentario: "",
           estado: "Pendiente",
         });
+        
+        // Resetear temporizador para la próxima ruta
+        setShowTimer(false);
+        setStartTime(null);
+        setElapsedTime(0);
       } else {
         setError(response.message || 'Error al crear la ruta');
       }
@@ -200,6 +239,12 @@ export default function IngresarRutas() {
       setError('Error al crear la ruta. Intenta nuevamente.');
     } finally {
       setLoading(false);
+      // Detener temporizador después de un breve delay para mostrar el tiempo final
+      setTimeout(() => {
+        setIsSubmitting(false);
+        setStartTime(null);
+        setShowTimer(false);
+      }, 2000); // Mostrar por 2 segundos más
     }
   };
 
@@ -211,6 +256,29 @@ export default function IngresarRutas() {
         </div>
 
         <h2 className="ingresar-ruta-title">Ingresar Ruta</h2>
+
+        {/* Temporizador */}
+        {showTimer && (
+          <div style={{
+            position: 'fixed',
+            top: '20px',
+            right: '20px',
+            backgroundColor: isSubmitting ? '#4CAF50' : '#2196F3',
+            color: 'white',
+            padding: '10px 15px',
+            borderRadius: '8px',
+            boxShadow: '0 4px 8px rgba(0,0,0,0.2)',
+            zIndex: 1000,
+            fontSize: '14px',
+            fontWeight: 'bold',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px'
+          }}>
+            <span>⏱️</span>
+            <span>{isSubmitting ? 'Enviando' : 'Escribiendo'}: {elapsedTime}s</span>
+          </div>
+        )}
 
         {loading && (
           <div style={{ textAlign: 'center', padding: '20px', color: '#666' }}>
@@ -358,6 +426,7 @@ export default function IngresarRutas() {
             <button 
               type="submit" 
               className="form-button ingresar-btn" 
+              style={{ backgroundColor: '#3294D6' }}
               disabled={loading}
             >
               {loading ? 'Creando...' : 'Ingresar'}

@@ -87,8 +87,8 @@ export default function Sidebar({ isOpen = false }) {
           </NavLink>
         )}
         
-        {/* Usuarios - solo si tiene permisos de gestión */}
-        {hasManagementPermission() && (
+        {/* Usuarios - solo administradores */}
+        {isAdmin() && (
           <NavLink to="/usuarios">
             <span>👥</span>
             <span>Usuarios</span>

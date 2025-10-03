@@ -5,20 +5,20 @@ export const getNextRutaNumber = async (req, res) => {
     try {
         const result = await RutasModel.getNextRutaNumber();
         
-        console.log('Resultado de la consulta:', result);
+        // console.log('Resultado de la consulta:', result);
         
         let nextNumber = 1;
         if (result.length > 0) {
             const lastRuta = result[0].no_ruta;
-            console.log('Última ruta encontrada:', lastRuta);
+            // console.log('Última ruta encontrada:', lastRuta);
             const lastNumber = parseInt(lastRuta.substring(4)); // Extraer número después de "RUTA"
-            console.log('Último número extraído:', lastNumber);
+            // console.log('Último número extraído:', lastNumber);
             nextNumber = lastNumber + 1;
         }
         
         const nextRutaNumber = `RUTA${nextNumber.toString().padStart(3, '0')}`;
         
-        console.log('Siguiente número calculado:', nextRutaNumber);
+        // console.log('Siguiente número calculado:', nextRutaNumber);
         
         res.status(200).json({
             success: true,
@@ -330,12 +330,12 @@ export const getRutasRecientes = async (req, res) => {
 
         // Agrupar rutas por fecha
         const rutasPorFecha = {};
-        const hoy = new Date().toISOString().split('T')[0];
+        const hoy = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Guatemala' });
         let rutasHoy = 0;
 
         rutas.forEach(ruta => {
             // Convertir fecha a formato YYYY-MM-DD para comparación
-            const fechaRuta = new Date(ruta.fecha).toISOString().split('T')[0];
+            const fechaRuta = new Date(ruta.fecha).toLocaleDateString('en-CA', { timeZone: 'America/Guatemala' });
             if (!rutasPorFecha[fechaRuta]) {
                 rutasPorFecha[fechaRuta] = [];
             }

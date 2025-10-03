@@ -24,7 +24,23 @@ export class User {
             LEFT JOIN roles r ON u.rol_id = r.id
             WHERE u.id = ?
         `;
-        return await executeQuery(query, [id]);
+        const usuarios = await executeQuery(query, [id]);
+        
+        if (usuarios.length > 0) {
+            const usuario = usuarios[0];
+            const permisosQuery = `
+                SELECT p.id, p.nombre_permiso, p.descripcion
+                FROM permisos p
+                INNER JOIN rol_permisos rp ON p.id = rp.permiso_id
+                WHERE rp.rol_id = ?
+                ORDER BY p.id
+            `;
+            const permisos = await executeQuery(permisosQuery, [usuario.rol_id]);
+            usuario.permisos = permisos.map(p => p.id);
+            return [usuario];
+        }
+        
+        return usuarios;
     }
 
     // Crear nuevo usuario
@@ -113,7 +129,22 @@ export class User {
             LEFT JOIN pilotos p ON u.piloto_id = p.id
             ORDER BY u.creado_en DESC
         `;
-        return await executeQuery(query);
+        const usuarios = await executeQuery(query);
+        
+        // Agregar permisos a cada usuario
+        for (let usuario of usuarios) {
+            const permisosQuery = `
+                SELECT p.id, p.nombre_permiso, p.descripcion
+                FROM permisos p
+                INNER JOIN rol_permisos rp ON p.id = rp.permiso_id
+                WHERE rp.rol_id = ?
+                ORDER BY p.id
+            `;
+            const permisos = await executeQuery(permisosQuery, [usuario.rol_id]);
+            usuario.permisos = permisos.map(p => p.id);
+        }
+        
+        return usuarios;
     }
 
     // Verificar si el usuario existe

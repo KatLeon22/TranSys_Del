@@ -87,7 +87,7 @@ export default function IngresarClientes() {
           </div>
 
           <div className="button-group">
-            <button type="submit" className="form-button" disabled={loading}>
+            <button type="submit" className="form-button" style={{ backgroundColor: '#3292D3' }} disabled={loading}>
               {loading ? "Creando..." : "Ingresar Cliente"}
             </button>
             <button type="button" className="form-button close-button" onClick={handleClose} disabled={loading}>

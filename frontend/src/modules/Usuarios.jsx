@@ -38,21 +38,44 @@ const Usuarios = () => {
     permisos: []
   });
 
-  // Lista de permisos disponibles
-  const permisosDisponibles = [
-    { id: 1, nombre: 'crear_rutas', descripcion: 'Permite crear nuevas rutas' },
-    { id: 2, nombre: 'editar_rutas', descripcion: 'Permite editar rutas existentes' },
-    { id: 3, nombre: 'eliminar_rutas', descripcion: 'Permite eliminar rutas' },
-    { id: 4, nombre: 'ver_rutas', descripcion: 'Permite ver rutas' },
-    { id: 5, nombre: 'cambiar_estado', descripcion: 'Permite cambiar estado de rutas' },
-    { id: 6, nombre: 'gestionar_catalogos', descripcion: 'Permite añadir clientes, camiones, pilotos, ayudantes' },
-    { id: 7, nombre: 'generar_reportes', descripcion: 'Permite generar reportes del sistema' }
-  ];
+  // Estado para permisos disponibles
+  const [permisosDisponibles, setPermisosDisponibles] = useState([]);
 
   useEffect(() => {
     loadData();
     loadPilotos();
+    loadPermisos();
   }, []);
+
+  const loadPermisos = async (rolId = null) => {
+    try {
+      console.log('🔄 Cargando permisos disponibles desde API para rol:', rolId);
+      const url = rolId 
+        ? `http://localhost:4000/api/usuarios/permissions/available?rol_id=${rolId}`
+        : 'http://localhost:4000/api/usuarios/permissions/available';
+        
+      const response = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          console.log('✅ Permisos cargados:', data.data);
+          setPermisosDisponibles(data.data);
+        } else {
+          console.error('❌ Error en respuesta de permisos:', data);
+        }
+      } else {
+        console.error('❌ Error HTTP:', response.status);
+      }
+    } catch (error) {
+      console.error('❌ Error cargando permisos:', error);
+    }
+  };
 
 
   const loadPilotos = async () => {
@@ -130,6 +153,11 @@ const Usuarios = () => {
       piloto_id: rolId === '2' ? prev.piloto_id : '', // Mantener piloto_id solo si es piloto
       permisos: rolId === '1' ? [1, 2, 3, 4, 5, 6, 7] : rolId === '2' ? [4, 5] : [] // Asignar permisos por defecto según rol (Usuario sin permisos predefinidos)
     }));
+    
+    // Recargar permisos disponibles según el rol seleccionado
+    if (rolId) {
+      loadPermisos(rolId);
+    }
   };
 
   const handlePermissionChange = (permisoId, isChecked) => {
@@ -150,12 +178,38 @@ const Usuarios = () => {
     setTempPermissions([]);
   };
 
-  const handleSavePermissions = () => {
-    setFormData(prev => ({
-      ...prev,
-      permisos: [...tempPermissions]
-    }));
-    setShowPermissionsModal(false);
+  const handleSavePermissions = async () => {
+    try {
+      if (selectedUser) {
+        // Actualizar permisos del usuario existente
+        console.log('🔄 Actualizando permisos para usuario:', selectedUser.id);
+        console.log('🔐 Nuevos permisos:', tempPermissions);
+        
+        const result = await usuariosService.update(selectedUser.id, {
+          permisos: tempPermissions
+        });
+        
+        if (result.success) {
+          showMessage('Permisos actualizados correctamente', 'success');
+          loadData(); // Recargar la lista de usuarios
+        } else {
+          showMessage('Error actualizando permisos', 'error');
+        }
+      } else {
+        // Crear nuevo usuario
+        setFormData(prev => ({
+          ...prev,
+          permisos: [...tempPermissions]
+        }));
+      }
+      
+      setShowPermissionsModal(false);
+      setTempPermissions([]);
+      setSelectedUser(null);
+    } catch (error) {
+      console.error('Error actualizando permisos:', error);
+      showMessage('Error actualizando permisos', 'error');
+    }
   };
 
 
@@ -223,6 +277,23 @@ const Usuarios = () => {
     setSelectedUserForPassword(usuario);
     setNewPassword('');
     setShowPasswordModal(true);
+  };
+
+  const handleEditPermissions = (usuario) => {
+    setSelectedUser(usuario);
+    
+    // Cargar permisos actuales del usuario
+    if (usuario.rol_nombre === 'usuario') {
+      // Para usuarios, solo mostrar permisos permitidos (6 y 7)
+      const permisosPermitidos = (usuario.permisos || []).filter(permisoId => 
+        permisoId === 6 || permisoId === 7 // gestionar_catalogos y generar_reportes
+      );
+      setTempPermissions(permisosPermitidos);
+    } else {
+      setTempPermissions(usuario.permisos || []);
+    }
+    
+    setShowPermissionsModal(true);
   };
 
   const handleViewPassword = (usuario) => {
@@ -515,7 +586,7 @@ const Usuarios = () => {
                             const permiso = permisosDisponibles.find(p => p.id === permisoId);
                             return (
                               <span key={permisoId} className="permission-tag">
-                                {permiso ? permiso.nombre.replace('_', ' ').toUpperCase() : `Permiso ${permisoId}`}
+                                {permiso ? permiso.nombre_permiso.replace('_', ' ').toUpperCase() : `Permiso ${permisoId}`}
                               </span>
                             );
                           })}
@@ -861,35 +932,48 @@ const Usuarios = () => {
                         textAlign: 'left',
                         borderBottom: '2px solid #dee2e6',
                         fontWeight: 'bold',
-                        color: '#495057'
+                        color: '#ffffff',
+                        backgroundColor: '#103053'
                       }}>ID</th>
                       <th style={{
                         padding: '12px',
                         textAlign: 'left',
                         borderBottom: '2px solid #dee2e6',
                         fontWeight: 'bold',
-                        color: '#495057'
+                        color: '#ffffff',
+                        backgroundColor: '#103053'
                       }}>Usuario</th>
                       <th style={{
                         padding: '12px',
                         textAlign: 'left',
                         borderBottom: '2px solid #dee2e6',
                         fontWeight: 'bold',
-                        color: '#495057'
+                        color: '#ffffff',
+                        backgroundColor: '#103053'
                       }}>Contraseña</th>
                       <th style={{
                         padding: '12px',
                         textAlign: 'left',
                         borderBottom: '2px solid #dee2e6',
                         fontWeight: 'bold',
-                        color: '#495057'
+                        color: '#ffffff',
+                        backgroundColor: '#103053'
+                      }}>Rol</th>
+                      <th style={{
+                        padding: '12px',
+                        textAlign: 'left',
+                        borderBottom: '2px solid #dee2e6',
+                        fontWeight: 'bold',
+                        color: '#ffffff',
+                        backgroundColor: '#103053'
                       }}>Estado</th>
                       <th style={{
                         padding: '12px',
                         textAlign: 'left',
                         borderBottom: '2px solid #dee2e6',
                         fontWeight: 'bold',
-                        color: '#495057'
+                        color: '#ffffff',
+                        backgroundColor: '#103053'
                       }}>Acciones</th>
                     </tr>
                   </thead>
@@ -915,6 +999,20 @@ const Usuarios = () => {
                           }}>
                             {usuario.password ? usuario.password.substring(0, 20) + '...' : 'Sin contraseña'}
                           </code>
+                        </td>
+                        <td style={{ padding: '12px' }}>
+                          <span style={{
+                            padding: '4px 8px',
+                            borderRadius: '4px',
+                            fontSize: '12px',
+                            fontWeight: 'bold',
+                            backgroundColor: usuario.rol_nombre === 'administrador' ? '#e3f2fd' : 
+                                         usuario.rol_nombre === 'piloto' ? '#f3e5f5' : '#e8f5e8',
+                            color: usuario.rol_nombre === 'administrador' ? '#1976d2' : 
+                                   usuario.rol_nombre === 'piloto' ? '#7b1fa2' : '#388e3c'
+                          }}>
+                            {usuario.rol_nombre || 'Sin rol'}
+                          </span>
                         </td>
                         <td style={{ padding: '12px' }}>
                           <select 
@@ -953,6 +1051,24 @@ const Usuarios = () => {
                             >
                               🔑 Editar
                             </button>
+                            {usuario.rol_nombre === 'usuario' && (
+                              <button 
+                                onClick={() => handleEditPermissions(usuario)}
+                                style={{
+                                  background: '#6f42c1',
+                                  color: 'white',
+                                  border: 'none',
+                                  borderRadius: '6px',
+                                  padding: '6px 10px',
+                                  cursor: 'pointer',
+                                  fontSize: '12px',
+                                  fontWeight: 'bold'
+                                }}
+                                title="Editar permisos"
+                              >
+                                🔐 Permisos
+                              </button>
+                            )}
                             <button 
                               onClick={() => handleDelete(usuario.id)}
                               style={{
@@ -1079,22 +1195,48 @@ const Usuarios = () => {
               marginBottom: '20px'
             }}>
               <div className="permisos-container">
-                {permisosDisponibles.map(permiso => (
-                  <div key={permiso.id} className="permiso-item">
-                    <label className="permiso-checkbox">
-                      <input
-                        type="checkbox"
-                        checked={tempPermissions.includes(permiso.id)}
-                        onChange={(e) => handlePermissionChange(permiso.id, e.target.checked)}
-                      />
-                      <span className="checkmark"></span>
-                      <div className="permiso-info">
-                        <span className="permiso-nombre">{permiso.nombre.replace('_', ' ').toUpperCase()}</span>
-                        <span className="permiso-descripcion">{permiso.descripcion}</span>
+                {selectedUser && selectedUser.rol_nombre === 'usuario' ? (
+                  // Solo mostrar permisos específicos para usuarios con rol "Usuario"
+                  permisosDisponibles
+                    .filter(permiso => 
+                      permiso.nombre_permiso === 'generar_reportes' || 
+                      permiso.nombre_permiso === 'gestionar_catalogos'
+                    )
+                    .map(permiso => (
+                      <div key={permiso.id} className="permiso-item">
+                        <label className="permiso-checkbox">
+                          <input
+                            type="checkbox"
+                            checked={tempPermissions.includes(permiso.id)}
+                            onChange={(e) => handlePermissionChange(permiso.id, e.target.checked)}
+                          />
+                          <span className="checkmark"></span>
+                          <div className="permiso-info">
+                            <span className="permiso-nombre">{permiso.nombre_permiso.replace('_', ' ').toUpperCase()}</span>
+                            <span className="permiso-descripcion">{permiso.descripcion}</span>
+                          </div>
+                        </label>
                       </div>
-                    </label>
-                  </div>
-                ))}
+                    ))
+                ) : (
+                  // Mostrar todos los permisos para otros casos
+                  permisosDisponibles.map(permiso => (
+                    <div key={permiso.id} className="permiso-item">
+                      <label className="permiso-checkbox">
+                        <input
+                          type="checkbox"
+                          checked={tempPermissions.includes(permiso.id)}
+                          onChange={(e) => handlePermissionChange(permiso.id, e.target.checked)}
+                        />
+                        <span className="checkmark"></span>
+                        <div className="permiso-info">
+                          <span className="permiso-nombre">{permiso.nombre_permiso.replace('_', ' ').toUpperCase()}</span>
+                          <span className="permiso-descripcion">{permiso.descripcion}</span>
+                        </div>
+                      </label>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
             

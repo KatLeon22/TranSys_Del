@@ -45,7 +45,7 @@ export default function Login() {
           <h2 className="login-title">Iniciar Sesión</h2>
           <p className="login-subtitle">Sistema de Administración de Rutas</p>
         </div>
-        <form onSubmit={handleSubmit} className="login-form">
+        <form onSubmit={handleSubmit} className="login-form" autoComplete="off">
           <div className="form-group">
             <label>Usuario</label>
             <input
@@ -54,6 +54,7 @@ export default function Login() {
               value={form.usuario}
               onChange={handleChange}
               placeholder="Ingrese su usuario"
+              autoComplete="off"
               required
             />
           </div>
@@ -65,6 +66,7 @@ export default function Login() {
               value={form.password}
               onChange={handleChange}
               placeholder="Ingrese su contraseña"
+              autoComplete="new-password"
               required
             />
           </div>

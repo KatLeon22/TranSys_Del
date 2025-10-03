@@ -41,7 +41,7 @@ export const getPilotoInfo = async (req, res) => {
             data: {
                 user: req.user,
                 userInfo: userInfo,
-                fecha_actual: new Date().toISOString().split('T')[0]
+                fecha_actual: new Date().toLocaleDateString('en-CA', { timeZone: 'America/Guatemala' })
             }
         });
     } catch (error) {
@@ -59,7 +59,7 @@ export const debugPilotoCompleto = async (req, res) => {
     try {
         const userId = req.user?.id;
         const pilotoId = req.user?.piloto_id;
-        const fechaActual = new Date().toISOString().split('T')[0];
+        const fechaActual = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Guatemala' });
         
         console.log('🔍 DEBUG COMPLETO - Usuario ID:', userId);
         console.log('🔍 DEBUG COMPLETO - Piloto ID:', pilotoId);
@@ -190,11 +190,11 @@ export const getRutasByPiloto = async (req, res) => {
     try {
         const userId = req.user?.id; // ID del usuario logueado
         
-        console.log('🔍 Obteniendo rutas para usuario ID:', userId);
+        // console.log('🔍 Obteniendo rutas para usuario ID:', userId);
         
-        // Obtener fecha actual
-        const hoy = new Date().toISOString().split('T')[0];
-        console.log('📅 Fecha actual:', hoy);
+        // Obtener fecha actual en zona horaria de Guatemala
+        const hoy = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Guatemala' });
+        console.log('📅 Fecha actual (Guatemala):', hoy);
         
         // Obtener rutas usando el modelo (que maneja la obtención del piloto_id)
         const rutas = await PilotoModel.getRutasByPiloto(userId);
@@ -204,8 +204,8 @@ export const getRutasByPiloto = async (req, res) => {
         
         // Filtrar por fecha actual (comparar solo la parte de fecha, no la hora)
         const rutasHoy = rutas.filter(ruta => {
-            const fechaRuta = new Date(ruta.fecha).toISOString().split('T')[0];
-            console.log(`🔍 Comparando: ${fechaRuta} === ${hoy} ? ${fechaRuta === hoy}`);
+            const fechaRuta = new Date(ruta.fecha).toLocaleDateString('en-CA', { timeZone: 'America/Guatemala' });
+            // console.log(`🔍 Comparando: ${fechaRuta} === ${hoy} ? ${fechaRuta === hoy}`);
             return fechaRuta === hoy;
         });
         

@@ -141,7 +141,7 @@ export default function App() {
                 <Route 
                   path="/usuarios" 
                   element={
-                    <ProtectedRoute requiredPermissions={['gestionar_catalogos']}>
+                    <ProtectedRoute requiredRole="administrador">
                       <Usuarios />
                     </ProtectedRoute>
                   } 

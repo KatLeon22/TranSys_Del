@@ -160,7 +160,7 @@ export default function IngresarCamiones() {
           )}
 
           <div className="button-group">
-            <button type="submit" className="form-button" disabled={loading}>
+            <button type="submit" className="form-button" style={{ backgroundColor: '#3292D3' }} disabled={loading}>
               {loading ? "Creando..." : "Ingresar"}
             </button>
             <button type="button" className="close-button" onClick={() => navigate("/camiones")} disabled={loading}>
