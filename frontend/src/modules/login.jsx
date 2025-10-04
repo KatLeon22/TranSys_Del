@@ -41,7 +41,7 @@ export default function Login() {
     <div className="login-container">
       <div className="login-card">
         <div className="login-header">
-          <img src="/src/assets/logo.png" alt="Logo S de León" className="company-logo" />
+          <img src="/assets/logo.png" alt="Logo S de León" className="company-logo" />
           <h2 className="login-title">Iniciar Sesión</h2>
           <p className="login-subtitle">Sistema de Administración de Rutas</p>
         </div>
