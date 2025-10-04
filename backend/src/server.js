@@ -9,6 +9,9 @@ import dotenv from "dotenv";
 // Cargar variables de entorno
 dotenv.config();
 
+// Configurar zona horaria de Guatemala
+process.env.TZ = 'America/Guatemala';
+
 const PORT = process.env.PORT || 4000;
 
 // Función para inicializar el servidor
