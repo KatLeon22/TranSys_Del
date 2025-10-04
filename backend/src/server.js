@@ -2,7 +2,7 @@ import app from "./app.js";
 import { testConnection } from "./config/db.js";
 import dotenv from "dotenv";
 
-// =========================
+//  =========================
 // SERVER - SOLO CONEXIÓN BD Y INICIO
 // =========================
 
