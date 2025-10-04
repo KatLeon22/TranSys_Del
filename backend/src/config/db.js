@@ -24,9 +24,14 @@ const pool = mysql.createPool(dbConfig);
 export const testConnection = async () => {
     try {
         const connection = await pool.getConnection();
+        
+        // Configurar zona horaria de Guatemala
+        await connection.execute("SET time_zone = '-06:00'");
+        
         console.log('✅ Conexión a la base de datos establecida correctamente');
         console.log(`📊 Base de datos: ${dbConfig.database}`);
         console.log(`🏠 Host: ${dbConfig.host}:${dbConfig.port}`);
+        console.log('🕐 Zona horaria configurada: Guatemala (GMT-6)');
         connection.release();
         return true;
     } catch (error) {

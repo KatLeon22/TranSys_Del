@@ -398,7 +398,7 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
             <th>Destino</th>
             <th>Chofer</th>
             <th>Ayudante</th>
-            <th>Fecha</th>
+            <th>Fecha de Ruta</th>
             <th>Hora</th>
             <th>Precio del<br />viaje</th>
             <th style={{width: "50px"}}>Comentario</th>
