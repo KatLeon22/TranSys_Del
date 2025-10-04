@@ -96,15 +96,30 @@
   align-items: flex-start;
 }
 
-/* Responsive */
+/* ========================================
+   RESPONSIVE PARA MÓVILES - PILOTO LAYOUT
+   ======================================== */
+
 @media (max-width: 768px) {
+  .piloto-layout {
+    flex-direction: column;
+    position: relative;
+  }
+  
   .piloto-main {
     margin-left: 0;
+    width: 100%;
+    min-height: 100vh;
   }
   
   .piloto-navbar {
     padding: 0 15px;
     height: 60px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
   
   .navbar-left h1 {
@@ -125,6 +140,41 @@
   
   .piloto-content {
     padding: 15px;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Mejorar el scroll en móviles */
+  .piloto-content {
+    overscroll-behavior: contain;
+  }
+  
+  /* Evitar zoom en inputs */
+  .piloto-content input,
+  .piloto-content select,
+  .piloto-content textarea {
+    font-size: 16px;
+  }
+  
+  /* Touch targets más grandes */
+  .piloto-content button,
+  .piloto-content a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Mejorar la legibilidad en móviles */
+  .piloto-content h1,
+  .piloto-content h2,
+  .piloto-content h3 {
+    font-size: 1.2rem;
+    line-height: 1.4;
+  }
+  
+  .piloto-content p {
+    font-size: 1rem;
+    line-height: 1.5;
   }
 }
 
