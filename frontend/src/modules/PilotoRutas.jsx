@@ -61,7 +61,7 @@ export default function PilotoRutas() {
   const abrirModal = (ruta) => {
     setSelectedRuta(ruta);
     setNuevoEstado(ruta.estado);
-    setComentario(ruta.comentario || '');
+    setComentario(''); // Limpiar comentario anterior al abrir modal
     setShowModal(true);
   };
 
@@ -151,7 +151,12 @@ export default function PilotoRutas() {
               <p><strong>Servicio:</strong> {ruta.servicio}</p>
               <p><strong>Origen:</strong> {ruta.origen}</p>
               <p><strong>Destino:</strong> {ruta.destino}</p>
-              <p><strong>Fecha:</strong> {ruta.fecha}</p>
+              <p><strong>Fecha:</strong> {ruta.fecha ? new Date(ruta.fecha).toLocaleDateString('es-GT', { 
+                year: 'numeric', 
+                month: '2-digit', 
+                day: '2-digit',
+                timeZone: 'America/Guatemala'
+              }) : '-'}</p>
               <p><strong>Camion:</strong> {ruta.camion_placa} ({ruta.camion_marca} {ruta.camion_modelo})</p>
               {ruta.ayudante_nombre && (
                 <p><strong>Ayudante:</strong> {ruta.ayudante_nombre} {ruta.ayudante_apellido}</p>
@@ -182,7 +187,10 @@ export default function PilotoRutas() {
               <label>Nuevo Estado:</label>
               <select 
                 value={nuevoEstado} 
-                onChange={(e) => setNuevoEstado(e.target.value)}
+                onChange={(e) => {
+                  setNuevoEstado(e.target.value);
+                  setComentario(''); // Limpiar comentario al cambiar estado
+                }}
                 className="estado-select"
               >
                 {estadosDisponibles.map(estado => (
