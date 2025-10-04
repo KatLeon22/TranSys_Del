@@ -51,8 +51,8 @@ const Usuarios = () => {
     try {
       console.log('🔄 Cargando permisos disponibles desde API para rol:', rolId);
       const url = rolId 
-        ? `http://localhost:4000/api/usuarios/permissions/available?rol_id=${rolId}`
-        : 'http://localhost:4000/api/usuarios/permissions/available';
+        ? `/api/usuarios/permissions/available?rol_id=${rolId}`
+        : '/api/usuarios/permissions/available';
         
       const response = await fetch(url, {
         headers: {
@@ -82,7 +82,7 @@ const Usuarios = () => {
     try {
       setLoadingPilotos(true);
       console.log('🔄 Cargando pilotos desde API...');
-      const response = await fetch('http://localhost:4000/api/piloto');
+      const response = await fetch('/api/piloto');
       console.log('📡 Respuesta recibida:', response.status);
       const data = await response.json();
       console.log('📋 Datos de pilotos:', data);
