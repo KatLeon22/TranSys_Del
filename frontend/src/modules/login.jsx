@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import authService from "../services/authService.js";
 import "../styles/login.css";
+import logo from "../assets/logo.jpg";
 
 export default function Login() {
   const [form, setForm] = useState({ usuario: "", password: "" });
@@ -41,7 +42,7 @@ export default function Login() {
     <div className="login-container">
       <div className="login-card">
         <div className="login-header">
-          <img src="/src/assets/logo.jpg" alt="" className="company-logo" />
+          <img src={logo} alt="" className="company-logo" />
           <h2 className="login-title">Iniciar Sesión</h2>
           <p className="login-subtitle">Sistema de Administración de Rutas</p>
         </div>
