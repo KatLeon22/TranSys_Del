@@ -16,6 +16,19 @@ const dbConfig = {
     queueLimit: 0
 };
 
+// DEBUG TEMPORAL: Mostrar valores de las variables
+console.log('🔍 DEBUG - Variables de entorno:');
+console.log('DB_HOST:', process.env.DB_HOST);
+console.log('DB_PORT:', process.env.DB_PORT);
+console.log('DB_USER:', process.env.DB_USER);
+console.log('DB_PASSWORD:', process.env.DB_PASSWORD ? '***HIDDEN***' : 'undefined');
+console.log('DB_NAME:', process.env.DB_NAME);
+console.log('🔍 DEBUG - Configuración final:');
+console.log('Host:', dbConfig.host);
+console.log('Port:', dbConfig.port);
+console.log('User:', dbConfig.user);
+console.log('Database:', dbConfig.database);
+
 // Crear pool de conexiones
 const pool = mysql.createPool(dbConfig);
 
