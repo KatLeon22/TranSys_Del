@@ -8,6 +8,7 @@ import AutoRedirect from "./components/AutoRedirect";
 
 // Importar estilos responsive
 import "./styles/mobile-responsive.css";
+import "./styles/responsive-main.css";
 
 // Módulos
 import Dashboard from "./modules/Dashboard";

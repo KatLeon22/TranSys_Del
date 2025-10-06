@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import authService from "../services/authService.js";
 import "../styles/piloto-sidebar.css";
 
-export default function PilotoSidebar() {
+export default function PilotoSidebar({ isOpen = false }) {
   const user = authService.getCurrentUser();
   const [open, setOpen] = useState(false);
   const [pinned, setPinned] = useState(false);
@@ -29,7 +29,7 @@ export default function PilotoSidebar() {
 
   return (
     <aside 
-      className={`piloto-sidebar ${open ? 'open' : 'collapsed'} ${pinned ? 'pinned' : ''}`}
+      className={`piloto-sidebar ${open ? 'open' : 'collapsed'} ${pinned ? 'pinned' : ''} ${isOpen ? 'mobile-open' : ''}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >

@@ -12,6 +12,13 @@
   flex-direction: column;
 }
 
+/* Responsive para móviles */
+@media (max-width: 767px) {
+  .piloto-main {
+    margin-left: 0;
+  }
+}
+
 .piloto-navbar {
   background: white;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -23,6 +30,39 @@
   position: sticky;
   top: 0;
   z-index: 100;
+}
+
+/* Responsive para navbar de piloto */
+@media (max-width: 767px) {
+  .piloto-navbar {
+    padding: 0 15px;
+    height: 60px;
+  }
+  
+  .navbar-left h1 {
+    font-size: 1.2rem;
+  }
+  
+  .navbar-subtitle {
+    display: none;
+  }
+  
+  .navbar-right {
+    gap: 10px;
+  }
+  
+  .user-info {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  
+  .user-name {
+    font-size: 0.9rem;
+  }
+  
+  .user-role {
+    font-size: 0.8rem;
+  }
 }
 
 .navbar-content {

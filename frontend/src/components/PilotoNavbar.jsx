@@ -1,12 +1,17 @@
 import React from "react";
 import LogoutButton from "./LogoutButton";
+import MobileMenuToggle from "./MobileMenuToggle";
 import authService from "../services/authService.js";
 
-export default function PilotoNavbar() {
+export default function PilotoNavbar({ onToggleMobileMenu }) {
   const user = authService.getCurrentUser();
   
   return (
     <header className="piloto-navbar">
+      <MobileMenuToggle 
+        isOpen={false} 
+        onToggle={onToggleMobileMenu}
+      />
       <div className="navbar-content">
         <div className="navbar-left">
           <h1>Panel de Piloto</h1>
