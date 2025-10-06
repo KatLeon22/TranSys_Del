@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import rutaService from "../services/rutaService.js";
 import PopUp from "../components/PopUp.jsx";
 import "../styles/rutas.css";
-import "../styles/rutas-responsive.css";
 
 export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
   const navigate = useNavigate();
