@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import authService from "../services/authService.js";
 import "../styles/piloto-sidebar.css";
 
-export default function PilotoSidebar({ isOpen = false, onToggleMobileMenu }) {
+export default function PilotoSidebar() {
   const user = authService.getCurrentUser();
   const [open, setOpen] = useState(false);
   const [pinned, setPinned] = useState(false);
@@ -29,24 +29,11 @@ export default function PilotoSidebar({ isOpen = false, onToggleMobileMenu }) {
 
   return (
     <aside 
-      className={`piloto-sidebar ${open ? 'open' : 'collapsed'} ${pinned ? 'pinned' : ''} ${isOpen ? 'mobile-open' : ''}`}
+      className={`piloto-sidebar ${open ? 'open' : 'collapsed'} ${pinned ? 'pinned' : ''}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Botón hamburguesa para móviles */}
-      {onToggleMobileMenu && (
-        <button 
-          className="mobile-menu-toggle"
-          onClick={onToggleMobileMenu}
-          title="Abrir menú"
-        >
-          <span></span>
-          <span></span>
-          <span></span>
-        </button>
-      )}
-      
-      {/* Botón hamburguesa para desktop */}
+      {/* Botón hamburguesa */}
       <button 
         className="sidebar-toggle"
         onClick={handleToggle}
