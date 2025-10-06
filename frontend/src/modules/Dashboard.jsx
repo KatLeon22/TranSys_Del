@@ -51,9 +51,10 @@ export default function Dashboard() {
       // Guardar datos completos
       setData(response);
       
-      // Obtener rutas de la fecha más reciente disponible (usando zona horaria local)
-      const hoy = fechaActual.toLocaleDateString('en-CA'); // Formato YYYY-MM-DD en zona horaria local
+      // Obtener rutas de la fecha más reciente disponible (usando zona horaria de Guatemala)
+      const hoy = fechaActual.toLocaleDateString('en-CA', { timeZone: 'America/Guatemala' }); // Formato YYYY-MM-DD en zona horaria de Guatemala
       console.log('📅 Buscando rutas para la fecha:', hoy);
+      console.log('📅 Fecha actual del sistema:', new Date().toLocaleDateString('en-CA', { timeZone: 'America/Guatemala' }));
       console.log('📋 Fechas disponibles:', response?.data?.rutasPorFecha?.map(grupo => grupo.fecha));
       
       // Buscar rutas de hoy primero
@@ -163,11 +164,12 @@ export default function Dashboard() {
       <div className="dashboard-section">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
           <div>
-            <h3>Viajes {data?.data?.rutasPorFecha?.[0]?.fecha === fechaActual.toLocaleDateString('en-CA') ? 'de Hoy' : 'Recientes'} - {fechaActual.toLocaleDateString('es-ES', { 
+            <h3>Viajes {data?.data?.rutasPorFecha?.[0]?.fecha === fechaActual.toLocaleDateString('en-CA', { timeZone: 'America/Guatemala' }) ? 'de Hoy' : 'Recientes'} - {fechaActual.toLocaleDateString('es-ES', { 
               weekday: 'long', 
               year: 'numeric', 
               month: 'long', 
-              day: 'numeric' 
+              day: 'numeric',
+              timeZone: 'America/Guatemala'
             })}</h3>
             <p style={{ 
               fontSize: '0.85rem', 
@@ -175,7 +177,7 @@ export default function Dashboard() {
               margin: '4px 0 0 0',
               fontStyle: 'italic'
             }}>
-              {rutasHoy.length} viaje{rutasHoy.length !== 1 ? 's' : ''} programado{rutasHoy.length !== 1 ? 's' : ''} {data?.data?.rutasPorFecha?.[0]?.fecha === fechaActual.toLocaleDateString('en-CA') ? 'para hoy' : 'para esta fecha'}
+              {rutasHoy.length} viaje{rutasHoy.length !== 1 ? 's' : ''} programado{rutasHoy.length !== 1 ? 's' : ''} {data?.data?.rutasPorFecha?.[0]?.fecha === fechaActual.toLocaleDateString('en-CA', { timeZone: 'America/Guatemala' }) ? 'para hoy' : 'para esta fecha'}
               <span style={{ 
                 fontSize: '0.75rem', 
                 color: '#10b981', 
