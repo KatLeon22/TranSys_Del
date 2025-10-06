@@ -16,6 +16,38 @@
   z-index: 1000;
 }
 
+/* Sidebar oculto completamente */
+.sidebar.hidden {
+  transform: translateX(-100%);
+}
+
+/* Botón flotante para mostrar sidebar cuando está oculto */
+.sidebar-floating-toggle {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #103053 0%, #213547 100%);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(16, 48, 83, 0.4);
+  z-index: 1001;
+  color: white;
+  font-size: 1.2rem;
+}
+
+.sidebar-floating-toggle:hover {
+  background: linear-gradient(135deg, #213547 0%, #103053 100%);
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(16, 48, 83, 0.6);
+}
+
 /* Sidebar colapsado */
 .sidebar.collapsed {
   width: 64px;
@@ -71,6 +103,19 @@
 .sidebar-toggle:hover span {
   background: #ffffff;
   box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+/* Botón hamburguesa cuando está abierto (se convierte en X) */
+.sidebar.open .sidebar-toggle span:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.sidebar.open .sidebar-toggle span:nth-child(2) {
+  opacity: 0;
+}
+
+.sidebar.open .sidebar-toggle span:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -6px);
 }
 
 /* Header del sidebar */
