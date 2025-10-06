@@ -1,0 +1,487 @@
+/* =========================
+   TABLAS RESPONSIVE AVANZADAS
+   ========================= */
+
+/* Contenedor base para tablas responsive */
+.table-responsive-container {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: white;
+}
+
+/* Tabla base responsive */
+.table-responsive {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  min-width: 600px; /* Ancho mínimo para evitar compresión excesiva */
+}
+
+/* Headers de tabla */
+.table-responsive thead th {
+  background: linear-gradient(135deg, #103053 0%, #213547 100%);
+  color: white;
+  padding: 12px 8px;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* Celdas de tabla */
+.table-responsive tbody td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #f3f4f6;
+  color: #1f2937;
+  vertical-align: middle;
+}
+
+/* Hover en filas */
+.table-responsive tbody tr:hover {
+  background-color: #f9fafb;
+  transition: background-color 0.2s ease;
+}
+
+/* Badges de estado responsive */
+.estado-badge {
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+/* Botones de acción responsive */
+.action-buttons {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 32px;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* =========================
+   RESPONSIVE POR DISPOSITIVO
+   ========================= */
+
+/* Móviles pequeños (320px - 479px) */
+@media (max-width: 479px) {
+  .table-responsive-container {
+    margin: 0 -10px;
+    border-radius: 0;
+  }
+  
+  .table-responsive {
+    font-size: 0.7rem;
+    min-width: 500px;
+  }
+  
+  .table-responsive thead th {
+    padding: 8px 4px;
+    font-size: 0.7rem;
+  }
+  
+  .table-responsive tbody td {
+    padding: 6px 4px;
+  }
+  
+  .estado-badge {
+    font-size: 0.65rem;
+    padding: 2px 6px;
+  }
+  
+  .action-btn {
+    padding: 2px 4px;
+    font-size: 0.65rem;
+    min-width: 28px;
+    min-height: 28px;
+  }
+  
+  .action-buttons {
+    gap: 2px;
+  }
+}
+
+/* Móviles medianos (480px - 767px) */
+@media (min-width: 480px) and (max-width: 767px) {
+  .table-responsive {
+    font-size: 0.8rem;
+    min-width: 550px;
+  }
+  
+  .table-responsive thead th {
+    padding: 10px 6px;
+    font-size: 0.75rem;
+  }
+  
+  .table-responsive tbody td {
+    padding: 8px 6px;
+  }
+  
+  .estado-badge {
+    font-size: 0.7rem;
+    padding: 3px 6px;
+  }
+  
+  .action-btn {
+    padding: 3px 6px;
+    font-size: 0.7rem;
+    min-width: 30px;
+    min-height: 30px;
+  }
+}
+
+/* Tablets (768px - 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+  .table-responsive {
+    font-size: 0.85rem;
+    min-width: 600px;
+  }
+  
+  .table-responsive thead th {
+    padding: 12px 8px;
+    font-size: 0.8rem;
+  }
+  
+  .table-responsive tbody td {
+    padding: 10px 8px;
+  }
+  
+  .estado-badge {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+  }
+  
+  .action-btn {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    min-width: 32px;
+    min-height: 32px;
+  }
+}
+
+/* Desktop (992px+) */
+@media (min-width: 992px) {
+  .table-responsive {
+    font-size: 0.9rem;
+    min-width: 700px;
+  }
+  
+  .table-responsive thead th {
+    padding: 12px 10px;
+    font-size: 0.85rem;
+  }
+  
+  .table-responsive tbody td {
+    padding: 12px 10px;
+  }
+  
+  .estado-badge {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+  }
+  
+  .action-btn {
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    min-width: 36px;
+    min-height: 36px;
+  }
+}
+
+/* =========================
+   TABLAS CON DISEÑO DE TARJETAS EN MÓVILES
+   ========================= */
+
+/* Convertir tabla a tarjetas en móviles */
+@media (max-width: 767px) {
+  .table-card-view {
+    display: none;
+  }
+  
+  .table-card-view .table-card {
+    background: white;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e5e7eb;
+  }
+  
+  .table-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  
+  .table-card-title {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 1rem;
+  }
+  
+  .table-card-status {
+    font-size: 0.75rem;
+  }
+  
+  .table-card-body {
+    display: grid;
+    gap: 8px;
+  }
+  
+  .table-card-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+  }
+  
+  .table-card-label {
+    font-weight: 500;
+    color: #6b7280;
+    font-size: 0.8rem;
+  }
+  
+  .table-card-value {
+    color: #1f2937;
+    font-size: 0.85rem;
+    text-align: right;
+  }
+  
+  .table-card-actions {
+    margin-top: 12px;
+    padding-top: 8px;
+    border-top: 1px solid #f3f4f6;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+}
+
+/* =========================
+   UTILIDADES RESPONSIVE
+   ========================= */
+
+/* Ocultar columnas en móviles */
+@media (max-width: 767px) {
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+/* Ocultar columnas en tablets */
+@media (min-width: 768px) and (max-width: 991px) {
+  .hide-tablet {
+    display: none !important;
+  }
+}
+
+/* Mostrar solo en móviles */
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .mobile-only {
+    display: block;
+  }
+}
+
+/* Mostrar solo en desktop */
+.desktop-only {
+  display: block;
+}
+
+@media (max-width: 767px) {
+  .desktop-only {
+    display: none;
+  }
+}
+
+/* =========================
+   PAGINACIÓN RESPONSIVE
+   ========================= */
+
+.pagination-responsive {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.pagination-btn {
+  padding: 8px 12px;
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #374151;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.85rem;
+  min-width: 40px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination-btn:hover {
+  background: #f3f4f6;
+  border-color: #103053;
+}
+
+.pagination-btn.active {
+  background: #103053;
+  color: white;
+  border-color: #103053;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Responsive para paginación */
+@media (max-width: 767px) {
+  .pagination-responsive {
+    gap: 4px;
+  }
+  
+  .pagination-btn {
+    padding: 6px 8px;
+    font-size: 0.75rem;
+    min-width: 36px;
+    min-height: 36px;
+  }
+  
+  .pagination-info {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin: 0 8px;
+  }
+}
+
+/* =========================
+   FILTROS RESPONSIVE
+   ========================= */
+
+.table-filters {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 120px;
+}
+
+.filter-label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.filter-input {
+  padding: 6px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.filter-input:focus {
+  outline: none;
+  border-color: #103053;
+  box-shadow: 0 0 0 2px rgba(16, 48, 83, 0.1);
+}
+
+/* Responsive para filtros */
+@media (max-width: 767px) {
+  .table-filters {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .filter-group {
+    width: 100%;
+    min-width: auto;
+  }
+  
+  .filter-input {
+    width: 100%;
+  }
+}
+
+/* =========================
+   LOADING RESPONSIVE
+   ========================= */
+
+.table-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  color: #6b7280;
+}
+
+.loading-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2px solid #e5e7eb;
+  border-top: 2px solid #103053;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive para loading */
+@media (max-width: 767px) {
+  .table-loading {
+    padding: 20px;
+    font-size: 0.9rem;
+  }
+  
+  .loading-spinner {
+    width: 20px;
+    height: 20px;
+  }
+}

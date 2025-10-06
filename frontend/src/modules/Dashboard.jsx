@@ -69,7 +69,7 @@ export default function Dashboard() {
         console.log('✅ Rutas encontradas:', rutasHoyData.rutas.length);
         setRutasHoy(rutasHoyData.rutas);
       } else {
-        console.log('⚠️ No se encontraron rutas para ninguna fecha');
+        console.log('⚠️ No hay rutas programadas para hoy');
         setRutasHoy([]);
       }
     } catch (error) {
@@ -260,8 +260,11 @@ export default function Dashboard() {
           </div>
         ) : (
           <div className="sin-datos">
-            <p>No hay viajes programados para hoy</p>
+            <p>📅 No hay viajes programados para hoy</p>
             <p>Los viajes aparecerán aquí cuando se asignen para el día actual</p>
+            <p style={{ fontSize: '0.9rem', color: '#6b7280', marginTop: '10px' }}>
+              💡 <strong>Tip:</strong> Ve a la sección "Rutas" para crear nuevos viajes
+            </p>
           </div>
         )}
       </div>

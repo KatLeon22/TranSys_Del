@@ -449,6 +449,429 @@
 }
 
 /* ========================================
+   RESPONSIVE MEJORADO PARA SIDEBAR
+   ======================================== */
+
+/* Móviles pequeños (320px - 479px) */
+@media (max-width: 479px) {
+  .sidebar {
+    width: 100%;
+    height: 100vh;
+    position: fixed;
+    left: -100%;
+    top: 0;
+    transform: translateX(0);
+    transition: left 0.3s ease;
+    z-index: 1001;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
+  }
+  
+  .sidebar.open,
+  .sidebar.pinned {
+    left: 0;
+  }
+  
+  .sidebar-header {
+    padding: 12px 15px;
+    min-height: 60px;
+  }
+  
+  .sidebar-title {
+    font-size: 1rem;
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+  }
+  
+  .truck-icon {
+    font-size: 1.2rem;
+  }
+  
+  .sidebar nav a,
+  .sidebar-dropdown-btn {
+    padding: 12px 15px;
+    font-size: 0.9rem;
+    min-height: 48px;
+    gap: 12px;
+  }
+  
+  .sidebar nav a span:first-child,
+  .sidebar-dropdown-btn span:first-child {
+    font-size: 1.2rem;
+    min-width: 20px;
+  }
+  
+  .sidebar-dropdown-content {
+    margin-left: 15px;
+    padding-left: 15px;
+  }
+  
+  .sidebar-dropdown-content a {
+    padding: 12px 15px;
+    font-size: 0.85rem;
+    min-height: 42px;
+  }
+  
+  .mobile-menu-toggle {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 1002;
+    background: #103053;
+    border: none;
+    border-radius: 6px;
+    padding: 10px;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .mobile-menu-toggle:hover {
+    background: #213547;
+    transform: scale(1.05);
+  }
+  
+  .mobile-menu-toggle span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    background: white;
+    margin: 2px 0;
+    transition: 0.3s;
+  }
+}
+
+/* Móviles medianos (480px - 767px) */
+@media (min-width: 480px) and (max-width: 767px) {
+  .sidebar {
+    width: 280px;
+    height: 100vh;
+    position: fixed;
+    left: -100%;
+    top: 0;
+    transform: translateX(0);
+    transition: left 0.3s ease;
+    z-index: 1001;
+    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
+  }
+  
+  .sidebar.open,
+  .sidebar.pinned {
+    left: 0;
+  }
+  
+  .sidebar-header {
+    padding: 15px 20px;
+    min-height: 70px;
+  }
+  
+  .sidebar-title {
+    font-size: 1.2rem;
+    opacity: 1 !important;
+    transform: translateX(0) !important;
+  }
+  
+  .truck-icon {
+    font-size: 1.4rem;
+  }
+  
+  .sidebar nav a,
+  .sidebar-dropdown-btn {
+    padding: 15px 20px;
+    font-size: 0.95rem;
+    min-height: 50px;
+    gap: 15px;
+  }
+  
+  .sidebar nav a span:first-child,
+  .sidebar-dropdown-btn span:first-child {
+    font-size: 1.3rem;
+    min-width: 22px;
+  }
+  
+  .sidebar-dropdown-content {
+    margin-left: 20px;
+    padding-left: 20px;
+  }
+  
+  .sidebar-dropdown-content a {
+    padding: 14px 20px;
+    font-size: 0.9rem;
+    min-height: 45px;
+  }
+  
+  .mobile-menu-toggle {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1002;
+    background: #103053;
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .mobile-menu-toggle:hover {
+    background: #213547;
+    transform: scale(1.05);
+  }
+  
+  .mobile-menu-toggle span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: white;
+    margin: 3px 0;
+    transition: 0.3s;
+  }
+}
+
+/* Tablets (768px - 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+  .sidebar {
+    width: 250px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    transform: translateX(0);
+    transition: all 0.3s ease;
+    z-index: 1000;
+  }
+  
+  .sidebar.collapsed {
+    width: 64px;
+  }
+  
+  .sidebar.open,
+  .sidebar.pinned {
+    width: 250px;
+  }
+  
+  .sidebar-header {
+    padding: 18px 20px;
+    min-height: 75px;
+  }
+  
+  .sidebar-title {
+    font-size: 1.1rem;
+  }
+  
+  .truck-icon {
+    font-size: 1.3rem;
+  }
+  
+  .sidebar nav a,
+  .sidebar-dropdown-btn {
+    padding: 14px 20px;
+    font-size: 0.9rem;
+    min-height: 48px;
+    gap: 12px;
+  }
+  
+  .sidebar nav a span:first-child,
+  .sidebar-dropdown-btn span:first-child {
+    font-size: 1.2rem;
+    min-width: 20px;
+  }
+  
+  .sidebar-dropdown-content {
+    margin-left: 18px;
+    padding-left: 18px;
+  }
+  
+  .sidebar-dropdown-content a {
+    padding: 12px 18px;
+    font-size: 0.85rem;
+    min-height: 42px;
+  }
+  
+  .mobile-menu-toggle {
+    display: none;
+  }
+}
+
+/* Desktop (992px+) */
+@media (min-width: 992px) {
+  .sidebar {
+    width: 256px;
+    height: 100vh;
+    position: fixed;
+    left: 0;
+    top: 0;
+    transform: translateX(0);
+    transition: all 0.3s ease;
+    z-index: 1000;
+  }
+  
+  .sidebar.collapsed {
+    width: 64px;
+  }
+  
+  .sidebar.open,
+  .sidebar.pinned {
+    width: 256px;
+  }
+  
+  .sidebar-header {
+    padding: 20px;
+    min-height: 80px;
+  }
+  
+  .sidebar-title {
+    font-size: 1.2rem;
+  }
+  
+  .truck-icon {
+    font-size: 1.5rem;
+  }
+  
+  .sidebar nav a,
+  .sidebar-dropdown-btn {
+    padding: 15px 25px;
+    font-size: 0.95rem;
+    min-height: 50px;
+    gap: 12px;
+  }
+  
+  .sidebar nav a span:first-child,
+  .sidebar-dropdown-btn span:first-child {
+    font-size: 1.2rem;
+    min-width: 20px;
+  }
+  
+  .sidebar-dropdown-content {
+    margin-left: 20px;
+    padding-left: 20px;
+  }
+  
+  .sidebar-dropdown-content a {
+    padding: 12px 20px;
+    font-size: 0.9rem;
+    min-height: 45px;
+  }
+  
+  .mobile-menu-toggle {
+    display: none;
+  }
+}
+
+/* =========================
+   MEJORAS DE ACCESIBILIDAD
+   ========================= */
+
+@media (max-width: 767px) {
+  /* Aumentar el área de toque para enlaces */
+  .sidebar nav a,
+  .sidebar-dropdown-btn {
+    min-height: 48px;
+    touch-action: manipulation;
+  }
+  
+  /* Mejorar el contraste */
+  .sidebar nav a:hover,
+  .sidebar-dropdown-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-left-color: #ffffff;
+  }
+  
+  /* Focus visible mejorado */
+  .sidebar nav a:focus,
+  .sidebar-dropdown-btn:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 2px;
+  }
+  
+  /* Scroll suave */
+  .sidebar {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+}
+
+/* =========================
+   ANIMACIONES RESPONSIVE
+   ========================= */
+
+@media (max-width: 767px) {
+  .sidebar {
+    animation: slideInLeft 0.3s ease;
+  }
+  
+  @keyframes slideInLeft {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  
+  .sidebar nav a,
+  .sidebar-dropdown-btn {
+    transition: all 0.2s ease;
+  }
+  
+  .sidebar nav a:hover,
+  .sidebar-dropdown-btn:hover {
+    transform: translateX(5px);
+  }
+}
+
+/* =========================
+   UTILIDADES RESPONSIVE
+   ========================= */
+
+/* Ocultar elementos en móviles */
+@media (max-width: 767px) {
+  .sidebar .hide-mobile {
+    display: none !important;
+  }
+}
+
+/* Mostrar solo en desktop */
+@media (min-width: 768px) {
+  .sidebar .hide-desktop {
+    display: none !important;
+  }
+}
+
+/* =========================
+   OVERLAY PARA MÓVILES
+   ========================= */
+
+@media (max-width: 767px) {
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+    display: none;
+  }
+  
+  .sidebar-overlay.active {
+    display: block;
+  }
+}
+
+/* =========================
    RESPONSIVE PARA MÓVILES - ADMIN SIDEBAR
    ======================================== */
 
