@@ -37,17 +37,6 @@
   overflow-y: auto;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .layout-main {
-    margin-left: 0;
-  }
-  
-  .sidebar.open ~ .layout-main,
-  .sidebar.pinned ~ .layout-main {
-    margin-left: 0;
-  }
-}
 
 
 
