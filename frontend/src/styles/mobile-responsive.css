@@ -40,7 +40,7 @@
 
 /* Estilos base para móviles */
 @media (max-width: 768px) {
-  /* Layout principal */
+  /* Layout principal - solo en móviles */
   .layout {
     flex-direction: column;
   }
