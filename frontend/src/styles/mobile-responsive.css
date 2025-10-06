@@ -1,11 +1,41 @@
 /* =========================
-   RESPONSIVE GLOBAL PARA MÓVILES
+   SISTEMA RESPONSIVO COMPLETO
    ========================= */
 
 /* Viewport meta tag para móviles */
 @viewport {
   width: device-width;
   initial-scale: 1;
+}
+
+/* Variables CSS para breakpoints */
+:root {
+  --mobile-xs: 320px;
+  --mobile-sm: 480px;
+  --mobile-md: 576px;
+  --tablet-sm: 768px;
+  --tablet-md: 992px;
+  --desktop-sm: 1200px;
+  --desktop-md: 1400px;
+  --desktop-lg: 1600px;
+  
+  /* Espaciado responsive */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 48px;
+  
+  /* Tamaños de fuente responsive */
+  --font-xs: 0.75rem;
+  --font-sm: 0.875rem;
+  --font-base: 1rem;
+  --font-lg: 1.125rem;
+  --font-xl: 1.25rem;
+  --font-2xl: 1.5rem;
+  --font-3xl: 1.875rem;
+  --font-4xl: 2.25rem;
 }
 
 /* Estilos base para móviles */

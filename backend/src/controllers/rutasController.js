@@ -364,7 +364,7 @@ export const getRutasRecientes = async (req, res) => {
         console.log('🔍 Backend - Fechas ordenadas:', rutasPorFechaArray.map(grupo => grupo.fecha));
         console.log('🔍 Backend - Rutas de hoy:', rutasHoy);
 
-        // Filtrar para mostrar solo rutas de hoy si existen, sino mostrar las más recientes
+        // Filtrar para mostrar solo rutas de hoy si existen
         let rutasParaMostrar = [];
         let fechaParaMostrar = hoy;
         
@@ -374,12 +374,10 @@ export const getRutasRecientes = async (req, res) => {
             fechaParaMostrar = hoy;
             console.log('✅ Mostrando rutas de hoy:', rutasParaMostrar.length);
         } else {
-            // No hay rutas para hoy, mostrar las más recientes
-            if (rutasPorFechaArray.length > 0) {
-                rutasParaMostrar = rutasPorFechaArray[0].rutas;
-                fechaParaMostrar = rutasPorFechaArray[0].fecha;
-                console.log('⚠️ No hay rutas para hoy, mostrando las más recientes del:', fechaParaMostrar);
-            }
+            // No hay rutas para hoy - mostrar array vacío
+            rutasParaMostrar = [];
+            fechaParaMostrar = hoy;
+            console.log('⚠️ No hay rutas para hoy, mostrando array vacío');
         }
 
         const estadisticas = {

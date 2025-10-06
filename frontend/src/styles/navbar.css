@@ -104,10 +104,14 @@
   }
 }
 
-/* Responsive para navbar */
-@media (max-width: 768px) {
+/* =========================
+   RESPONSIVE MEJORADO PARA NAVBAR
+   ========================= */
+
+/* Móviles pequeños (320px - 479px) */
+@media (max-width: 479px) {
   .navbar {
-    padding: 15px 20px;
+    padding: 10px 12px;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
@@ -115,31 +119,42 @@
   
   .navbar .user {
     flex-direction: row;
-    gap: 10px;
+    gap: 8px;
     align-items: center;
   }
   
   .navbar .user span {
-    font-size: 0.9rem;
-    padding: 6px 12px;
+    font-size: 0.8rem;
+    padding: 4px 8px;
+    display: none; /* Ocultar nombre en móviles muy pequeños */
+  }
+  
+  .navbar .user .admin-icon {
+    font-size: 1.1rem;
+    padding: 6px;
   }
   
   .navbar .user button {
-    padding: 8px 16px;
-    font-size: 0.8rem;
+    padding: 8px 12px;
+    font-size: 0.75rem;
+    border-radius: 20px;
   }
   
-  /* Botón hamburguesa para móviles */
   .mobile-menu-toggle {
     display: block;
     background: none;
     border: none;
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     color: white;
     cursor: pointer;
-    padding: 8px;
+    padding: 6px;
     border-radius: 4px;
     transition: background-color 0.3s ease;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .mobile-menu-toggle:hover {
@@ -147,18 +162,238 @@
   }
 }
 
-@media (max-width: 480px) {
+/* Móviles medianos (480px - 767px) */
+@media (min-width: 480px) and (max-width: 767px) {
   .navbar {
-    padding: 12px 15px;
+    padding: 12px 16px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .navbar .user {
+    flex-direction: row;
+    gap: 12px;
+    align-items: center;
+  }
+  
+  .navbar .user span {
+    font-size: 0.85rem;
+    padding: 6px 10px;
+  }
+  
+  .navbar .user .admin-icon {
+    font-size: 1.2rem;
+    padding: 7px;
+  }
+  
+  .navbar .user button {
+    padding: 8px 16px;
+    font-size: 0.8rem;
+  }
+  
+  .mobile-menu-toggle {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    color: white;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .mobile-menu-toggle:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Tablets (768px - 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+  .navbar {
+    padding: 16px 24px;
+  }
+  
+  .navbar .user {
+    gap: 16px;
   }
   
   .navbar .user span {
     font-size: 0.9rem;
-    padding: 6px 12px;
+    padding: 8px 14px;
+  }
+  
+  .navbar .user .admin-icon {
+    font-size: 1.25rem;
+    padding: 8px;
   }
   
   .navbar .user button {
     padding: 10px 20px;
-    font-size: 0.8rem;
+    font-size: 0.85rem;
+  }
+  
+  .mobile-menu-toggle {
+    display: none;
+  }
+}
+
+/* Desktop (992px+) */
+@media (min-width: 992px) {
+  .navbar {
+    padding: 20px 30px;
+  }
+  
+  .navbar .user {
+    gap: 20px;
+  }
+  
+  .navbar .user span {
+    font-size: 1rem;
+    padding: 8px 16px;
+  }
+  
+  .navbar .user .admin-icon {
+    font-size: 1.3rem;
+    padding: 8px;
+  }
+  
+  .navbar .user button {
+    padding: 12px 24px;
+    font-size: 0.9rem;
+  }
+  
+  .mobile-menu-toggle {
+    display: none;
+  }
+}
+
+/* =========================
+   MEJORAS DE ACCESIBILIDAD
+   ========================= */
+
+@media (max-width: 767px) {
+  /* Aumentar el área de toque para botones */
+  .navbar .user button,
+  .mobile-menu-toggle {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Mejorar el contraste */
+  .navbar .user span {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  /* Focus visible mejorado */
+  .navbar .user button:focus,
+  .mobile-menu-toggle:focus {
+    outline: 2px solid rgba(255, 255, 255, 0.5);
+    outline-offset: 2px;
+  }
+}
+
+/* =========================
+   ANIMACIONES RESPONSIVE
+   ========================= */
+
+@media (max-width: 767px) {
+  .navbar .user button {
+    transition: all 0.2s ease;
+  }
+  
+  .navbar .user button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(238, 90, 36, 0.4);
+  }
+  
+  .mobile-menu-toggle {
+    transition: all 0.2s ease;
+  }
+  
+  .mobile-menu-toggle:hover {
+    transform: scale(1.05);
+  }
+}
+
+/* =========================
+   UTILIDADES RESPONSIVE
+   ========================= */
+
+/* Ocultar elementos en móviles */
+@media (max-width: 767px) {
+  .navbar .user span.hide-mobile {
+    display: none;
+  }
+}
+
+/* Mostrar solo en desktop */
+@media (min-width: 768px) {
+  .navbar .user span.hide-desktop {
+    display: none;
+  }
+}
+
+/* =========================
+   NAVBAR CON LOGO RESPONSIVE
+   ========================= */
+
+.navbar-with-logo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.navbar-logo img {
+  height: 40px;
+  width: auto;
+}
+
+.navbar-logo-text {
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive para logo */
+@media (max-width: 767px) {
+  .navbar-logo img {
+    height: 32px;
+  }
+  
+  .navbar-logo-text {
+    font-size: 1rem;
+  }
+  
+  .navbar-logo {
+    gap: 8px;
+  }
+}
+
+@media (max-width: 479px) {
+  .navbar-logo img {
+    height: 28px;
+  }
+  
+  .navbar-logo-text {
+    font-size: 0.9rem;
+  }
+  
+  .navbar-logo {
+    gap: 6px;
   }
 }
