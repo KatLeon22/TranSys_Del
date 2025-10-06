@@ -57,16 +57,12 @@ export default function Dashboard() {
       console.log('📅 Fecha actual del sistema:', new Date().toLocaleDateString('en-CA', { timeZone: 'America/Guatemala' }));
       console.log('📋 Fechas disponibles:', response?.data?.rutasPorFecha?.map(grupo => grupo.fecha));
       
-      // Buscar rutas de hoy primero
-      let rutasHoyData = response?.data?.rutasPorFecha?.find(grupo => grupo.fecha === hoy);
+      // El backend ahora devuelve solo las rutas relevantes (de hoy o las más recientes)
+      let rutasHoyData = response?.data?.rutasPorFecha?.[0]; // El backend ya filtra correctamente
       
-      // Si no hay rutas para hoy, mostrar las de la fecha más reciente
-      if (!rutasHoyData || rutasHoyData.rutas.length === 0) {
-        console.log('⚠️ No se encontraron rutas para hoy, buscando fecha más reciente...');
-        rutasHoyData = response?.data?.rutasPorFecha?.[0]; // La primera es la más reciente
-        if (rutasHoyData) {
-          console.log('📅 Mostrando rutas de la fecha más reciente:', rutasHoyData.fecha);
-        }
+      if (rutasHoyData) {
+        const esHoy = rutasHoyData.fecha === hoy;
+        console.log(`📅 Mostrando rutas del ${rutasHoyData.fecha} (${esHoy ? 'HOY' : 'FECHA MÁS RECIENTE'})`);
       }
       
       if (rutasHoyData && rutasHoyData.rutas.length > 0) {

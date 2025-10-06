@@ -333,9 +333,14 @@ export const getRutasRecientes = async (req, res) => {
         const hoy = new Date().toLocaleDateString('en-CA', { timeZone: 'America/Guatemala' });
         let rutasHoy = 0;
 
+        console.log('🔍 Backend - Fecha de hoy calculada:', hoy);
+        console.log('🔍 Backend - Fecha actual del sistema:', new Date().toLocaleDateString('en-CA', { timeZone: 'America/Guatemala' }));
+
         rutas.forEach(ruta => {
             // Convertir fecha a formato YYYY-MM-DD para comparación
             const fechaRuta = new Date(ruta.fecha).toLocaleDateString('en-CA', { timeZone: 'America/Guatemala' });
+            console.log(`🔍 Ruta ${ruta.no_ruta}: fecha original=${ruta.fecha}, fecha convertida=${fechaRuta}, es hoy? ${fechaRuta === hoy}`);
+            
             if (!rutasPorFecha[fechaRuta]) {
                 rutasPorFecha[fechaRuta] = [];
             }
@@ -355,10 +360,36 @@ export const getRutasRecientes = async (req, res) => {
                 rutas: rutasPorFecha[fecha]
             }));
 
+        console.log('🔍 Backend - Fechas disponibles:', Object.keys(rutasPorFecha));
+        console.log('🔍 Backend - Fechas ordenadas:', rutasPorFechaArray.map(grupo => grupo.fecha));
+        console.log('🔍 Backend - Rutas de hoy:', rutasHoy);
+
+        // Filtrar para mostrar solo rutas de hoy si existen, sino mostrar las más recientes
+        let rutasParaMostrar = [];
+        let fechaParaMostrar = hoy;
+        
+        if (rutasPorFecha[hoy] && rutasPorFecha[hoy].length > 0) {
+            // Hay rutas para hoy
+            rutasParaMostrar = rutasPorFecha[hoy];
+            fechaParaMostrar = hoy;
+            console.log('✅ Mostrando rutas de hoy:', rutasParaMostrar.length);
+        } else {
+            // No hay rutas para hoy, mostrar las más recientes
+            if (rutasPorFechaArray.length > 0) {
+                rutasParaMostrar = rutasPorFechaArray[0].rutas;
+                fechaParaMostrar = rutasPorFechaArray[0].fecha;
+                console.log('⚠️ No hay rutas para hoy, mostrando las más recientes del:', fechaParaMostrar);
+            }
+        }
+
         const estadisticas = {
             totalRutas: rutas.length,
             rutasHoy,
-            rutasPorFecha: rutasPorFechaArray
+            rutasPorFecha: [{
+                fecha: fechaParaMostrar,
+                cantidad: rutasParaMostrar.length,
+                rutas: rutasParaMostrar
+            }]
         };
         
         res.status(200).json({
