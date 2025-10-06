@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PilotoSidebar from "./PilotoSidebar";
+import PilotoNavbar from "./PilotoNavbar";
 import MobileMenuToggle from "./MobileMenuToggle";
 import "../styles/piloto-layout.css";
 
@@ -29,8 +30,9 @@ export default function PilotoLayout({ children }) {
 
   return (
     <div className="piloto-layout">
-      <PilotoSidebar isOpen={isMobileMenuOpen} onToggleMobileMenu={toggleMobileMenu} />
+      <PilotoSidebar isOpen={isMobileMenuOpen} />
       <div className="piloto-main">
+        <PilotoNavbar onToggleMobileMenu={toggleMobileMenu} />
         <div className="piloto-content">{children}</div>
       </div>
       {/* Overlay para móviles */}
