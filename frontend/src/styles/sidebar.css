@@ -31,11 +31,6 @@
   width: 256px;
 }
 
-/* Sidebar móvil abierto */
-.sidebar.mobile-open {
-  transform: translateX(0);
-}
-
 /* Botón hamburguesa */
 .sidebar-toggle {
   position: absolute;
@@ -53,7 +48,7 @@
   align-items: center;
   gap: 3px;
   transition: all 0.3s ease;
-  box-shadow: 0 3px 10px rgba(255, 251, 251, 0.3);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
   z-index: 1002;
 }
 
@@ -67,370 +62,226 @@
 .sidebar-toggle span {
   width: 18px;
   height: 2px;
-  background: linear-gradient(90deg, #ffffff 0%, #f0f0f0 100%);
+  background: #ffffff;
   border-radius: 2px;
   transition: all 0.3s ease;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   transform-origin: center;
 }
 
-/* Animación de la hamburguesa */
 .sidebar-toggle:hover span {
-  transform: scale(1.1);
-  background: linear-gradient(90deg, #60a5fa 0%, #3b82f6 100%);
-  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+  background: #ffffff;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
 }
 
-.sidebar-toggle:hover span:nth-child(1) {
-  transform: translateY(-2px) scale(1.1);
-}
-
-.sidebar-toggle:hover span:nth-child(3) {
-  transform: translateY(2px) scale(1.1);
-}
-
-/* Animación cuando está activo */
-.sidebar-toggle:active span {
-  transform: scale(0.95);
-}
-
-/* Animación de pulso */
-.sidebar-toggle {
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  }
-  50% {
-    box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
-  }
-  100% {
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  }
-}
-
-/* Animación de hamburguesa a X cuando está fijo */
-.sidebar.pinned .sidebar-toggle span:nth-child(1) {
-  transform: rotate(45deg) translate(5px, 5px);
-  background: linear-gradient(90deg, #ffffff 0%, #f0f0f0 100%);
-}
-
-.sidebar.pinned .sidebar-toggle span:nth-child(2) {
-  opacity: 0;
-  transform: scale(0);
-}
-
-.sidebar.pinned .sidebar-toggle span:nth-child(3) {
-  transform: rotate(-45deg) translate(5px, -5px);
-  background: linear-gradient(90deg, #ffffff 0%, #f0f0f0 100%);
-}
-
-/* Animación cuando está fijo */
-.sidebar.pinned .sidebar-toggle {
-  animation: none;
-  background: linear-gradient(135deg, #103053 0%, #103053 50%, #103053 100%);
-  border-color: rgba(59, 130, 246, 0.3);
-}
-
-.sidebar.pinned .sidebar-toggle:hover {
-  background: linear-gradient(135deg, #103053 0%, #103053 50%, #1d4ed8 100%);
-  transform: scale(1.1);
-}
-
-.sidebar::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(45deg, rgba(43, 67, 88, 0.15) 0%, rgba(33, 53, 71, 0.1) 100%);
-  pointer-events: none;
-}
-
-/* Sidebar Header */
+/* Header del sidebar */
 .sidebar-header {
   padding: 20px;
-  background: linear-gradient(135deg, #103053 0%, #103053 50%, #213547 100%);
-  text-align: center;
-  position: relative;
-  z-index: 1;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   min-height: 80px;
-  transition: all 0.3s ease;
+  position: relative;
 }
 
-/* Título del sidebar */
 .sidebar-title {
   font-size: 1.2rem;
   font-weight: 700;
-  letter-spacing: 1px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-  color: #ffffff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  transition: all 0.3s ease;
-  white-space: nowrap;
-  overflow: hidden;
-}
-
-/* Título colapsado */
-.sidebar.collapsed .sidebar-title {
-  opacity: 0;
-  transform: translateX(-20px);
-}
-
-/* Título expandido */
-.sidebar.open .sidebar-title,
-.sidebar.pinned .sidebar-title {
+  text-align: center;
   opacity: 1;
   transform: translateX(0);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-/* Icono de camión */
 .truck-icon {
   font-size: 1.5rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
 }
 
-
-
-
-/* Sidebar Navigation */
+/* Navegación */
 .sidebar nav {
   flex: 1;
-  display: flex;
-  flex-direction: column;
   padding: 20px 0;
-  position: relative;
-  z-index: 1;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
 
-/* Sidebar Links */
+.sidebar nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar nav::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 2px;
+}
+
+.sidebar nav::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Enlaces de navegación */
 .sidebar nav a {
-  padding: 15px 25px;
-  color: #d1d5db;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  position: relative;
-  font-weight: 500;
-  font-size: 0.95rem;
   display: flex;
   align-items: center;
   gap: 12px;
+  padding: 15px 25px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
   border-left: 3px solid transparent;
-  white-space: nowrap;
+  position: relative;
   overflow: hidden;
-}
-
-/* Enlaces colapsados */
-.sidebar.collapsed nav a {
-  padding: 15px;
-  justify-content: center;
-}
-
-.sidebar.collapsed nav a span {
-  opacity: 0;
-  transform: translateX(-20px);
-}
-
-/* Enlaces expandidos */
-.sidebar.open nav a span,
-.sidebar.pinned nav a span {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-/* Iconos */
-.sidebar nav a span:first-child,
-.sidebar-dropdown-btn span:first-child {
-  font-size: 1.2rem;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 20px;
-}
-
-/* Texto de los enlaces */
-.sidebar nav a span:last-child,
-.sidebar-dropdown-btn span:last-child {
-  transition: all 0.3s ease;
 }
 
 .sidebar nav a::before {
   content: '';
   position: absolute;
-  left: 0;
   top: 0;
-  bottom: 0;
-  width: 3px;
-  background: linear-gradient(180deg, #103053 0%, #103053 100%);
-  transform: scaleY(0);
-  transition: transform 0.3s ease;
-}
-
-.sidebar nav a:hover {
-  background: linear-gradient(90deg, rgba(43, 67, 88, 0.2) 0%, rgba(16, 48, 83, 0.15) 50%, rgba(33, 53, 71, 0.1) 100%);
-  color: #ffffff;
-  transform: translateX(5px);
-  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s ease;
 }
 
 .sidebar nav a:hover::before {
-  transform: scaleY(1);
+  left: 100%;
+}
+
+.sidebar nav a:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-left-color: #ffffff;
+  transform: translateX(5px);
 }
 
 .sidebar nav a.active {
-  background: linear-gradient(90deg, rgba(43, 67, 88, 0.3) 0%, rgba(16, 48, 83, 0.25) 50%, rgba(33, 53, 71, 0.2) 100%);
-  color: #ffffff;
-  border-left-color: #103053;
+  background: rgba(255, 255, 255, 0.15);
+  border-left-color: #ffffff;
   font-weight: 600;
-  box-shadow: 0 4px 15px rgba(16, 48, 83, 0.3);
 }
 
-.sidebar nav a.active::before {
-  transform: scaleY(1);
+.sidebar nav a span:first-child {
+  font-size: 1.2rem;
+  min-width: 20px;
+  text-align: center;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
 }
 
-/* Dropdown Button */
+/* Dropdown */
 .sidebar-dropdown-btn {
-  background: none;
-  border: none;
-  color: #d1d5db;
-  padding: 15px 25px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-size: 0.95rem;
-  font-weight: 500;
-  text-align: left;
-  width: 100%;
   display: flex;
   align-items: center;
   gap: 12px;
-  position: relative;
+  padding: 15px 25px;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
   border-left: 3px solid transparent;
-  white-space: nowrap;
+  position: relative;
   overflow: hidden;
-}
-
-/* Dropdown colapsado */
-.sidebar.collapsed .sidebar-dropdown-btn {
-  padding: 15px;
-  justify-content: center;
-}
-
-.sidebar.collapsed .sidebar-dropdown-btn span:first-child {
-  opacity: 1;
-  transform: translateX(0);
-}
-
-.sidebar.collapsed .sidebar-dropdown-btn span:last-child {
-  opacity: 0;
-  transform: translateX(-20px);
-}
-
-/* Dropdown expandido */
-.sidebar.open .sidebar-dropdown-btn span,
-.sidebar.pinned .sidebar-dropdown-btn span {
-  opacity: 1;
-  transform: translateX(0);
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
 }
 
 .sidebar-dropdown-btn::before {
   content: '';
   position: absolute;
-  left: 0;
   top: 0;
-  bottom: 0;
-  width: 3px;
-  background: linear-gradient(180deg, #103053 0%, #384e70 50%, #103053 100%);
-  transform: scaleY(0);
-  transition: transform 0.3s ease;
-}
-
-.sidebar-dropdown-btn::after {
-  content: '▼';
-  font-size: 0.8rem;
-  transition: transform 0.3s ease;
-}
-
-.sidebar-dropdown-btn:hover {
-  background: linear-gradient(90deg, rgba(43, 67, 88, 0.2) 0%, rgba(16, 48, 83, 0.15) 50%, rgba(33, 53, 71, 0.1) 100%);
-  color: #ffffff;
-  transform: translateX(5px);
-  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s ease;
 }
 
 .sidebar-dropdown-btn:hover::before {
-  transform: scaleY(1);
+  left: 100%;
 }
 
-.sidebar-dropdown-btn:hover::after {
-  transform: rotate(180deg);
+.sidebar-dropdown-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-left-color: #ffffff;
+  transform: translateX(5px);
 }
 
-/* Dropdown Content */
+.sidebar-dropdown-btn span:first-child {
+  font-size: 1.2rem;
+  min-width: 20px;
+  text-align: center;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
 .sidebar-dropdown-content {
-  background: linear-gradient(180deg, rgba(31, 41, 55, 0.9) 0%, rgba(17, 24, 39, 0.95) 100%);
-  border-left: 3px solid #eaebec;
   margin-left: 20px;
-  border-radius: 0 8px 8px 0;
-  overflow: hidden;
+  padding-left: 20px;
+  border-left: 2px solid rgba(255, 255, 255, 0.2);
   animation: slideDown 0.3s ease;
-  box-shadow: 0 4px 20px rgba(55, 65, 81, 0.3);
 }
 
 .sidebar-dropdown-content a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   padding: 12px 20px;
-  color: #9ca3af;
+  color: rgba(255, 255, 255, 0.8);
   text-decoration: none;
-  display: block;
-  transition: all 0.3s ease;
   font-size: 0.9rem;
+  font-weight: 400;
+  transition: all 0.3s ease;
   border-left: 2px solid transparent;
   position: relative;
+  overflow: hidden;
 }
 
 .sidebar-dropdown-content a::before {
   content: '';
   position: absolute;
-  left: 0;
   top: 0;
-  bottom: 0;
-  width: 2px;
-  background: linear-gradient(180deg, #a8aaab 0%, #384e70 50%, #1f2937 100%);
-  transform: scaleY(0);
-  transition: transform 0.3s ease;
-}
-
-.sidebar-dropdown-content a:hover {
-  background: linear-gradient(90deg, rgba(43, 67, 88, 0.2) 0%, rgba(16, 48, 83, 0.15) 50%, rgba(33, 53, 71, 0.1) 100%);
-  color: #ffffff;
-  transform: translateX(3px);
-  border-left-color: #103053;
-  box-shadow: 0 2px 10px rgba(16, 48, 83, 0.2);
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s ease;
 }
 
 .sidebar-dropdown-content a:hover::before {
-  transform: scaleY(1);
+  left: 100%;
+}
+
+.sidebar-dropdown-content a:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-left-color: rgba(255, 255, 255, 0.5);
+  transform: translateX(5px);
+  color: #ffffff;
 }
 
 .sidebar-dropdown-content a.active {
-  background: linear-gradient(90deg, rgba(43, 67, 88, 0.3) 0%, rgba(16, 48, 83, 0.25) 50%, rgba(33, 53, 71, 0.2) 100%);
+  background: rgba(255, 255, 255, 0.15);
+  border-left-color: rgba(255, 255, 255, 0.5);
   color: #ffffff;
-  border-left-color: #103053;
-  font-weight: 600;
-  box-shadow: 0 2px 10px rgba(16, 48, 83, 0.3);
+  font-weight: 500;
 }
 
-.sidebar-dropdown-content a.active::before {
-  transform: scaleY(1);
+.sidebar-dropdown-content a span:first-child {
+  font-size: 1rem;
+  min-width: 18px;
+  text-align: center;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
 }
 
 /* Animaciones */
@@ -451,651 +302,5 @@
   }
   to {
     opacity: 1;
-  }
-}
-
-/* ========================================
-   RESPONSIVE MEJORADO PARA SIDEBAR
-   ======================================== */
-
-/* Móviles pequeños (320px - 479px) */
-@media (max-width: 479px) {
-  .sidebar {
-    width: 100%;
-    height: 100vh;
-    position: fixed;
-    left: -100%;
-    top: 0;
-    transform: translateX(0);
-    transition: left 0.3s ease;
-    z-index: 1001;
-    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
-  }
-  
-  .sidebar.open,
-  .sidebar.pinned {
-    left: 0;
-  }
-  
-  .sidebar-header {
-    padding: 12px 15px;
-    min-height: 60px;
-  }
-  
-  .sidebar-title {
-    font-size: 1rem;
-    opacity: 1 !important;
-    transform: translateX(0) !important;
-  }
-  
-  .truck-icon {
-    font-size: 1.2rem;
-  }
-  
-  .sidebar nav a,
-  .sidebar-dropdown-btn {
-    padding: 12px 15px;
-    font-size: 0.9rem;
-    min-height: 48px;
-    gap: 12px;
-  }
-  
-  .sidebar nav a span:first-child,
-  .sidebar-dropdown-btn span:first-child {
-    font-size: 1.2rem;
-    min-width: 20px;
-  }
-  
-  .sidebar-dropdown-content {
-    margin-left: 15px;
-    padding-left: 15px;
-  }
-  
-  .sidebar-dropdown-content a {
-    padding: 12px 15px;
-    font-size: 0.85rem;
-    min-height: 42px;
-  }
-  
-  .mobile-menu-toggle {
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    z-index: 1002;
-    background: #103053;
-    border: none;
-    border-radius: 6px;
-    padding: 10px;
-    color: white;
-    cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-    min-width: 44px;
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .mobile-menu-toggle:hover {
-    background: #213547;
-    transform: scale(1.05);
-  }
-  
-  .mobile-menu-toggle span {
-    display: block;
-    width: 20px;
-    height: 2px;
-    background: white;
-    margin: 2px 0;
-    transition: 0.3s;
-  }
-}
-
-/* Móviles medianos (480px - 767px) */
-@media (min-width: 480px) and (max-width: 767px) {
-  .sidebar {
-    width: 280px;
-    height: 100vh;
-    position: fixed;
-    left: -100%;
-    top: 0;
-    transform: translateX(0);
-    transition: left 0.3s ease;
-    z-index: 1001;
-    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
-  }
-  
-  .sidebar.open,
-  .sidebar.pinned {
-    left: 0;
-  }
-  
-  .sidebar-header {
-    padding: 15px 20px;
-    min-height: 70px;
-  }
-  
-  .sidebar-title {
-    font-size: 1.2rem;
-    opacity: 1 !important;
-    transform: translateX(0) !important;
-  }
-  
-  .truck-icon {
-    font-size: 1.4rem;
-  }
-  
-  .sidebar nav a,
-  .sidebar-dropdown-btn {
-    padding: 15px 20px;
-    font-size: 0.95rem;
-    min-height: 50px;
-    gap: 15px;
-  }
-  
-  .sidebar nav a span:first-child,
-  .sidebar-dropdown-btn span:first-child {
-    font-size: 1.3rem;
-    min-width: 22px;
-  }
-  
-  .sidebar-dropdown-content {
-    margin-left: 20px;
-    padding-left: 20px;
-  }
-  
-  .sidebar-dropdown-content a {
-    padding: 14px 20px;
-    font-size: 0.9rem;
-    min-height: 45px;
-  }
-  
-  .mobile-menu-toggle {
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    z-index: 1002;
-    background: #103053;
-    border: none;
-    border-radius: 8px;
-    padding: 12px;
-    color: white;
-    cursor: pointer;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-    min-width: 44px;
-    min-height: 44px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .mobile-menu-toggle:hover {
-    background: #213547;
-    transform: scale(1.05);
-  }
-  
-  .mobile-menu-toggle span {
-    display: block;
-    width: 22px;
-    height: 2px;
-    background: white;
-    margin: 3px 0;
-    transition: 0.3s;
-  }
-}
-
-/* Tablets (768px - 991px) */
-@media (min-width: 768px) and (max-width: 991px) {
-  .sidebar {
-    width: 250px;
-    height: 100vh;
-    position: fixed;
-    left: 0;
-    top: 0;
-    transform: translateX(0);
-    transition: all 0.3s ease;
-    z-index: 1000;
-  }
-  
-  .sidebar.collapsed {
-    width: 64px;
-  }
-  
-  .sidebar.open,
-  .sidebar.pinned {
-    width: 250px;
-  }
-  
-  .sidebar-header {
-    padding: 18px 20px;
-    min-height: 75px;
-  }
-  
-  .sidebar-title {
-    font-size: 1.1rem;
-  }
-  
-  .truck-icon {
-    font-size: 1.3rem;
-  }
-  
-  .sidebar nav a,
-  .sidebar-dropdown-btn {
-    padding: 14px 20px;
-    font-size: 0.9rem;
-    min-height: 48px;
-    gap: 12px;
-  }
-  
-  .sidebar nav a span:first-child,
-  .sidebar-dropdown-btn span:first-child {
-    font-size: 1.2rem;
-    min-width: 20px;
-  }
-  
-  .sidebar-dropdown-content {
-    margin-left: 18px;
-    padding-left: 18px;
-  }
-  
-  .sidebar-dropdown-content a {
-    padding: 12px 18px;
-    font-size: 0.85rem;
-    min-height: 42px;
-  }
-  
-  .mobile-menu-toggle {
-    display: none;
-  }
-}
-
-/* Desktop (992px+) */
-@media (min-width: 992px) {
-  .sidebar {
-    width: 256px;
-    height: 100vh;
-    position: fixed;
-    left: 0;
-    top: 0;
-    transform: translateX(0);
-    transition: all 0.3s ease;
-    z-index: 1000;
-  }
-  
-  .sidebar.collapsed {
-    width: 64px;
-  }
-  
-  .sidebar.open,
-  .sidebar.pinned {
-    width: 256px;
-  }
-  
-  .sidebar-header {
-    padding: 20px;
-    min-height: 80px;
-  }
-  
-  .sidebar-title {
-    font-size: 1.2rem;
-  }
-  
-  .truck-icon {
-    font-size: 1.5rem;
-  }
-  
-  .sidebar nav a,
-  .sidebar-dropdown-btn {
-    padding: 15px 25px;
-    font-size: 0.95rem;
-    min-height: 50px;
-    gap: 12px;
-  }
-  
-  .sidebar nav a span:first-child,
-  .sidebar-dropdown-btn span:first-child {
-    font-size: 1.2rem;
-    min-width: 20px;
-  }
-  
-  .sidebar-dropdown-content {
-    margin-left: 20px;
-    padding-left: 20px;
-  }
-  
-  .sidebar-dropdown-content a {
-    padding: 12px 20px;
-    font-size: 0.9rem;
-    min-height: 45px;
-  }
-  
-  .mobile-menu-toggle {
-    display: none !important;
-  }
-}
-
-/* =========================
-   MEJORAS DE ACCESIBILIDAD
-   ========================= */
-
-@media (max-width: 767px) {
-  /* Aumentar el área de toque para enlaces */
-  .sidebar nav a,
-  .sidebar-dropdown-btn {
-    min-height: 48px;
-    touch-action: manipulation;
-  }
-  
-  /* Mejorar el contraste */
-  .sidebar nav a:hover,
-  .sidebar-dropdown-btn:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-left-color: #ffffff;
-  }
-  
-  /* Focus visible mejorado */
-  .sidebar nav a:focus,
-  .sidebar-dropdown-btn:focus {
-    outline: 2px solid rgba(255, 255, 255, 0.5);
-    outline-offset: 2px;
-  }
-  
-  /* Scroll suave */
-  .sidebar {
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: contain;
-  }
-}
-
-/* =========================
-   ANIMACIONES RESPONSIVE
-   ========================= */
-
-@media (max-width: 767px) {
-  .sidebar {
-    animation: slideInLeft 0.3s ease;
-  }
-  
-  @keyframes slideInLeft {
-    from {
-      transform: translateX(-100%);
-    }
-    to {
-      transform: translateX(0);
-    }
-  }
-  
-  .sidebar nav a,
-  .sidebar-dropdown-btn {
-    transition: all 0.2s ease;
-  }
-  
-  .sidebar nav a:hover,
-  .sidebar-dropdown-btn:hover {
-    transform: translateX(5px);
-  }
-}
-
-/* =========================
-   UTILIDADES RESPONSIVE
-   ========================= */
-
-/* Ocultar elementos en móviles */
-@media (max-width: 767px) {
-  .sidebar .hide-mobile {
-    display: none !important;
-  }
-}
-
-/* Mostrar solo en desktop */
-@media (min-width: 768px) {
-  .sidebar .hide-desktop {
-    display: none !important;
-  }
-}
-
-/* =========================
-   OVERLAY PARA MÓVILES
-   ========================= */
-
-@media (max-width: 767px) {
-  .sidebar-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 999;
-    display: none;
-  }
-  
-  .sidebar-overlay.active {
-    display: block;
-  }
-}
-
-/* =========================
-   RESPONSIVE PARA MÓVILES - ADMIN SIDEBAR
-   ======================================== */
-
-@media (max-width: 768px) {
-  .sidebar {
-    width: 280px;
-    height: 100vh;
-    position: fixed;
-    left: -100%;
-    top: 0;
-    transform: translateX(0);
-    transition: left 0.3s ease;
-    z-index: 1001;
-    box-shadow: 2px 0 15px rgba(0, 0, 0, 0.3);
-  }
-  
-  .sidebar.open,
-  .sidebar.pinned {
-    left: 0;
-  }
-  
-  .sidebar.hovered {
-    left: -100%;
-  }
-  
-  .sidebar.mobile {
-    width: 280px;
-  }
-  
-  /* Botón hamburguesa para móviles */
-  .mobile-menu-toggle {
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    z-index: 1002;
-    background: #103053;
-    border: none;
-    border-radius: 8px;
-    padding: 12px;
-    color: white;
-    cursor: pointer;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    transition: all 0.3s ease;
-  }
-  
-  .mobile-menu-toggle:hover {
-    background: #213547;
-    transform: scale(1.05);
-  }
-  
-  .mobile-menu-toggle span {
-    display: block;
-    width: 25px;
-    height: 3px;
-    background: white;
-    margin: 3px 0;
-    transition: 0.3s;
-  }
-  
-  .mobile-menu-toggle.active span:nth-child(1) {
-    transform: rotate(-45deg) translate(-5px, 6px);
-  }
-  
-  .mobile-menu-toggle.active span:nth-child(2) {
-    opacity: 0;
-  }
-  
-  .mobile-menu-toggle.active span:nth-child(3) {
-    transform: rotate(45deg) translate(-5px, -6px);
-  }
-  
-  /* En móviles, siempre mostrar texto */
-  .sidebar nav a span,
-  .sidebar-dropdown-btn span {
-    opacity: 1 !important;
-    transform: translateX(0) !important;
-  }
-  
-  .sidebar-toggle {
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    right: auto;
-    transform: none;
-    z-index: 1003;
-  }
-  
-  .sidebar-header {
-    padding: 20px;
-    min-height: 80px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(135deg, #103053 0%, #213547 100%);
-  }
-  
-  .sidebar-title {
-    font-size: 1.4rem;
-    opacity: 1 !important;
-    transform: translateX(0) !important;
-  }
-  
-  .truck-icon {
-    font-size: 1.5rem;
-  }
-  
-  .sidebar nav {
-    padding: 20px 0;
-    flex: 1;
-    overflow-y: auto;
-  }
-  
-  .sidebar nav a,
-  .sidebar-dropdown-btn {
-    padding: 18px 25px;
-    font-size: 1rem;
-    font-weight: 500;
-    min-height: 50px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    border-left: 4px solid transparent;
-    transition: all 0.3s ease;
-  }
-  
-  .sidebar nav a:hover,
-  .sidebar-dropdown-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    border-left-color: #ffffff;
-    transform: translateX(8px);
-  }
-  
-  .sidebar nav a.active,
-  .sidebar-dropdown-btn.active {
-    background: rgba(255, 255, 255, 0.15);
-    border-left-color: #ffffff;
-    font-weight: 600;
-  }
-  
-  /* Iconos más grandes en móviles */
-  .sidebar nav a span:first-child,
-  .sidebar-dropdown-btn span:first-child {
-    font-size: 1.4rem;
-    min-width: 25px;
-  }
-  
-  /* Texto más legible en móviles */
-  .sidebar nav a span:last-child,
-  .sidebar-dropdown-btn span:last-child {
-    font-size: 1rem;
-    font-weight: 500;
-  }
-  
-  .sidebar-dropdown-content {
-    margin-left: 20px;
-    padding-left: 20px;
-  }
-  
-  .sidebar-dropdown-content a {
-    padding: 15px 20px;
-    font-size: 0.95rem;
-    min-height: 45px;
-  }
-  
-  /* Mejorar el scroll en móviles */
-  .sidebar {
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior: contain;
-  }
-  
-  /* Touch targets más grandes */
-  .sidebar nav a,
-  .sidebar-dropdown-btn {
-    min-height: 50px;
-    touch-action: manipulation;
-  }
-  
-  /* Animaciones suaves */
-  .sidebar {
-    animation: slideInLeft 0.3s ease;
-  }
-  
-  @keyframes slideInLeft {
-    from {
-      transform: translateX(-100%);
-    }
-    to {
-      transform: translateX(0);
-    }
-  }
-}
-
-@media (max-width: 480px) {
-  .sidebar {
-    width: 100%;
-  }
-  
-  .sidebar-header {
-    padding: 15px;
-    min-height: 60px;
-  }
-  
-  .sidebar-title {
-    font-size: 0.9rem;
-  }
-  
-  .truck-icon {
-    font-size: 1rem;
-  }
-  
-  
-  .sidebar nav a,
-  .sidebar-dropdown-btn {
-    padding: 10px 15px;
-    font-size: 0.85rem;
-  }
-  
-  .sidebar-dropdown-content {
-    margin-left: 10px;
   }
 }
