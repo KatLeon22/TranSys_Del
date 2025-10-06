@@ -7,6 +7,7 @@ export default function Sidebar({ isOpen = false }) {
   const [personalOpen, setPersonalOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const [pinned, setPinned] = useState(false);
+  const [hidden, setHidden] = useState(false);
 
   // Mostrar permisos del usuario
   const userPermissions = authService.getPermissions();
@@ -54,22 +55,43 @@ export default function Sidebar({ isOpen = false }) {
     setOpen(!pinned);
   };
 
+  // Manejar ocultar/mostrar sidebar
+  const handleHideToggle = () => {
+    setHidden(!hidden);
+    if (!hidden) {
+      setOpen(false);
+      setPinned(false);
+    }
+  };
+
   return (
-    <aside 
-      className={`sidebar ${open ? 'open' : 'collapsed'} ${pinned ? 'pinned' : ''} ${isOpen ? 'mobile-open' : ''}`}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      {/* Botón hamburguesa */}
-      <button 
-        className="sidebar-toggle"
-        onClick={handleToggle}
-        title={pinned ? 'Desactivar modo fijo' : 'Activar modo fijo'}
+    <>
+      {/* Botón flotante cuando sidebar está oculto */}
+      {hidden && (
+        <button 
+          className="sidebar-floating-toggle"
+          onClick={handleHideToggle}
+          title="Mostrar sidebar"
+        >
+          ☰
+        </button>
+      )}
+      
+      <aside 
+        className={`sidebar ${open ? 'open' : 'collapsed'} ${pinned ? 'pinned' : ''} ${hidden ? 'hidden' : ''} ${isOpen ? 'mobile-open' : ''}`}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
       >
-        <span></span>
-        <span></span>
-        <span></span>
-      </button>
+        {/* Botón hamburguesa */}
+        <button 
+          className="sidebar-toggle"
+          onClick={hidden ? handleHideToggle : handleToggle}
+          title={hidden ? 'Mostrar sidebar' : (pinned ? 'Desactivar modo fijo' : 'Activar modo fijo')}
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       
       {/* Header del sidebar con texto */}
       <div className="sidebar-header">
@@ -153,5 +175,6 @@ export default function Sidebar({ isOpen = false }) {
         )}
       </nav>
     </aside>
+    </>
   );
 }
