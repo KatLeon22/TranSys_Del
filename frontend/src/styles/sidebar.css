@@ -9,6 +9,7 @@
   position: fixed;
   left: 0;
   top: 0;
+  width: 256px;
   height: 100vh;
   overflow: hidden;
   transition: all 0.3s ease;
@@ -771,7 +772,7 @@
   }
   
   .mobile-menu-toggle {
-    display: none;
+    display: none !important;
   }
 }
 
