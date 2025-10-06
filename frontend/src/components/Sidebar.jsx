@@ -56,7 +56,7 @@ export default function Sidebar({ isOpen = false }) {
 
   return (
     <aside 
-      className={`sidebar ${open ? 'open' : 'collapsed'} ${pinned ? 'pinned' : ''}`}
+      className={`sidebar ${open ? 'open' : 'collapsed'} ${pinned ? 'pinned' : ''} ${isOpen ? 'mobile-open' : ''}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >

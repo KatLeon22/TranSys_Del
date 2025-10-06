@@ -20,7 +20,6 @@ export default function Navbar({ onToggleMobileMenu }) {
       <MobileMenuToggle 
         isOpen={false} 
         onToggle={onToggleMobileMenu}
-        style={{ display: 'block' }}
       />
       <div className="user">
         <span className="user-info">

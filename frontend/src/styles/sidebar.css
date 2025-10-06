@@ -30,6 +30,11 @@
   width: 256px;
 }
 
+/* Sidebar móvil abierto */
+.sidebar.mobile-open {
+  transform: translateX(0);
+}
+
 /* Botón hamburguesa */
 .sidebar-toggle {
   position: absolute;
