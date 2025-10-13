@@ -36,6 +36,17 @@ app.use(express.json());
 // Servir archivos estáticos del frontend
 app.use(express.static(path.join(__dirname, '../../frontend/dist')));
 
+// Servir robots.txt desde la raíz del proyecto
+app.get('/robots.txt', (req, res) => {
+  res.sendFile(path.join(__dirname, '../../robots.txt'));
+});
+
+// Servir sitemap.xml desde la raíz del proyecto
+app.get('/sitemap.xml', (req, res) => {
+  res.setHeader('Content-Type', 'application/xml');
+  res.sendFile(path.join(__dirname, '../../sitemap.xml'));
+});
+
 // =========================
 // RUTAS
 // =========================
