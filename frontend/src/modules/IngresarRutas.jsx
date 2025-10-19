@@ -204,8 +204,20 @@ export default function IngresarRutas() {
       const response = await rutaService.createRuta(rutaData);
       
       if (response.success) {
-        const finalTime = Math.floor((Date.now() - startTime) / 1000);
-        setSuccessMessage(`La ruta ha sido creada exitosamente en ${finalTime} segundos`);
+        const finalTimeSeconds = Math.floor((Date.now() - startTime) / 1000);
+        const finalTimeMinutes = Math.floor(finalTimeSeconds / 60);
+        const remainingSeconds = finalTimeSeconds % 60;
+        
+        let timeMessage;
+        if (finalTimeMinutes > 0) {
+          timeMessage = remainingSeconds > 0 
+            ? `${finalTimeMinutes} minuto${finalTimeMinutes > 1 ? 's' : ''} y ${remainingSeconds} segundo${remainingSeconds > 1 ? 's' : ''}`
+            : `${finalTimeMinutes} minuto${finalTimeMinutes > 1 ? 's' : ''}`;
+        } else {
+          timeMessage = `${finalTimeSeconds} segundo${finalTimeSeconds > 1 ? 's' : ''}`;
+        }
+        
+        setSuccessMessage(`La ruta ha sido creada exitosamente en ${timeMessage}`);
         setShowSuccessModal(true);
         // Limpiar formulario y resetear temporizador
         setFormData({
@@ -276,7 +288,7 @@ export default function IngresarRutas() {
             gap: '8px'
           }}>
             <span>⏱️</span>
-            <span>{isSubmitting ? 'Enviando' : 'Escribiendo'}: {elapsedTime}s</span>
+            <span>{isSubmitting ? 'Enviando' : 'Escribiendo'}: {Math.floor(elapsedTime / 60)}m {elapsedTime % 60}s</span>
           </div>
         )}
 
