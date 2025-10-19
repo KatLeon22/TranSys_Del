@@ -21,6 +21,8 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
   const [ayudantesDisponibles, setAyudantesDisponibles] = useState([]);
   const [camionesDisponibles, setCamionesDisponibles] = useState([]);
   const [clientesDisponibles, setClientesDisponibles] = useState([]);
+  const [commentModal, setCommentModal] = useState({ show: false, comment: '' });
+  const [selectedRow, setSelectedRow] = useState(null);
 
   const estados = ["Pendiente", "En curso", "Entregado", "Incidente"];
   const acciones = ["Editar", "Mostrar", "Eliminar"];
@@ -28,6 +30,7 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
   useEffect(() => {
     cargarDatos();
   }, []);
+
 
   // Debug: mostrar información cuando cambie la búsqueda
   useEffect(() => {
@@ -242,6 +245,15 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
     else if (value === "Mostrar") navigate(`/mostrar-ruta/${id}`);
   };
 
+  const handleCommentClick = (comment) => {
+    setCommentModal({ show: true, comment: comment || 'Sin comentarios' });
+  };
+
+  const handleRowClick = (rutaId) => {
+    setSelectedRow(selectedRow === rutaId ? null : rutaId);
+  };
+
+
   const confirmarEliminar = async () => {
     try {
       const response = await rutaService.deleteRuta(modal.rutaId);
@@ -390,25 +402,56 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
             <th>No.<br />Ruta</th>
             <th style={{minWidth: "120px"}}>Cliente</th>
             <th style={{minWidth: "100px"}}>Servicio</th>
-            <th>Mercadería</th>
+            <th title="Mercadería">Mercadería</th>
             <th>Camión</th>
-            <th>Combustible<br />(gal.)</th>
+            <th title="Combustible (galones)">Combustible<br />(gal.)</th>
             <th>Origen</th>
             <th>Destino</th>
             <th>Chofer</th>
-            <th>Ayudante</th>
-            <th>Fecha de Ruta</th>
-            <th>Hora</th>
-            <th>Precio del<br />viaje</th>
-            <th style={{width: "50px"}}>Comentario</th>
+            <th title="Ayudante">Ayudante</th>
+            <th>Fecha<br />de<br />Ruta</th>
+            <th>Hora <br /> (ETA)</th>
+            <th title="Precio del viaje">Precio del<br />viaje</th>
+            <th style={{width: "50px"}} title="Comentario">Comentario</th>
             <th>Estado</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           {currentRutas.map(ruta => (
-            <tr key={ruta.id}>
-              <td style={{minWidth: "50px", padding: "2px", textAlign: "center", fontSize: "0.8rem", fontWeight: "600"}}>
+            <tr 
+              key={ruta.id}
+              onClick={() => handleRowClick(ruta.id)}
+              style={{
+                cursor: "pointer",
+                backgroundColor: selectedRow === ruta.id ? "#dbeafe" : "transparent",
+                border: selectedRow === ruta.id ? "2px solid #2563eb" : "1px solid #e5e7eb",
+                transition: "all 0.2s ease"
+              }}
+              onMouseEnter={(e) => {
+                if (selectedRow !== ruta.id) {
+                  e.currentTarget.style.backgroundColor = "#f0f9ff";
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (selectedRow !== ruta.id) {
+                  e.currentTarget.style.backgroundColor = "transparent";
+                }
+              }}
+            >
+              <td style={{minWidth: "50px", padding: "2px", textAlign: "center", fontSize: "0.8rem", fontWeight: "600", position: "relative"}}>
+                {selectedRow === ruta.id && (
+                  <div style={{
+                    position: "absolute",
+                    left: "2px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    width: "4px",
+                    height: "20px",
+                    backgroundColor: "#2563eb",
+                    borderRadius: "2px"
+                  }}></div>
+                )}
                 {ruta.noRuta.replace(/RUTA/gi, '').replace(/\s+/g, '')}
               </td>
               <td style={{lineHeight: "1.1", minWidth: "80px", padding: "2px"}}>
@@ -444,19 +487,37 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
               </td>
               <td 
                 style={{
-                  minWidth: "80px", 
+                  minWidth: "60px", 
                   padding: "2px", 
                   fontSize: "0.75rem", 
                   wordBreak: "break-word", 
                   whiteSpace: "nowrap",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
-                  cursor: "help"
+                  cursor: "pointer",
+                  backgroundColor: ruta.comentario ? "#f0f9ff" : "#f9fafb",
+                  border: "1px solid #e5e7eb",
+                  borderRadius: "4px",
+                  transition: "background-color 0.2s"
                 }}
-                title={ruta.comentario || "Sin comentarios"}
+                title={ruta.comentario ? "Haz clic para ver el comentario completo" : "Sin comentarios"}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleCommentClick(ruta.comentario);
+                }}
+                onMouseEnter={(e) => {
+                  if (ruta.comentario) {
+                    e.target.style.backgroundColor = "#dbeafe";
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (ruta.comentario) {
+                    e.target.style.backgroundColor = "#f0f9ff";
+                  }
+                }}
               >
                 {ruta.comentario ? 
-                  (ruta.comentario.length > 25 ? `${ruta.comentario.substring(0, 25)}...` : ruta.comentario) 
+                  (ruta.comentario.length > 15 ? `${ruta.comentario.substring(0, 15)}...` : ruta.comentario) 
                   : "-"
                 }
               </td>
@@ -483,6 +544,7 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
               <td style={{minWidth: "80px", padding: "2px"}}>
                 <select 
                   onChange={e => handleAccionChange(ruta.id,e.target.value)}
+                  onClick={(e) => e.stopPropagation()}
                   style={{
                     width: "100%",
                     padding: "2px 4px",
@@ -527,6 +589,50 @@ export default function Ruta({ rutas: rutasProp, setRutas: setRutasProp }) {
         message={successMessage}
         type="delete"
       />
+
+      {/* Modal de comentarios */}
+      {commentModal.show && (
+        <div className="modal-overlay">
+          <div className="modal" style={{ maxWidth: "500px", width: "90%" }}>
+            <h3 style={{ marginBottom: "15px", color: "#1f2937", fontSize: "1.1rem" }}>
+              Comentario Completo
+            </h3>
+            <div 
+              style={{
+                backgroundColor: "#f9fafb",
+                padding: "15px",
+                borderRadius: "8px",
+                border: "1px solid #e5e7eb",
+                fontSize: "0.9rem",
+                lineHeight: "1.5",
+                whiteSpace: "pre-wrap",
+                wordBreak: "break-word",
+                maxHeight: "300px",
+                overflowY: "auto"
+              }}
+            >
+              {commentModal.comment}
+            </div>
+            <div className="modal-buttons" style={{ marginTop: "15px" }}>
+              <button 
+                className="close-button" 
+                onClick={() => setCommentModal({ show: false, comment: '' })}
+                style={{ 
+                  backgroundColor: "#6b7280", 
+                  color: "white",
+                  padding: "8px 16px",
+                  borderRadius: "6px",
+                  border: "none",
+                  cursor: "pointer",
+                  fontSize: "0.85rem"
+                }}
+              >
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

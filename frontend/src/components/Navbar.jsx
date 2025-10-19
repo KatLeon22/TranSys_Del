@@ -23,7 +23,7 @@ export default function Navbar({ onToggleMobileMenu }) {
       />
       <div className="user">
         <span className="user-info">
-          Usuario {user?.username || 'Usuario'}
+          Usuario: {user?.username || 'Usuario'}
         </span>
         <span className="admin-icon">{getRoleIcon()}</span>
         <span>Rol: {user?.rol_nombre || 'Sin rol'}</span>
