@@ -1,9 +1,5 @@
 User-agent: *
-Allow: /
+Disallow: /
 
-# Sitemap
-Sitemap: https://tu-dominio.com/sitemap.xml
-
-# Disallow admin routes if needed
-Disallow: /admin/
-Disallow: /api/
+# Bloquear todo el sitio - Sistema administrativo privado
+# No debe ser indexado por buscadores
