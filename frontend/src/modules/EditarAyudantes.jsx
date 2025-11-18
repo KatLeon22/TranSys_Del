@@ -36,7 +36,15 @@ export default function EditarAyudantes() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setAyudante(prev => ({ ...prev, [name]: value }));
+    
+    // Validación especial para el campo de teléfono
+    if (name === 'telefono') {
+      // Permitir solo números, guiones, paréntesis y espacios
+      const telefonoValido = value.replace(/[^0-9\s\-()]/g, '');
+      setAyudante(prev => ({ ...prev, [name]: telefonoValido }));
+    } else {
+      setAyudante(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = (e) => {
@@ -89,6 +97,8 @@ export default function EditarAyudantes() {
               name="telefono"
               value={ayudante.telefono}
               onChange={handleChange}
+              pattern="[0-9\s\-()]+"
+              title="Solo se permiten números, guiones, paréntesis y espacios"
               required
             />
           </div>

@@ -19,7 +19,15 @@ export default function IngresarClientes() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setCliente(prev => ({ ...prev, [name]: value }));
+    
+    // Validación especial para el campo de teléfono
+    if (name === 'telefono') {
+      // Permitir solo números, guiones, paréntesis y espacios
+      const telefonoValido = value.replace(/[^0-9\s\-()]/g, '');
+      setCliente(prev => ({ ...prev, [name]: telefonoValido }));
+    } else {
+      setCliente(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -83,7 +91,15 @@ export default function IngresarClientes() {
 
           <div className="form-group">
             <label>Teléfono</label>
-            <input type="tel" name="telefono" value={cliente.telefono} onChange={handleChange} required />
+            <input 
+              type="tel" 
+              name="telefono" 
+              value={cliente.telefono} 
+              onChange={handleChange}
+              pattern="[0-9\s\-()]+"
+              title="Solo se permiten números, guiones, paréntesis y espacios"
+              required 
+            />
           </div>
 
           <div className="button-group">

@@ -22,7 +22,15 @@ export default function IngresarChoferes() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setChofer((prev) => ({ ...prev, [name]: value }));
+    
+    // Validación especial para el campo de teléfono
+    if (name === 'telefono') {
+      // Permitir solo números, guiones, paréntesis y espacios
+      const telefonoValido = value.replace(/[^0-9\s\-()]/g, '');
+      setChofer((prev) => ({ ...prev, [name]: telefonoValido }));
+    } else {
+      setChofer((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -119,6 +127,8 @@ export default function IngresarChoferes() {
               name="telefono"
               value={chofer.telefono}
               onChange={handleChange}
+              pattern="[0-9\s\-()]+"
+              title="Solo se permiten números, guiones, paréntesis y espacios"
               required
             />
           </div>

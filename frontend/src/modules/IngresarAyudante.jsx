@@ -20,7 +20,15 @@ export default function IngresarAyudante() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // Validación especial para el campo de teléfono
+    if (name === 'telefono') {
+      // Permitir solo números, guiones, paréntesis y espacios
+      const telefonoValido = value.replace(/[^0-9\s\-()]/g, '');
+      setFormData(prev => ({ ...prev, [name]: telefonoValido }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -98,11 +106,13 @@ export default function IngresarAyudante() {
           <div className="form-group">
             <label htmlFor="telefono">Teléfono:</label>
             <input
-              type="text"
+              type="tel"
               id="telefono"
               name="telefono"
               value={formData.telefono}
               onChange={handleChange}
+              pattern="[0-9\s\-()]+"
+              title="Solo se permiten números, guiones, paréntesis y espacios"
               required
             />
           </div>
