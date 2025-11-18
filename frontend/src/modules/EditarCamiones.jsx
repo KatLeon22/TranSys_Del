@@ -65,7 +65,15 @@ export default function EditarCamiones() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setCamion(prev => ({ ...prev, [name]: value }));
+    
+    // Validación especial para el campo de tarjeta de circulación
+    if (name === 'tarjetaCirculacion') {
+      // Permitir solo números
+      const tarjetaValida = value.replace(/[^0-9]/g, '');
+      setCamion(prev => ({ ...prev, [name]: tarjetaValida }));
+    } else {
+      setCamion(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -161,7 +169,15 @@ export default function EditarCamiones() {
 
           <div className="form-group">
             <label>Tarjeta de circulación</label>
-            <input type="text" name="tarjetaCirculacion" value={camion.tarjetaCirculacion} onChange={handleChange} required />
+            <input 
+              type="text" 
+              name="tarjetaCirculacion" 
+              value={camion.tarjetaCirculacion} 
+              onChange={handleChange}
+              pattern="[0-9]+"
+              title="Solo se permiten números"
+              required 
+            />
           </div>
 
           {error && (
